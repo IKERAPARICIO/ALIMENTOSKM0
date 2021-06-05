@@ -4,6 +4,7 @@ userrol = "gestor";
 //userrol = "produc";
 //userrol = "consum";
 //userrol = "";
+
 if (userrol == null){
 	//response.sendRedirect("index.jsp");
 }
