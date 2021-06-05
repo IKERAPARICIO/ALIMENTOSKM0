@@ -1,0 +1,241 @@
+/*************************** COMMUN STYLE ***************************/
+body{
+	color:#78a206;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size:15px;
+}
+
+#contenedor{
+	background-color:#DEE5E1;
+	padding:0px;
+	margin:0px;
+}
+
+#msg{
+	position: relative;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #A8DDFD;
+    width: 300px;
+    text-align: left;
+    border: 1px solid #97C6E3;
+    border-radius: 10px;
+}
+
+input[type=submit]{
+	font-size:15px;
+	color:#fff;
+	width: 200px;
+	margin: 10px;
+	padding: 10px; 
+    background:#78a206; 
+    cursor:pointer;
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    border-color:#78a206;
+}
+
+/*************************** SECTION STYLE ***************************/
+section{
+	padding: 20px 50px;
+}
+
+section form label{
+	padding:5px;
+	display:inline-block;
+	width: 80px;
+}
+
+section input[type=text]{
+	width: 300px;
+}
+
+section table{
+	border-collapse: collapse;
+  	width: 100%;
+}
+
+section table td{
+	text-align:center;
+	height:40px;
+}
+	
+section table tr:nth-child(even){
+	background-color: #f2f2f2;
+}
+
+section table tr:hover {
+	background-color: #ddd;
+}
+
+section table th {
+  	padding-top: 12px;
+  	padding-bottom: 12px;
+  	text-align: left;
+  	background-color: #78a206;
+  	color: #fff;
+  	text-align:center;
+}
+
+/*************************** NAVIGATION BAR STYLE ***************************/
+/* Modify the backgorund color 
+.navbar-custom {
+    background-color: #78a206;
+}
+
+/* Modify brand and text color 
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color: #fff;
+}*/
+
+.bg-custom {
+    background-color: #78a206;
+}
+
+.navbar-light .navbar-nav .nav-link {
+     color: #fff; 
+}
+
+.navbar-expand-lg .navbar-nav .nav-link {
+    padding-right: 25px;
+    padding-left: 25px;
+}
+
+/*
+nav ul
+	list-style:none;
+	margin:0;
+}
+
+nav ul li{
+	float:left;
+	width:14%;
+}
+
+nav ul li a{
+	display:inline-block;
+	width:100%;
+	height:20px;
+	text-decoration:none;
+	text-align:center;
+	font-weight:bold;
+	padding:8px 0 8px 0;
+	margin-left:-17px;
+	background-color:#78a206;
+    color: #fff;
+}
+
+nav ul li a:hover{
+	background-color:#78a206bd;
+}*/
+
+/*************************** HEADER STYLE ***************************/
+header{
+	margin:0;
+	overflow:hidden;
+}
+
+header .cabizq{
+	float:left;
+}
+
+header .cabcenter{
+	float:left;
+	font-weight:bold;
+	font-size:30px;
+	color: #4b6409;
+	padding: 15px;
+	text-shadow: 2px 2px 5px #b7b6b6;
+}
+
+header .cabder{
+	float:right;
+}
+
+header .cabizq .logo img{
+	width:60px;
+	margin-left:19px;
+}
+
+header .cabder .logo img{
+	width:60px;
+	margin-right:19px;
+}
+
+/*************************** FOOTER STYLE ***************************/
+footer{
+	font-size:12px;
+	padding:10px;
+	overflow:hidden;
+	background-color:#78a206;
+	color: #fff;
+}
+
+footer img{
+	height:40px;
+}
+
+footer .floatLeft {
+	float:left;
+}
+
+footer .floatRight {
+	float:right;
+}
+
+footer .floatRight .footertext {
+	margin-top: 12px;
+	margin-right: 12px;
+}
+
+footer .floatLeft .footertext {
+	margin-top: 12px;
+}
+
+
+/*************************** BUTTON ***************************/
+.centeredContainer{
+	text-align: center;
+	margin-top: 5px;
+}
+
+.button {
+	display:inline-block;    
+    margin:2px;
+  	background-color: #78a206;
+  	border: none;
+  	color: white;
+ 	padding: 10px;
+  	text-align: center;
+  	text-decoration: none;
+  	display: inline-block;
+  	cursor: pointer;
+  	width: 180px;
+  	border-radius: 8px;
+}
+
+/*************************** MEDIA QUERY ***************************/
+@media only screen and (max-width: 991px) {
+	header {
+	    display: none;
+	}
+	
+	section{
+		padding: 10px 20px;
+	}
+	
+	button {
+	  	width: auto;
+	}
+}
+
+@media only screen and (max-width: 600px) {
+	section{
+		padding: 2px;
+	}
+	
+	body{
+		font-size:10px;
+	}
+}
