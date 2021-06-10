@@ -1,12 +1,18 @@
 package modelo;
 
+import java.sql.SQLException;
+
+import dao.AlimentoDAO;
+import dao.TerrenoDAO;
+import dao.UsuarioDAO;
+
 public class Usuario {
 	
 	private int id;
 	private String nick;
 	private String password;
-	private String nombre;
-	private String apellidos;
+	private String nombre = "";
+	private String apellidos = "";
 	private String mail;
 	private String ciudad;
 	private String telefono;
@@ -15,10 +21,9 @@ public class Usuario {
 		
 	}
 
-	public Usuario(String nick, String password, String nombre, String apellidos, String mail, String ciudad,
+	public Usuario(String nick, String nombre, String apellidos, String mail, String ciudad,
 			String telefono) {
 		this.nick = nick;
-		this.password = password;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.mail = mail;
@@ -90,6 +95,36 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 
+	//polimorfismo, se trata en las clases hijo
+	public void insertar() {
+	}
 	
+	
+	public boolean esUsuarioValido(String nick, String pass) {
+		try {
+			return UsuarioDAO.getInstance().validUser(nick, pass);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public void buscarID(int id) {
+		Usuario u = null;
+		try {
+			u = UsuarioDAO.getInstance().finID(id);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		if (u != null) {
+			this.id = u.getId();
+			this.nick = u.getNick();
+			this.nombre = u.getNombre();
+			this.apellidos = u.getApellidos();
+			this.mail = u.getMail();
+			this.ciudad = u.getCiudad();
+			this.telefono = u.getTelefono();
+		}
+	}
 	
 }

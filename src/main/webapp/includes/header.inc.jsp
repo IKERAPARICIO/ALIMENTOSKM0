@@ -8,6 +8,7 @@ userrol = "gestor";
 if (userrol == null){
 	//response.sendRedirect("index.jsp");
 }
+String msgJsp = null;
 %>
 <header>
 	<div class="cabizq">

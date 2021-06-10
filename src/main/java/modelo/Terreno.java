@@ -1,5 +1,10 @@
 package modelo;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+import dao.TerrenoDAO;
+
 public class Terreno {
 
 	private int id;
@@ -15,11 +20,22 @@ public class Terreno {
 	}
 
 	public Terreno(String nombre, double metros, String ciudad, String direccion) {
-		super();
 		this.nombre = nombre;
 		this.metros = metros;
 		this.ciudad = ciudad;
 		this.direccion = direccion;
+	}
+	
+	public Terreno(int id, String nombre, double metros, String ciudad, String direccion, int idUsuario) {
+		this.id = id;
+		this.nombre = nombre;
+		this.metros = metros;
+		this.ciudad = ciudad;
+		this.direccion = direccion;
+		
+		Usuario productor = new Usuario();
+		productor.buscarID(idUsuario);
+		this.productor = productor;
 	}
 
 	public int getId() {
@@ -70,5 +86,61 @@ public class Terreno {
 		this.productor = productor;
 	}
 	
+	public int getProductorId() {
+		return productor.getId();
+	}
 	
+	//Acceso a DAO
+	public int insertar() {
+		int idTerreno = 0;
+		try {
+			idTerreno = TerrenoDAO.getInstance().insert(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return idTerreno;
+	}
+	
+	public void eliminar(int id) {
+		try {
+			TerrenoDAO.getInstance().delete(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void actualizar() {
+		try {
+			TerrenoDAO.getInstance().update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Terreno> obtenerTerrenos() {
+		ArrayList<Terreno> lista = null;
+		try {
+			lista = TerrenoDAO.getInstance().listTerrenos();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	public void buscarID(int id) {
+		Terreno t = null;
+		try {
+			t = TerrenoDAO.getInstance().finID(id);
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+		}
+		if (t != null) {
+			this.id = t.getId();
+			this.nombre = t.getNombre();
+			this.metros = t.getMetros();
+			this.ciudad = t.getCiudad();
+			this.direccion = t.getDireccion();
+			this.productor = t.getProductor();
+		}
+	}
 }

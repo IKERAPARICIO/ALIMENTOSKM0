@@ -5,4 +5,9 @@
 		<div id="msg"><%=msg%></div>
 	<%
 	}
+	if (msgJsp != null){ 
+	%>
+		<div id="msg"><%=msgJsp%></div>
+	<%
+	}
 %>

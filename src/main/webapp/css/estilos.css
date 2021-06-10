@@ -16,7 +16,7 @@ body{
     margin-top: 10px;
     padding: 10px;
     background-color: #A8DDFD;
-    width: 300px;
+    width: 400px;
     text-align: left;
     border: 1px solid #97C6E3;
     border-radius: 10px;
@@ -239,3 +239,66 @@ footer .floatLeft .footertext {
 		font-size:10px;
 	}
 }
+
+
+/*************************** LOGIN ***************************/
+.loginBack {
+	background: #dee5e1;	
+}
+
+.wrapper-login {	
+	margin-top: 30px;
+  	margin-bottom: 30px;
+}
+
+.form-signin {
+  	width: 420px;
+  	padding: 15px 35px 45px;
+  	margin: 0 auto;
+  	background-color: #fff;
+  	border: 1px solid rgba(0,0,0,0.1);  
+}
+
+.form-signin-heading {
+  	margin-bottom: 30px;
+}
+
+.form-control {
+  	position: relative;
+  	font-size: 16px;
+  	height: auto;
+  	padding: 10px;
+}
+
+.form-control-register {
+  	position: relative;
+  	font-size: 16px;
+  	height: auto;
+  	padding: 2px;
+}
+
+.wrapper-login input[type="text"] {
+	width: 95%;
+  	margin-bottom: -1px;
+  	border-bottom-left-radius: 0;
+  	border-bottom-right-radius: 0;
+}
+
+.wrapper-login input[type="password"] {
+	width: 95%;
+	margin-bottom: 20px;
+	border-top-left-radius: 0;
+	border-top-right-radius: 0;
+}
+
+.buttonLogin {
+	width: 100%;
+	font-size:18px;
+}
+
+.wrapper-login input[type=submit] {
+	margin:0px;
+	width: 97%;
+	font-size:18px;
+}
+

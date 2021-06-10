@@ -1,7 +1,6 @@
-<%@page import="modelo.Alimento"%>
-<%@page import="dao.AlimentoDAO"%>
+<%@page import="modelo.Cesta"%>
+<%@page import="dao.CestaDAO"%>
 <%@page import="java.util.ArrayList"%>
-<%@page import="java.util.Map"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
@@ -10,7 +9,7 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <meta charset="ISO-8859-1">
-<title>Listado de Alimentos</title>
+<title>Confeccionar Cestas</title>
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
@@ -18,32 +17,37 @@
 	<%@include file="/includes/header.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
-		<h1>Alimentos</h1>
+		<h1>Confeccionar Cestas</h1>
 
 		<table>
 			<tr>
-				<th>ALIMENTO</th>
-				<th>MEDIDA</th>
-				<th>PRECIO ACTUAL</th>
+				<th>ID</th>
+				<th>CESTA</th>
+				<th>FECHA</th>
+				<th>CONSUMIDOR</th>
+				<th>FECHA COMPRA</th>
+				<th>PRECIO</th>
 				<th></th>
 			</tr>
 			<%
-			AlimentoDAO ali = new AlimentoDAO();
+			CestaDAO cest = new CestaDAO();
 			
-			//Alimento alimento = new Alimento();
-			//if (alimento.obtenerAlimentos() != null){
-			//	for (Alimento a : alimento.obtenerAlimentos()) {
-			ArrayList<Alimento> alimentos = ali.listAlimentos();
-			if (alimentos != null){
-				for (Alimento a : alimentos) {
+			ArrayList<Cesta> cestas = cest.listCestas();
+			if (cestas != null){
+				for (Cesta c : cestas) {
 				%>
 				<tr>
-					<td><%=a.getNombre()%></td>
-					<td><%=a.getMedida()%></td>
-					<td><%=a.getPrecio()%></td>
+					<td><%=c.getId()%></td>
+					<td><%=c.getNombre()%></td>
+					<td><%=c.getFechaCreacion()%></td>
+					<td><%=c.getUsuarioName()%></td>
+					<td><%=c.getFechaCompra()%></td>
+					<td><%=c.getPrecio()%></td>
 					<td>
-						<a href="AlimentosController?opcion=2&id=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-						<a href="alimento.jsp?id=<%=a.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+						<% if (c.getUsuarioName() == "") {%>
+							<a href="CestasController?opcion=1&id=<%=c.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+							<a href="cesta.jsp?id=<%=c.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+						<% } %>
 					</td>
 				</tr>
 				<%
@@ -53,7 +57,7 @@
 		</table>
 		
 		<div class="centeredContainer">
-			<button class="button" onclick="document.location='alimento.jsp'">Nuevo Alimento</button>
+			<button class="button" onclick="document.location='cesta.jsp'">Nueva Cesta</button>
 		</div>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>

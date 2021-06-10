@@ -28,13 +28,13 @@
           <a class="nav-link" href="alimentos.jsp">Alimentos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Confeccionar Cestas</a>
+          <a class="nav-link" href="confeccionarCestas.jsp">Confeccionar Cestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Propuestas</a>
+          <a class="nav-link" href="propuestas.jsp">Propuestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Almacen</a>
+          <a class="nav-link" href="almacen.jsp">Almacen</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="#">Perfil</a>

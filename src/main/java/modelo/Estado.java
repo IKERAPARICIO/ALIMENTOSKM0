@@ -1,5 +1,5 @@
 package modelo;
 
 public enum Estado {
-	PROPUESTO,GESTIONADO 
+	PROPUESTO,ACEPTADO,RECHAZADO,VENDIDO,ANULADO;
 }
