@@ -22,14 +22,14 @@ public class Porcion implements Producto {
 		this.paquete = paquete;
 	}
 	
-	/*public Porcion(int id, double cantidad, int idPaquete) {
+	public Porcion(int id, double cantidad, int idPaquete) {
 		this.id = id;
 		this.cantidad = cantidad;
 
 		Paquete paquete = new Paquete();
 		paquete.buscarID(idPaquete);
 		this.paquete = paquete;
-	}*/
+	}
 	
 	public Porcion(int id, double cantidad, int idPaquete, int idCesta) {
 		this.id = id;

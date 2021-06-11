@@ -3,6 +3,8 @@ package modelo;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import dao.CestaDAO;
+import dao.PaqueteDAO;
 import dao.TerrenoDAO;
 
 public class Terreno {
@@ -24,6 +26,17 @@ public class Terreno {
 		this.metros = metros;
 		this.ciudad = ciudad;
 		this.direccion = direccion;
+	}
+	
+	public Terreno(String nombre, double metros, String ciudad, String direccion, int idUsuario) {
+		this.nombre = nombre;
+		this.metros = metros;
+		this.ciudad = ciudad;
+		this.direccion = direccion;
+		
+		Usuario productor = new Usuario();
+		productor.buscarID(idUsuario);
+		this.productor = productor;
 	}
 	
 	public Terreno(int id, String nombre, double metros, String ciudad, String direccion, int idUsuario) {
@@ -142,5 +155,41 @@ public class Terreno {
 			this.direccion = t.getDireccion();
 			this.productor = t.getProductor();
 		}
+	}
+	
+	public void quitarAlimento(int idAlimento) {
+		try {
+			TerrenoDAO.getInstance().removeAlimento(this.id, idAlimento);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void agregarAlimento(int idAlimento) {
+		try {
+			TerrenoDAO.getInstance().addAlimento(this.id, idAlimento);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public ArrayList<Alimento> obtenerAlimentos() {
+		ArrayList<Alimento> alimentos = null;
+		try {
+			alimentos = TerrenoDAO.getInstance().getAlimentos(this.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return alimentos;
+	}
+	
+	public ArrayList<Alimento> obtenerAlimentosDisponibles() {
+		ArrayList<Alimento> alimentos = null;
+		try {
+			alimentos = TerrenoDAO.getInstance().getAlimentosDisponibles(this.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return alimentos;
 	}
 }

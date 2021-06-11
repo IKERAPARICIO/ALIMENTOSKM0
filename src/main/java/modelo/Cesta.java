@@ -4,7 +4,6 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.AlimentoDAO;
 import dao.CestaDAO;
 
 public class Cesta implements Producto {
@@ -22,6 +21,11 @@ public class Cesta implements Producto {
 	}
 
 	public Cesta(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	public Cesta(int id, String nombre) {
+		this.id = id;
 		this.nombre = nombre;
 	}
 
@@ -79,7 +83,7 @@ public class Cesta implements Producto {
 			return consumidor.getId();
 	}
 	
-	public String getUsuarioName() {
+	public String getUsuarioNombre() {
 		if(consumidor == null)
 			return "";
 		else
@@ -105,12 +109,14 @@ public class Cesta implements Producto {
 		return precio;
 	}
 
-	public void insertar() {
+	public int insertar() {
+		int idCesta = 0;
 		try {
-			CestaDAO.getInstance().insert(this);
+			idCesta = CestaDAO.getInstance().insert(this);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		return idCesta;
 	}
 	
 	public void eliminar(int id) {
@@ -129,7 +135,7 @@ public class Cesta implements Producto {
 		}
 	}
 	
-	public void buscarID(int idCesta) {
+	public void buscarID(int id) {
 		Cesta c = null;
 		try {
 			c = CestaDAO.getInstance().finID(id);
@@ -153,5 +159,21 @@ public class Cesta implements Producto {
 			e.printStackTrace();
 		}
 		return porciones;
+	}
+	
+	public void quitarPorcion(int idPorcion) {
+		try {
+			CestaDAO.getInstance().removePorcion(this.id, idPorcion);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void agregarPorcion(int idPorcion) {
+		try {
+			CestaDAO.getInstance().addPorcion(this.id, idPorcion);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

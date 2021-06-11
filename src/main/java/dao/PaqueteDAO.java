@@ -199,6 +199,20 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	public ArrayList<Porcion> listPorcionesDisponibles() throws SQLException{	
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM porcion WHERE idPorcion NOT IN (SELECT idPorcion FROM cesta_porcion)");		;
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Porcion> result = null;
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+				result.add(new Porcion(rs.getInt("idPorcion"), rs.getDouble("cantidad"), rs.getInt("idPaquete")));
+		}
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
 	public ArrayList<String> getPropuestasStates() {
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add(Estado.PROPUESTO.toString());

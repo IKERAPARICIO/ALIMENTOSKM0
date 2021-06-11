@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
+import modelo.Alimento;
+import modelo.Porcion;
 import modelo.Terreno;
 import singleton.DBConnection;
 
@@ -28,13 +31,22 @@ public class TerrenoDAO {
 		int idTerreno = 0;
 		try {
 			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO terreno (nombre, idUsuario, metros, ciudad, direccion) VALUES (?,?,?,?,?)");
+					.prepareStatement("INSERT INTO terreno (nombre, idUsuario, metros, ciudad, direccion) VALUES (?,?,?,?,?)", 
+							Statement.RETURN_GENERATED_KEYS );
 			ps.setString(1, t.getNombre());
 			ps.setInt(2, t.getProductorId());
 			ps.setDouble(3, t.getMetros());
 			ps.setString(4, t.getCiudad());
 			ps.setString(5, t.getDireccion());
-			ps.executeUpdate();
+			
+			int rowAffected = ps.executeUpdate();
+			if(rowAffected == 1)
+			{
+				//obtiene el id del nuevo alimento insertado
+				ResultSet rs = ps.getGeneratedKeys();
+                if(rs.next())
+                	idTerreno = rs.getInt(1);
+			}
 			ps.close();
 		} catch (Exception e) {
 			System.out.println("Error al introducir el terreno!");
@@ -88,6 +100,58 @@ public class TerrenoDAO {
 		if (rs.next()) {
 			result = new Terreno(rs.getInt("idTerreno"), rs.getString("nombre"), rs.getDouble("metros"),
 					 rs.getString("ciudad"), rs.getString("direccion"), rs.getInt("idUsuario"));
+		}
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
+	public void removeAlimento(int idTerreno, int idAlimento) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM terreno_alimento WHERE idTerreno = ? AND idAlimento = ?");
+		ps.setInt(1, idTerreno);
+		ps.setInt(2, idAlimento);
+		ps.executeUpdate();
+		ps.close();
+	}
+	
+	public void addAlimento(int idTerreno, int idAlimento) throws SQLException {
+		try {
+			PreparedStatement ps = con
+					.prepareStatement("INSERT INTO terreno_alimento (idTerreno, idAlimento) VALUES (?,?)");
+			ps.setInt(1, idTerreno);
+			ps.setInt(2, idAlimento);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			System.out.println("Error al agregar el alimento al terreno!");
+		}
+	}
+	
+	public ArrayList<Alimento> getAlimentos(int idTerreno) throws SQLException{	
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM terreno_alimento, alimento "
+				+ "WHERE terreno_alimento.idAlimento = alimento.idAlimento AND idTerreno = ?");		
+		ps.setInt(1, idTerreno);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Alimento> result = null;
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+			result.add(new Alimento(rs.getInt("idAlimento"), rs.getString("nombre"), rs.getString("medida")));
+		}
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
+	public ArrayList<Alimento> getAlimentosDisponibles(int idTerreno) throws SQLException{	
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM alimento WHERE idAlimento NOT IN (SELECT idAlimento FROM terreno_alimento WHERE idTerreno = ? )");		;
+		ps.setInt(1, idTerreno);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Alimento> result = null;
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+			result.add(new Alimento(rs.getInt("idAlimento"), rs.getString("nombre"), rs.getString("medida")));
 		}
 		rs.close();
 		ps.close();

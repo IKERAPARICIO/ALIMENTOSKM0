@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import modelo.Cesta;
@@ -29,12 +30,19 @@ public class CestaDAO {
 		int idCesta = 0;
 		try {
 			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion) VALUES (?,?,?)");
+					.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS );
 			ps.setString(1, c.getNombre());
 			ps.setInt(2, c.getUsuarioId());
 			ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
 			
-			ps.executeUpdate();
+			int rowAffected = ps.executeUpdate();
+			if(rowAffected == 1)
+			{
+				//obtiene el id del nuevo alimento insertado
+				ResultSet rs = ps.getGeneratedKeys();
+                if(rs.next())
+                	idCesta = rs.getInt(1);
+			}
 			ps.close();
 		} catch (Exception e) {
 			System.out.println("Error al introducir el cesta!");
@@ -106,6 +114,27 @@ public class CestaDAO {
 		rs.close();
 		ps.close();
 		return result;
+	}
+	
+	public void removePorcion(int idCesta, int idPorcion) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("DELETE FROM cesta_porcion WHERE idCesta = ? AND idPorcion = ?");
+		ps.setInt(1, idCesta);
+		ps.setInt(2, idPorcion);
+		ps.executeUpdate();
+		ps.close();
+	}
+	
+	public void addPorcion(int idCesta, int idPorcion) throws SQLException {
+		try {
+			PreparedStatement ps = con
+					.prepareStatement("INSERT INTO cesta_porcion (idCesta, idPorcion) VALUES (?,?)");
+			ps.setInt(1, idCesta);
+			ps.setInt(2, idPorcion);
+			ps.executeUpdate();
+			ps.close();
+		} catch (Exception e) {
+			System.out.println("Error al agregar la porción a la cesta!");
+		}
 	}
 	
 }

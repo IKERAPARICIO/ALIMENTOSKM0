@@ -82,7 +82,8 @@ public class LoginController extends HttpServlet {
 		else
 		{
 			//alta de Consumidor
-			Consumidor consumidor = new Consumidor(nick,nombre,apellidos,mail,ciudad,telefono);
+			String sRol = "CONSUMIDOR";
+			Consumidor consumidor = new Consumidor(nick,pass,nombre,apellidos,mail,ciudad,telefono,sRol);
 			consumidor.setPassword(pass);
 			consumidor.insertar();
 			

@@ -5,9 +5,10 @@ import java.sql.SQLException;
 import dao.AlimentoDAO;
 import dao.TerrenoDAO;
 import dao.UsuarioDAO;
+import modelo.Rol;
 
 public class Usuario {
-	
+		
 	private int id;
 	private String nick;
 	private String password;
@@ -16,19 +17,35 @@ public class Usuario {
 	private String mail;
 	private String ciudad;
 	private String telefono;
+	private Rol rol;
 	
 	public Usuario() {
 		
 	}
 
-	public Usuario(String nick, String nombre, String apellidos, String mail, String ciudad,
-			String telefono) {
+	public Usuario(String nick, String password, String nombre, String apellidos, String mail, 
+			String ciudad, String telefono, String sRol) {
 		this.nick = nick;
+		this.password = password;
 		this.nombre = nombre;
 		this.apellidos = apellidos;
 		this.mail = mail;
 		this.ciudad = ciudad;
 		this.telefono = telefono;
+		this.rol = this.getRolFromString(sRol);
+	}
+	
+	public Usuario(int id, String nick, String password, String nombre, String apellidos, String mail, 
+			String ciudad, String telefono, String sRol) {
+		this.id = id;
+		this.nick = nick;
+		this.password = password;
+		this.nombre = nombre;
+		this.apellidos = apellidos;
+		this.mail = mail;
+		this.ciudad = ciudad;
+		this.telefono = telefono;
+		this.rol = this.getRolFromString(sRol);
 	}
 
 	public int getId() {
@@ -95,10 +112,45 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 
-	//polimorfismo, se trata en las clases hijo
-	public void insertar() {
+	public Rol getRol() {
+		return rol;
+	}
+
+	public void setRol(Rol rol) {
+		this.rol = rol;
 	}
 	
+	public String getRolName() {
+		return rol.toString();
+	}
+
+	public void insertar() {
+		try {
+			UsuarioDAO.getInstance().insert(this,"","");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void eliminar(int id) {
+		try {
+			UsuarioDAO.getInstance().delete(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void actualizar() {
+		try {
+			UsuarioDAO.getInstance().update(this,"","");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public String getNombreCompleto () {
+		return this.getNombre() + " " + this.getApellidos();
+	}
 	
 	public boolean esUsuarioValido(String nick, String pass) {
 		try {
@@ -124,7 +176,32 @@ public class Usuario {
 			this.mail = u.getMail();
 			this.ciudad = u.getCiudad();
 			this.telefono = u.getTelefono();
+			this.rol = u.getRol();
 		}
 	}
 	
+	public Rol getRolFromString(String sRol) {
+		if (sRol.equals(Rol.CONSUMIDOR.toString())) {
+			return Rol.CONSUMIDOR;
+		}
+		else if (sRol.equals(Rol.PRODUCTOR.toString())) {
+			return Rol.PRODUCTOR;
+		}
+		else if (sRol.equals(Rol.GESTOR.toString())) {
+			return Rol.GESTOR;
+		}
+		else {
+			return Rol.USUARIO;
+		}
+	}
+	
+	public String obtenerRol(int id) {
+		String sRol = "";
+		try {
+			sRol = UsuarioDAO.getInstance().getRol(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return sRol;
+	}
 }
