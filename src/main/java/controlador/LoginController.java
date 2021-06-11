@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.UsuarioDAO;
 import modelo.Consumidor;
@@ -35,6 +36,9 @@ public class LoginController extends HttpServlet {
 			case "2":
 				registroUsuario(request, response);
 				break;
+			case "3":
+				accesoInvitado(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -44,14 +48,26 @@ public class LoginController extends HttpServlet {
 		String nick = request.getParameter("nick");
 		String pass = request.getParameter("pass");
 		//if(username.isEmpty() || password.isEmpty() )
-		Usuario u = new Usuario();
-		boolean status = u.esUsuarioValido(nick, pass);
+		Usuario usuario = new Usuario();
+		int idUsuario = usuario.idUsuarioValido(nick, pass);
 
-		if(status)
+		if(idUsuario != 0)
 		{ 
+			usuario.buscarID(idUsuario);
 			//session.setAttribute("session","TRUE");  
-			
-			RequestDispatcher req = request.getRequestDispatcher("welcome.jsp");
+			HttpSession sesion = request.getSession();
+            sesion.setAttribute("usuario", usuario);
+            sesion.setAttribute("srol", usuario.getRolName());
+            
+            String vista = "index.jsp";
+            if (usuario.getRolName().equals("CONSUMIDOR"))
+            	vista = "cestas.jsp";
+            else if (usuario.getRolName().equals("PRODUCTOR"))
+            	vista = "terrenos.jsp";
+            else if (usuario.getRolName().equals("GESTOR"))
+            	vista = "usuarios.jsp";
+           
+			RequestDispatcher req = request.getRequestDispatcher(vista);
 			req.forward(request, response);
 		}
 		else
@@ -61,6 +77,15 @@ public class LoginController extends HttpServlet {
 			RequestDispatcher req = request.getRequestDispatcher("index.jsp");
 			req.include(request, response);
 		}
+	}
+	
+	private void accesoInvitado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		HttpSession sesion = request.getSession();
+		sesion.setAttribute("srol", "INVITADO");
+        String vista = "usuarios.jsp";
+        
+		RequestDispatcher req = request.getRequestDispatcher(vista);
+		req.forward(request, response);
 	}
 
 	private void registroUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

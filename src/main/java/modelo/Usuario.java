@@ -152,13 +152,14 @@ public class Usuario {
 		return this.getNombre() + " " + this.getApellidos();
 	}
 	
-	public boolean esUsuarioValido(String nick, String pass) {
+	public int idUsuarioValido(String nick, String pass) {
+		int id = 0;
 		try {
-			return UsuarioDAO.getInstance().validUser(nick, pass);
+			id = UsuarioDAO.getInstance().idValidUser(nick, pass);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return false;
 		}
+		return id;
 	}
 
 	public void buscarID(int id) {

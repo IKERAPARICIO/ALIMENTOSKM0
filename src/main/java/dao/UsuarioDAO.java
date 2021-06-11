@@ -27,20 +27,20 @@ public class UsuarioDAO {
 		return instance;
 	}
 	
-	public boolean validUser(String nick, String pass) throws SQLException {
-		boolean valid = false;
+	public int idValidUser(String nick, String pass) throws SQLException {
+		int id = 0;
 		
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM usuario WHERE nick = ? AND pass = ?");
+		PreparedStatement ps = con.prepareStatement("SELECT idUsuario FROM usuario WHERE nick = ? AND pass = ?");
 		ps.setString(1, nick);
 		ps.setString(2, pass);
 		ResultSet rs = ps.executeQuery();
 		if (rs.next()) {
-			valid = true;
+			id = rs.getInt("idUsuario");
 		}
 		rs.close();
 		ps.close();
 		
-		return valid;
+		return id;
 	}
 	
 	public int insert(Usuario u, String dni, String direccion) throws SQLException {
