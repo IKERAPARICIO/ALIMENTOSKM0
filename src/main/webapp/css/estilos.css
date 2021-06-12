@@ -302,3 +302,30 @@ footer .floatLeft .footertext {
 	font-size:18px;
 }
 
+/*************************** CESTAS ***************************/
+.precio{
+	display: inline-block;
+	width: 100px;
+	height: 40px;
+	padding: 4px;
+	border: 1px solid #78a206;    
+	background-color: #dee5e1;
+	float:right;
+	text-align: center
+}
+
+.precio-icono{
+	margin-top: 3px;
+	margin-left: 10px;
+	display: inline-block;
+	float:right;
+}
+
+.precio img{
+	margin-bottom: 5px;
+}
+
+.btn-link {
+    color: #78a206;
+    text-decoration: none;
+}

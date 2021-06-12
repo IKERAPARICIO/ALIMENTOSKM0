@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import modelo.Rol;
 import modelo.Usuario;
@@ -37,6 +39,12 @@ public class UsuariosController extends HttpServlet {
 				break;
 			case "3":
 				actualizarUsuario(request, response);
+				break;
+			case "4":
+				cargarPerfil(request, response);
+				break;
+			case "5":
+				cargarUsuarios(request, response);
 				break;
 			default:
 				System.out.println("Opcion no valida.");
@@ -102,8 +110,9 @@ public class UsuariosController extends HttpServlet {
 	 */
 	private void actualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario actualizado.";
+		int id = 0;
 		try {
-			int id = Integer.parseInt(request.getParameter("id"));
+			id = Integer.parseInt(request.getParameter("id"));
 			String nick = request.getParameter("nick");
 			String password = request.getParameter("password");
 			String nombre = request.getParameter("nombre");
@@ -128,8 +137,26 @@ public class UsuariosController extends HttpServlet {
 		} 		
 		
 		request.setAttribute("mensaje",msg);
-		RequestDispatcher vista = request.getRequestDispatcher("usuarios.jsp");
+		RequestDispatcher vista = request.getRequestDispatcher("usuario.jsp?id="+id);
 		vista.forward(request, response);
+	}
+	
+	private void cargarPerfil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		
+        String vista = "usuario.jsp?id="+usuario.getId();
+        
+		RequestDispatcher req = request.getRequestDispatcher(vista);
+		req.forward(request, response);
+	}
+	
+	private void cargarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String rol = request.getParameter("rol");
+		
+		request.setAttribute("rol",rol);
+		RequestDispatcher req = request.getRequestDispatcher("usuarios.jsp");
+		req.forward(request, response);
 	}
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

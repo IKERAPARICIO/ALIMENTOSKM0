@@ -7,19 +7,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="#">Cestas</a>
+          <a class="nav-link" href="CestasController?opcion=9">Cestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Productores</a>
+          <a class="nav-link" href="UsuariosController?opcion=5&rol=PRODUCTOR">Productores</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Mis Cestas</a>
+          <a class="nav-link" href="CestasController?opcion=8">Mis Cestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Carrito</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Perfil</a>
+          <a class="nav-link" href="UsuariosController?opcion=4">Perfil</a>
         </li>
       </ul>
     </div>

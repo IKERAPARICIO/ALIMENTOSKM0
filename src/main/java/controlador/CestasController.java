@@ -1,6 +1,8 @@
 package controlador;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -8,8 +10,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
+import dao.CestaDAO;
 import modelo.Cesta;
+import modelo.Usuario;
 
 /**
  * Servlet implementation class CestasController
@@ -24,8 +29,9 @@ public class CestasController extends HttpServlet {
 
     /**
      * Dependiendo la opcion indicada, da de alta un cesta, lo elimina o actualiza
+     * @throws SQLException 
      */
-	private void procesarCestas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void procesarCestas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
 				eliminarCesta(request, response);
@@ -45,16 +51,15 @@ public class CestasController extends HttpServlet {
 			case "6":
 				agregarPorcion(request, response);
 				break;
-			/*
-			case "4":
-				porcionesCesta(request, response);
+			case "7":
+				comprarCesta(request, response);
 				break;
-			case "5":
-				crearPorciones(request, response);
+			case "8":
+				verMisCestas(request, response);
 				break;
-			case "6":
-				eliminarPorcion(request, response);
-				break;;*/
+			case "9":
+				verCestasDisponibles(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -178,6 +183,59 @@ public class CestasController extends HttpServlet {
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
 	}
+	
+	private void comprarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String msg = null;
+		int id = 0;
+		try {
+			id = Integer.parseInt(request.getParameter("id"));
+			
+			Cesta cesta = new Cesta();
+			cesta.buscarID(id);
+			cesta.comprar(id);
+		} catch (NumberFormatException e) {
+			msg = "ERROR al comprar la cesta.";
+		}
+		
+		request.setAttribute("id",id);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
+		vista.forward(request, response);
+	}
+	
+	private void verMisCestas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+		String msg = null;
+		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		try {
+			CestaDAO cDAO = new CestaDAO();
+			listaCestas = cDAO.listMyCestas(usuario.getId());
+		} catch (NumberFormatException e) {
+			msg = "ERROR al cargar las cestas.";
+		}
+		
+		request.setAttribute("listaCestas",listaCestas);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
+		vista.forward(request, response);
+	}
+	
+	private void verCestasDisponibles(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+		String msg = null;
+		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
+		try {
+			CestaDAO cDAO = new CestaDAO();
+			listaCestas = cDAO.listCestasDisponibles();
+		} catch (NumberFormatException e) {
+			msg = "ERROR al cargar las cestas.";
+		}
+		
+		request.setAttribute("listaCestas",listaCestas);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
+		vista.forward(request, response);
+	}
 /*	
 	private void porcionesCesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
@@ -259,10 +317,20 @@ public class CestasController extends HttpServlet {
 	*/
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarCestas(request, response);
+		try {
+			procesarCestas(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarCestas(request, response);
+		try {
+			procesarCestas(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}    
 }

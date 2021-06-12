@@ -29,10 +29,14 @@
 				<th></th>
 			</tr>
 			<%
-			UsuarioDAO uDAO = new UsuarioDAO();
 			String rol = "";
-			ArrayList<Usuario> usuarios = uDAO.listUsuarios(rol);
+			String getRol = request.getParameter("rol");
+			if (getRol != null){
+				rol = getRol;
+			}
 			
+			UsuarioDAO uDAO = new UsuarioDAO();
+			ArrayList<Usuario> usuarios = uDAO.listUsuarios(rol);
 			if (usuarios != null){
 				for (Usuario u : usuarios) {
 				%>
@@ -43,8 +47,10 @@
 					<td><%=u.getTelefono()%></td>
 					<td><%=u.getMail()%></td>
 					<td>
-						<a href="UsuariosController?opcion=2&id=<%=u.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-						<a href="usuario.jsp?id=<%=u.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+						<% if(isGestor){ %>
+							<a href="UsuariosController?opcion=2&id=<%=u.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+							<a href="usuario.jsp?id=<%=u.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+						<% } %>
 					</td>
 				</tr>
 				<%
@@ -52,9 +58,11 @@
 			}
 			%>
 		</table>
-		<div class="centeredContainer">
-			<button class="button" onclick="document.location='usuario.jsp'">Nuevo Usuario</button>
-		</div>
+		<% if(isGestor){ %>
+			<div class="centeredContainer">
+				<button class="button" onclick="document.location='usuario.jsp'">Nuevo Usuario</button>
+			</div>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

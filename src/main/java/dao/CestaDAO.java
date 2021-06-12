@@ -86,6 +86,39 @@ public class CestaDAO {
 		return result;
 	}
 	
+	public ArrayList<Cesta> listCestasDisponibles() throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = 0 ORDER BY fechaCreacion");
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Cesta> result = null;
+		
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion")));
+		}
+		
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
+	public ArrayList<Cesta> listMyCestas(int idUsuario) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = ? ORDER BY fechaCreacion");
+		ps.setInt(1, idUsuario);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Cesta> result = null;
+		
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion")));
+		}
+		
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
 	public Cesta finID(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM cesta WHERE idCesta = ?");
 		ps.setInt(1, id);
@@ -135,6 +168,16 @@ public class CestaDAO {
 		} catch (Exception e) {
 			System.out.println("Error al agregar la porción a la cesta!");
 		}
+	}
+	
+	public void addUser(int idCesta, int idUsuario) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE cesta SET idUsuario = ?, fechaCompra = ? "
+													+ "WHERE idCesta = ?");
+		ps.setInt(1, idUsuario);
+		ps.setDate(2, new java.sql.Date(System.currentTimeMillis()));
+		ps.setInt(3, idCesta);
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 }

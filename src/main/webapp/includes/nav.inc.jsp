@@ -2,12 +2,14 @@
 //String msgJsp = null;
 HttpSession sesion = request.getSession();
 String srol = (String)sesion.getAttribute("srol");
+boolean isGestor = false;
 if (srol==null){ // si el usuario no existe, vamos a login
 	response.sendRedirect("index.jsp");
 }
 else{
 	switch(srol){
 	     case "GESTOR":
+	    	isGestor = true;
 	      %><%@include file="/includes/nav_gestor.inc.jsp"%><%
 	     	break; 
 	     case "PRODUCTOR":

@@ -172,6 +172,7 @@ public class Usuario {
 		if (u != null) {
 			this.id = u.getId();
 			this.nick = u.getNick();
+			this.password = u.getPassword();
 			this.nombre = u.getNombre();
 			this.apellidos = u.getApellidos();
 			this.mail = u.getMail();

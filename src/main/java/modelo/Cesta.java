@@ -29,6 +29,12 @@ public class Cesta implements Producto {
 		this.nombre = nombre;
 	}
 
+	public Cesta(int id, String nombre, Date fechaCreacion) {
+		this.id = id;
+		this.nombre = nombre;
+		this.fechaCreacion = fechaCreacion;
+	}
+	
 	public Cesta(int id, String nombre, Date fechaCreacion, Date fechaCompra, int idUsuario) {
 		this.id = id;
 		this.nombre = nombre;
@@ -172,6 +178,14 @@ public class Cesta implements Producto {
 	public void agregarPorcion(int idPorcion) {
 		try {
 			CestaDAO.getInstance().addPorcion(this.id, idPorcion);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void comprar(int idUsuario) {
+		try {
+			CestaDAO.getInstance().addUser(this.id, idUsuario);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

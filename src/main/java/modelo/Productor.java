@@ -73,6 +73,7 @@ public class Productor extends Usuario {
 			super.setId(u.getId());
 			super.setNick(u.getNick());
 			super.setNombre(u.getNombre());
+			super.setPassword(u.getPassword());
 			super.setApellidos(u.getApellidos());
 			super.setMail(u.getMail());
 			super.setCiudad(u.getCiudad());

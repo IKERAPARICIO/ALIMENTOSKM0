@@ -61,7 +61,7 @@ public class LoginController extends HttpServlet {
             
             String vista = "index.jsp";
             if (usuario.getRolName().equals("CONSUMIDOR"))
-            	vista = "cestas.jsp";
+            	vista = "CestasController?opcion=9";
             else if (usuario.getRolName().equals("PRODUCTOR"))
             	vista = "terrenos.jsp";
             else if (usuario.getRolName().equals("GESTOR"))
@@ -82,9 +82,8 @@ public class LoginController extends HttpServlet {
 	private void accesoInvitado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		HttpSession sesion = request.getSession();
 		sesion.setAttribute("srol", "INVITADO");
-        String vista = "usuarios.jsp";
         
-		RequestDispatcher req = request.getRequestDispatcher(vista);
+		RequestDispatcher req = request.getRequestDispatcher("CestasController?opcion=9");
 		req.forward(request, response);
 	}
 

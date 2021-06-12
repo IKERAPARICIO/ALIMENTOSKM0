@@ -1,15 +1,3 @@
-<!--<nav>
-	<ul>
-		<li><a href="productores.jsp">Usuarios</a></li>
-		<li><a href="terrenos.jsp">Terrenos</a></li>
-		<li><a href="alimentos.jsp">Alimentos</a></li>
-		<li><a href="confeccionarCestas.jsp">Confeccionar Cestas</a></li>
-		<li><a href="propuestas.jsp">Propuestas</a></li>
-		<li><a href="almacen.jsp">Almacen</a></li>
-		<li><a href="perfil.jsp">Perfil</a></li>
-	</ul>
-</nav>-->
-
 <nav class="navbar navbar-expand-lg navbar-light bg-custom">
   <div class="container-fluid">
     <a class="navbar-brand" href="#"></a>
@@ -37,7 +25,7 @@
           <a class="nav-link" href="almacen.jsp">Almacen</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Perfil</a>
+          <a class="nav-link" href="UsuariosController?opcion=4">Perfil</a>
         </li>
       </ul>
     </div>

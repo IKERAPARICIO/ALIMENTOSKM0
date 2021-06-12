@@ -88,7 +88,7 @@ function showHideAttributes(){
 			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
 			<label for="apellidos">apellidos:</label><input type="text" name="apellidos" value="<%=apellidos%>" id="apellidos"><br>
 			<label for="nick">nick:</label><input type="text" name="nick" value="<%=nick%>" id="nick"><br>
-			<label for="password">pass:</label><input type="password" name="password" value="<%=pass%>" id="password"><br>
+			<label for="password">pass:</label><input type="text" name="password" value="<%=pass%>" id="password"><br>
 			<label for="rol">Rol:</label>
 			<select id="sRol" name="sRol" onload="showHideAttributes()" onchange="showHideAttributes(this)">
 				<% for(String rol : roles){ %>
