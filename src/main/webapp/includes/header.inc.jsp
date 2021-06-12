@@ -1,14 +1,15 @@
 <%
-String userrol=(String)session.getAttribute("userrol");
-userrol = "gestor";
-//userrol = "produc";
-//userrol = "consum";
-//userrol = "";
-
-if (userrol == null){
-	//response.sendRedirect("index.jsp");
-}
+HttpSession sesion = request.getSession();
+int nivelAcceso = 0;
 String msgJsp = null;
+//si el usuario no existe, vamos a login
+if (sesion.getAttribute("nivelAcceso")==null){ 
+	response.sendRedirect("index.jsp");
+}
+else{
+	//devulve: 1 para invitado, 3 consumidor, 5 productor y 9 gestor
+	nivelAcceso = (int)sesion.getAttribute("nivelAcceso");
+}
 %>
 <header>
 	<div class="cabizq">
@@ -24,14 +25,14 @@ String msgJsp = null;
 	<div class=cabder>
 		<div class="logo">
 			<%
-	      	switch(userrol){
-	            case "gestor":
+			switch(nivelAcceso){
+	            case 9:
 		            %><img src="img/gestor.png" alt="biblioteca" title="imgRol">
 		            <%break; 
-	            case "produc":
+	            case 5:
 	            	%><img src="img/productor.png" alt="biblioteca" title="imgRol">
 	            	<%break; 
-	            case "consum":
+	            case 3:
 	            	%><img src="img/consumidor.png" alt="biblioteca" title="imgRol">
 	            	<%break; 
 	            default :%><%

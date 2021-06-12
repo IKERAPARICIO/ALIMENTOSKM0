@@ -15,6 +15,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
+	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Usuarios</h1>
@@ -47,7 +48,7 @@
 					<td><%=u.getTelefono()%></td>
 					<td><%=u.getMail()%></td>
 					<td>
-						<% if(isGestor){ %>
+						<% if(nivelAcceso > 8){ %>
 							<a href="UsuariosController?opcion=2&id=<%=u.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<a href="usuario.jsp?id=<%=u.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
 						<% } %>
@@ -58,7 +59,7 @@
 			}
 			%>
 		</table>
-		<% if(isGestor){ %>
+		<% if(nivelAcceso > 8){ %>
 			<div class="centeredContainer">
 				<button class="button" onclick="document.location='usuario.jsp'">Nuevo Usuario</button>
 			</div>

@@ -15,7 +15,7 @@ function setGuestAccess(){
 	document.getElementById("loginForm").submit(); 
 }
 </script>
-<%@include file="/includes/header.inc.jsp"%>
+<%@include file="/includes/headerLogin.inc.jsp"%>
 <%@include file="/includes/msg.inc.jsp"%>
 <div class="wrapper-login">
     <form class="form-signin" action="LoginController" id="loginForm" method="post">       

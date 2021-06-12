@@ -21,6 +21,7 @@
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
+	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Almacén</h1>

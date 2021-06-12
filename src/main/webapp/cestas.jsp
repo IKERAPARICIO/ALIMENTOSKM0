@@ -21,6 +21,7 @@ function confirmMsg(){
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
+	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Listado de Cestas</h1>
@@ -40,9 +41,11 @@ function confirmMsg(){
 				        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse<%=cId%>" aria-expanded="false" aria-controls="collapse<%=cId%>">
 				          	<%=cesta.getNombre()%>
 				        </button>
-				        <div class="precio-icono">
-				        	<a href="CestasController?opcion=7&id=<%=cesta.getId()%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
-				      	</div>
+				        <% if(nivelAcceso > 1){ %>
+					        <div class="precio-icono">
+					        	<a href="CestasController?opcion=7&id=<%=cesta.getId()%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
+					      	</div>
+					    <% } %>
 						<div class="precio">
 				        	<%=cPrecio%>&nbsp;<img src="img/euro.png" alt="Comprar" width="16px">
 				        </div>

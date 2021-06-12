@@ -39,6 +39,9 @@ public class LoginController extends HttpServlet {
 			case "3":
 				accesoInvitado(request, response);
 				break;
+			case "4":
+				cargarPaginaInicio(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -54,18 +57,19 @@ public class LoginController extends HttpServlet {
 		if(idUsuario != 0)
 		{ 
 			usuario.buscarID(idUsuario);
+			int nivelAcceso = usuario.obtenerPermisosRol();
 			//session.setAttribute("session","TRUE");  
 			HttpSession sesion = request.getSession();
             sesion.setAttribute("usuario", usuario);
-            sesion.setAttribute("srol", usuario.getRolName());
+            sesion.setAttribute("nivelAcceso", nivelAcceso);
             
             String vista = "index.jsp";
-            if (usuario.getRolName().equals("CONSUMIDOR"))
-            	vista = "CestasController?opcion=9";
-            else if (usuario.getRolName().equals("PRODUCTOR"))
-            	vista = "terrenos.jsp";
-            else if (usuario.getRolName().equals("GESTOR"))
+            if (nivelAcceso > 8)
             	vista = "usuarios.jsp";
+            else if (nivelAcceso > 4)
+            	vista = "terrenos.jsp";
+            else if (nivelAcceso > 2)
+            	vista = "CestasController?opcion=9";
            
 			RequestDispatcher req = request.getRequestDispatcher(vista);
 			req.forward(request, response);
@@ -81,7 +85,7 @@ public class LoginController extends HttpServlet {
 	
 	private void accesoInvitado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		HttpSession sesion = request.getSession();
-		sesion.setAttribute("srol", "INVITADO");
+		sesion.setAttribute("nivelAcceso", 1);
         
 		RequestDispatcher req = request.getRequestDispatcher("CestasController?opcion=9");
 		req.forward(request, response);
@@ -117,6 +121,14 @@ public class LoginController extends HttpServlet {
 		}
 	}
 
+	private void cargarPaginaInicio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		//HttpSession sesion = request.getSession();
+		//sesion.invalidate();
+		
+		request.setAttribute("mensaje","No tiene permisos para ver la página indicada.");
+		RequestDispatcher req = request.getRequestDispatcher("index.jsp");
+		req.forward(request, response);
+	}
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */

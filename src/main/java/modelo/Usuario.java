@@ -206,4 +206,24 @@ public class Usuario {
 		}
 		return sRol;
 	}
+	
+	/**
+	 * Para establecer los permisos en las paginas jsp se establece un sistema numérico de prioridades
+	 * A más valor más privilegios: 1 para Invitado, 3 Consumidor, 5 Productor y 9 Administrador
+	 * @return devuelve un entero con el valor del priviegio del usuario
+	 */
+	public int obtenerPermisosRol() {
+		if (this.rol.equals(Rol.CONSUMIDOR)) {
+			return 3;
+		}
+		else if (this.rol.equals(Rol.PRODUCTOR)) {
+			return 5;
+		}
+		else if (this.rol.equals(Rol.GESTOR)) {
+			return 9;
+		}
+		else {
+			return 1;
+		}
+	}
 }

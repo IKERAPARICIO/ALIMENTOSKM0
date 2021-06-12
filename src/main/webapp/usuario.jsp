@@ -27,6 +27,7 @@ function showHideAttributes(){
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
+	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
 		int id = 0;
@@ -89,12 +90,14 @@ function showHideAttributes(){
 			<label for="apellidos">apellidos:</label><input type="text" name="apellidos" value="<%=apellidos%>" id="apellidos"><br>
 			<label for="nick">nick:</label><input type="text" name="nick" value="<%=nick%>" id="nick"><br>
 			<label for="password">pass:</label><input type="text" name="password" value="<%=pass%>" id="password"><br>
-			<label for="rol">Rol:</label>
-			<select id="sRol" name="sRol" onload="showHideAttributes()" onchange="showHideAttributes(this)">
-				<% for(String rol : roles){ %>
-					<option value="<%=rol%>" <%if(rol.equals(sRol)){%> selected <%} %>><%=rol%></option>
-			  	<% } %>
-			</select><br>
+			<% if(nivelAcceso > 8){ %>
+				<label for="rol">Rol:</label>
+				<select id="sRol" name="sRol" onload="showHideAttributes()" onchange="showHideAttributes(this)">
+					<% for(String rol : roles){ %>
+						<option value="<%=rol%>" <%if(rol.equals(sRol)){%> selected <%} %>><%=rol%></option>
+				  	<% } %>
+				</select><br>
+			<% } %>
 			<label for="mail">mail:</label><input type="text" name="mail" value="<%=mail%>" id="mail"><br>
 			<label for="ciudad">ciudad:</label><input type="text" name="ciudad" value="<%=ciudad%>" id="ciudad"><br>
 			<label for="telefono">telefono:</label><input type="text" name="telefono" value="<%=telefono%>" id="telefono"><br>
