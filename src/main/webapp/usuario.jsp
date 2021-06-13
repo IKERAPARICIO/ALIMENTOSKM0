@@ -30,7 +30,7 @@ function showHideAttributes(){
 	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
-		int id = 0;
+		int id = 0; 
 		int option = 1;
 		String nombre = "";
 		String apellidos = "";
@@ -42,16 +42,14 @@ function showHideAttributes(){
 		String telefono = "";
 		String dni = "";
 		String direccion = "";
-
-		String sId = request.getParameter("id");
 		
 		UsuarioDAO uDAO = new UsuarioDAO();
 		ArrayList<String> roles = uDAO.getRols();
+
 		//actualizar el usuario
-		if(sId != null){
+		if (request.getAttribute("id") != null){
+			id = (int)request.getAttribute("id");
 			option = 3;
-			id = Integer.parseInt(sId);
-			
 			Usuario usuario = new Usuario();
 			String userRol = usuario.obtenerRol(id);
 			

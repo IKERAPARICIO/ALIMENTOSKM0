@@ -21,21 +21,20 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
 		int option = 3;
+		int id = 0;
 		String nombre = "";
 		Date fechaCreacion = null;
 		String nombreUsuario = "";
 		Date fechaCompra = null;
 		double precio = 0;
 		
-		//String sId = request.getParameter("id");
-		int id = (int)request.getAttribute("id");
-		
 		Cesta cesta = new Cesta();
 		//actualizar la cesta
-		if(id != 0){
+		if(request.getAttribute("cesta") != null){
+			cesta = (Cesta)request.getAttribute("cesta");
 			option = 4;
-			//id = Integer.parseInt(sId);
-			cesta.buscarID(id);
+			
+			id = cesta.getId();
 			nombre = cesta.getNombre();
 			fechaCreacion = cesta.getFechaCreacion();
 			nombreUsuario = cesta.getUsuarioNombre();
@@ -78,13 +77,13 @@
 				<%
 				for (Porcion p : porciones) { %>
 					<tr>
-						<td><%=p.getPaquete().getAlimento().getNombre()%></td>
+						<td><%=p.getNombreAlimento()%></td>
 						<td><%=p.getCantidad()%></td>
 						<td><%=p.getPrecio()%></td>
-						<td><%=p.getPaquete().getTerreno().getProductor().getNombre()%></td>
-						<td><%=p.getPaquete().getFechaAceptacion()%></td>
+						<td><%=p.getNombreProductor()%></td>
+						<td><%=p.getFechaAceptacionPaquete()%></td>
 						<td>
-							<% if (nombreUsuario != ""){ %>
+							<% if ("".equals(nombreUsuario)){ %>
 								<a href="CestasController?opcion=2&idCesta=<%=id%>&idPorcion=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<% } %>
 						</td>
@@ -93,7 +92,7 @@
 				</table><%
 			} %>
 			<div class="centeredContainer">
-				<button class="button" onclick="document.location='cestaPorciones.jsp?id=<%=id%>'">Nueva Porción</button>
+				<button class="button" onclick="document.location='CestasController?opcion=11&id=<%=id%>'">Nueva Porción</button>
 			</div>
 		<%}
 		%>

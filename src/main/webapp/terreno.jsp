@@ -30,16 +30,15 @@
 		String ciudad = "";
 		String direccion = "";
 		
-		//String sId = request.getParameter("id");
-		int id = (int)request.getAttribute("id");
-		
+		int id = 0;
 		Terreno terreno = new Terreno();
 		//actualizar el terreno
-		if(id != 0){
+		if(request.getAttribute("terreno") != null){
+			terreno = (Terreno)request.getAttribute("terreno");
 			option = 3;
-			terreno.buscarID(id);
+			id = terreno.getId();
 			nombre = terreno.getNombre();
-			productor = terreno.getProductor().getNombre();
+			productor = terreno.getNombreProductor();
 			idProductor = terreno.getProductorId();
 			metros = terreno.getMetros();
 			ciudad = terreno.getCiudad();

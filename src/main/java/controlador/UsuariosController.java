@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import dao.UsuarioDAO;
 import modelo.Rol;
 import modelo.Usuario;
 import modelo.Productor;
@@ -28,8 +30,9 @@ public class UsuariosController extends HttpServlet {
     
     /**
      * Dependiendo la opcion indicada, da de alta un usuario, lo elimina o actualiza
+     * @throws SQLException 
      */
-	private void procesarUsuarios(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void procesarUsuarios(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
 				altaUsuario(request, response);
@@ -46,6 +49,9 @@ public class UsuariosController extends HttpServlet {
 			case "5":
 				cargarUsuarios(request, response);
 				break;
+			case "6":
+				cargarPaginaUsuario(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -53,9 +59,11 @@ public class UsuariosController extends HttpServlet {
 	
 	/**
 	 * Da de alta el usuario segun los parametros pasados y vuelve a la pagina de alta con un mensaje de resultado.
+	 * @throws SQLException 
 	 */
 	private void altaUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario incluido.";
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 		try {		
 			String nick = request.getParameter("nick");
 			String password = request.getParameter("password");
@@ -71,16 +79,18 @@ public class UsuariosController extends HttpServlet {
 				String direccion = request.getParameter("direccion");
 				Productor usuario = new Productor(nick, password, nombre, apellidos, mail, ciudad, telefono, sRol, dni, direccion);
 				usuario.insertar();
+				usuarios = usuario.obtenerUsuarios("");
 			}
 			else {
 				Usuario usuario = new Usuario(nick, password, nombre, apellidos, mail, ciudad, telefono, sRol);
 				usuario.insertar();
+				usuarios = usuario.obtenerUsuarios("");
 			}
-			
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el usuario.";
 		}
 		
+		request.setAttribute("usuarios",usuarios);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("usuarios.jsp");
 		vista.forward(request, response);
@@ -88,18 +98,22 @@ public class UsuariosController extends HttpServlet {
 	
 	/**
 	 * Elimina el usuario que tiene el id pasado y vuelve a la pagina del listado de usuario con un mensaje de resultado.
+	 * @throws SQLException 
 	 */
 	private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario eliminado.";
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Usuario usuario = new Usuario();
 			usuario.eliminar(id);
+			usuarios = usuario.obtenerUsuarios("");
 		} catch (Exception e) {
 			msg = "ERROR al eliminar el usuario.";
 		}
 		
+		request.setAttribute("usuarios",usuarios);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("usuarios.jsp");
 		vista.forward(request, response);
@@ -136,8 +150,9 @@ public class UsuariosController extends HttpServlet {
 			msg = "ERROR al modificar el usuario.";
 		} 		
 		
+		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
-		RequestDispatcher vista = request.getRequestDispatcher("usuario.jsp?id="+id);
+		RequestDispatcher vista = request.getRequestDispatcher("usuario.jsp");
 		vista.forward(request, response);
 	}
 	
@@ -145,25 +160,47 @@ public class UsuariosController extends HttpServlet {
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
 		
-        String vista = "usuario.jsp?id="+usuario.getId();
-        
-		RequestDispatcher req = request.getRequestDispatcher(vista);
+		request.setAttribute("id",usuario.getId());
+		RequestDispatcher req = request.getRequestDispatcher("usuario.jsp");
 		req.forward(request, response);
 	}
 	
-	private void cargarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void cargarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		String rol = request.getParameter("rol");
 		
-		request.setAttribute("rol",rol);
+		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+		UsuarioDAO uDAO = new UsuarioDAO();
+		usuarios = uDAO.listUsuarios(rol);
+		
+		request.setAttribute("usuarios",usuarios);
 		RequestDispatcher req = request.getRequestDispatcher("usuarios.jsp");
 		req.forward(request, response);
 	}
-
+	
+	private void cargarPaginaUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		if(request.getParameter("id") != null) {
+			request.setAttribute("id",Integer.parseInt(request.getParameter("id")));
+		}
+		
+		RequestDispatcher req = request.getRequestDispatcher("usuario.jsp");
+		req.forward(request, response);
+	}
+	
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    	procesarUsuarios(request, response);
+    	try {
+			procesarUsuarios(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarUsuarios(request, response);
+		try {
+			procesarUsuarios(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

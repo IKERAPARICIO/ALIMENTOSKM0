@@ -65,7 +65,7 @@ public class LoginController extends HttpServlet {
             
             String vista = "index.jsp";
             if (nivelAcceso > 8)
-            	vista = "usuarios.jsp";
+            	vista = "UsuariosController?opcion=5";
             else if (nivelAcceso > 4)
             	vista = "terrenos.jsp";
             else if (nivelAcceso > 2)

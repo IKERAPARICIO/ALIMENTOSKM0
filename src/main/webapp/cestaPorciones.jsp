@@ -19,9 +19,6 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Porciones Disponibles</h1>
-		<%
-		String sId = request.getParameter("id");
-		%>
 		<table>
 			<tr>
 				<tr>
@@ -35,20 +32,20 @@
 				</tr>
 			</tr>
 			<%
-			PaqueteDAO pDAO = new PaqueteDAO();
-			ArrayList<Porcion> porciones = pDAO.listPorcionesDisponibles();
-			if (porciones != null){
+			if (request.getAttribute("porciones") != null){
+				ArrayList<Porcion> porciones = (ArrayList<Porcion>)request.getAttribute("porciones");
+				int id = (int)request.getAttribute("id");
 				for (Porcion p : porciones) {
 				%>
 				<tr>
-					<td><%=p.getPaquete().getAlimento().getNombre()%></td>
+					<td><%=p.getNombreAlimento()%></td>
 					<td><%=p.getCantidad()%></td>
-					<td><%=p.getPaquete().getAlimento().getPrecio()%></td>
-					<td><%=p.getPaquete().getTerreno().getNombre()%></td>
-					<td><%=p.getPaquete().getTerreno().getProductor().getNombre()%></td>
+					<td><%=p.getPrecioAlimento()%></td>
+					<td><%=p.getNombreTerreno()%></td>
+					<td><%=p.getNombreProductor()%></td>
 					<td><%=p.getPrecio()%></td>
 					<td>
-						<a href="CestasController?opcion=6&idCesta=<%=sId%>&idPorcion=<%=p.getId()%>"><img src="img/add.png" width="16px" alt="Incluir"></a>
+						<a href="CestasController?opcion=6&idCesta=<%=id%>&idPorcion=<%=p.getId()%>"><img src="img/add.png" width="16px" alt="Incluir"></a>
 					</td>
 				</tr>
 				<%

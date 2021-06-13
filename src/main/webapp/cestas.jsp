@@ -24,9 +24,18 @@ function confirmMsg(){
 	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
-		<h1>Listado de Cestas</h1>
 		<%
 		ArrayList<Cesta> listaCestas = (ArrayList<Cesta>)request.getAttribute("listaCestas");
+		Boolean miscestas = false;
+		if (request.getAttribute("miscestas") != null) {
+			miscestas = (boolean)request.getAttribute("miscestas");
+		}
+		if (miscestas){
+			%><h1>Mis Cestas</h1><%
+		}
+		else{
+			%><h1>Cestas Disponibles</h1><%
+		}
 		if (listaCestas != null){
 			int cId = 0;
 			Double cPrecio = 0.0;
@@ -39,13 +48,16 @@ function confirmMsg(){
 				    <div class="card-header" id="heading<%=cId%>">
 				      <h5 class="mb-0" >
 				        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse<%=cId%>" aria-expanded="false" aria-controls="collapse<%=cId%>">
-				          	<%=cesta.getNombre()%>
+				          	<%=cesta.getNombre()%><%if (miscestas) {%> (<%=cesta.getFechaCompra()%>)<%}%>
+				          	
 				        </button>
-				        <% if(nivelAcceso > 1){ %>
-					        <div class="precio-icono">
+				        <div class="precio-icono">
+				        <% if(nivelAcceso > 1 && !miscestas){ %>
 					        	<a href="CestasController?opcion=7&id=<%=cesta.getId()%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
-					      	</div>
+					    <% } else if (miscestas){ %>
+					        	<a href="CestasController?opcion=10&id=<%=cesta.getId()%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
 					    <% } %>
+					    </div>
 						<div class="precio">
 				        	<%=cPrecio%>&nbsp;<img src="img/euro.png" alt="Comprar" width="16px">
 				        </div>

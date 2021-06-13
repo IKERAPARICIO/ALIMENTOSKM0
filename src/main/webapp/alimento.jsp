@@ -22,14 +22,14 @@
 		String nombre = "";
 		String medida = "";
 		double precio = 0;
-		String sId = request.getParameter("id");
-		
+
 		//actualizar el alimento
-		if(sId != null){
-			option = 3;
-			id = Integer.parseInt(sId);
+		if(request.getAttribute("alimento") != null){
 			Alimento alimento = new Alimento();
-			alimento.buscarID(id);
+			alimento = (Alimento)request.getAttribute("alimento");
+			option = 3;
+
+			id = alimento.getId();
 			nombre = alimento.getNombre();
 			medida = alimento.getMedida();
 			precio = alimento.getPrecio();

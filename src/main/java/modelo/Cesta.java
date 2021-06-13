@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.CestaDAO;
+import dao.TerrenoDAO;
 
 public class Cesta implements Producto {
 	
@@ -33,6 +34,13 @@ public class Cesta implements Producto {
 		this.id = id;
 		this.nombre = nombre;
 		this.fechaCreacion = fechaCreacion;
+	}
+	
+	public Cesta(int id, String nombre, Date fechaCreacion, Date fechaCompra) {
+		this.id = id;
+		this.nombre = nombre;
+		this.fechaCreacion = fechaCreacion;
+		this.fechaCompra = fechaCompra;
 	}
 	
 	public Cesta(int id, String nombre, Date fechaCreacion, Date fechaCompra, int idUsuario) {
@@ -139,6 +147,16 @@ public class Cesta implements Producto {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public ArrayList<Cesta> obtenerCestas() {
+		ArrayList<Cesta> lista = null;
+		try {
+			lista = CestaDAO.getInstance().listCestas();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
 	}
 	
 	public void buscarID(int id) {

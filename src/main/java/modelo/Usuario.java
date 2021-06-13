@@ -1,6 +1,7 @@
 package modelo;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import dao.AlimentoDAO;
 import dao.TerrenoDAO;
@@ -162,6 +163,16 @@ public class Usuario {
 		return id;
 	}
 
+	public ArrayList<Usuario> obtenerUsuarios(String sRol) {
+		ArrayList<Usuario> lista = null;
+		try {
+			lista = UsuarioDAO.getInstance().listUsuarios(sRol);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
 	public void buscarID(int id) {
 		Usuario u = null;
 		try {

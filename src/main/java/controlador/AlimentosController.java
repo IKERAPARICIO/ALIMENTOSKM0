@@ -1,6 +1,8 @@
 package controlador;
 
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.AlimentoDAO;
+import dao.TerrenoDAO;
 import modelo.Alimento;
+import modelo.Terreno;
 
 /**
  * Servlet implementation class GestionLibros
@@ -26,8 +31,9 @@ public class AlimentosController extends HttpServlet {
 
     /**
      * Dependiendo la opcion indicada, da de alta un alimento, lo elimina o actualiza
+     * @throws SQLException 
      */
-	private void procesarAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void procesarAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
 				altaAlimento(request, response);
@@ -38,6 +44,12 @@ public class AlimentosController extends HttpServlet {
 			case "3":
 				actualizarAlimento(request, response);
 				break;
+			case "4":
+				cargarAlimentos(request, response);
+				break;
+			case "5":
+				verDetalleAlimento(request, response);
+				break;	
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -48,20 +60,22 @@ public class AlimentosController extends HttpServlet {
 	 */
 	private void altaAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento incluido.";
-		Alimento alimento = new Alimento();
+		ArrayList<Alimento> alimentos = new ArrayList<Alimento>(); 
 		try {
 			String nombre = request.getParameter("nombre");
 			String medida = request.getParameter("medida");
 			double precio = Double.parseDouble(request.getParameter("precio"));
 			
-			alimento = new Alimento(nombre, medida);
+			Alimento alimento = new Alimento(nombre, medida);
 			int idAlimento = alimento.insertar();
 			alimento.setId(idAlimento);
 			alimento.setPrecio(precio);
+			alimentos = alimento.obtenerAlimentos();
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el Alimento.";
 		}
 		
+		request.setAttribute("alimentos",alimentos);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("alimentos.jsp");
 		vista.forward(request, response);
@@ -72,16 +86,18 @@ public class AlimentosController extends HttpServlet {
 	 */
 	private void eliminarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento eliminado.";
+		ArrayList<Alimento> alimentos = new ArrayList<Alimento>(); 
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Alimento alimento = new Alimento();
 			alimento.eliminar(id);
-		
+			alimentos = alimento.obtenerAlimentos();
 		} catch (Exception e) {
 			msg = "ERROR al eliminar el alimento.";
 		}
 		
+		request.setAttribute("alimentos",alimentos);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("alimentos.jsp");
 		vista.forward(request, response);
@@ -92,6 +108,7 @@ public class AlimentosController extends HttpServlet {
 	 */
 	private void actualizarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento actualizado.";
+		ArrayList<Alimento> alimentos = new ArrayList<Alimento>(); 
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			String nombre = request.getParameter("nombre");
@@ -104,42 +121,59 @@ public class AlimentosController extends HttpServlet {
 			if(alimento.getPrecio() != precio) {
 				alimento.setPrecio(precio);
 			}
+			alimentos = alimento.obtenerAlimentos();
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar el alimento.";
 		}
 		
+		request.setAttribute("alimentos",alimentos);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("alimentos.jsp");
 		vista.forward(request, response);
 	}
 
-	/**
-	 *  TODO: quitar el metodo
-	 */
-	/*private void historicoPreciosAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String msg = "Histórico de precios del Alimento";
-		Map<String,String> historico = new HashMap<>();
+	private void cargarAlimentos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		AlimentoDAO aDAO = new AlimentoDAO();
+		ArrayList<Alimento> alimentos = aDAO.listAlimentos();	
+		
+		request.setAttribute("alimentos",alimentos);
+		RequestDispatcher req = request.getRequestDispatcher("alimentos.jsp");
+		req.forward(request, response);
+	}
+	
+	private void verDetalleAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String msg = null;
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
-			
-			Alimento alimento = new Alimento();
-			historico = alimento.getHistoricoPrecios(id);
-		
-		} catch (Exception e) {
-			msg = "ERROR al buscar el historico de precios del alimento.";
+			if (id != 0) {
+				Alimento alimento = new Alimento();
+				alimento.buscarID(id);
+				request.setAttribute("alimento",alimento);
+			}
+		} catch (NumberFormatException e) {
+			msg = "ERROR al cargar el alimento.";
 		}
-		
+
 		request.setAttribute("mensaje",msg);
-		request.setAttribute("historico",historico);
-		RequestDispatcher vista = request.getRequestDispatcher("alimentos.jsp");
+		RequestDispatcher vista = request.getRequestDispatcher("alimento.jsp");
 		vista.forward(request, response);
-	}*/
+	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarAlimentos(request, response);
+		try {
+			procesarAlimentos(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarAlimentos(request, response);
+		try {
+			procesarAlimentos(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

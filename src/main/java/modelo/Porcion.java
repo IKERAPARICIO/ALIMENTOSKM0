@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -76,6 +77,27 @@ public class Porcion implements Producto {
 		return cesta.getId();
 	}
 
+	//
+	public String getNombreAlimento() {
+		return this.paquete.getAlimento().getNombre();
+	}
+	
+	public String getNombreProductor() {
+		return this.paquete.getTerreno().getProductor().getNombre();
+	}
+	
+	public Date getFechaAceptacionPaquete() {
+		return this.paquete.getFechaAceptacion();
+	}
+	
+	public Double getPrecioAlimento() {
+		return this.paquete.getAlimento().getPrecio();
+	}
+	
+	public String getNombreTerreno() {
+		return this.paquete.getTerreno().getNombre();
+	}
+	
 	@Override
 	public double getPrecio() {
 		double precio = 0;

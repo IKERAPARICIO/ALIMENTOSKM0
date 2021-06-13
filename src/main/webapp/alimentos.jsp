@@ -1,5 +1,4 @@
 <%@page import="modelo.Alimento"%>
-<%@page import="dao.AlimentoDAO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -29,47 +28,42 @@
 			</tr>
 			<%
 			ArrayList<Alimento> alimentos = new ArrayList<Alimento>();
-			boolean terrenoPasado;
 			int idTerreno = 0;
 			//si no se pasa un terreno se cargan todos los alimentos
-			if (request.getAttribute("idTerreno") == null){
-				terrenoPasado = false;
-				AlimentoDAO ali = new AlimentoDAO();
-				alimentos = ali.listAlimentos();
-			}
 			//si se llama desde terrenos.jsp se puedan incluir alimentos al Terreno pasado
-			else{
-				idTerreno = (int)request.getAttribute("idTerreno");
-				terrenoPasado = true;
+			if (request.getAttribute("alimentos") != null){
 				alimentos = (ArrayList<Alimento>)request.getAttribute("alimentos");
-			}
-
-			if (alimentos != null){
-				for (Alimento a : alimentos) {
-				%>
-				<tr>
-					<td><%=a.getNombre()%></td>
-					<td><%=a.getMedida()%></td>
-					<td><%=a.getPrecio()%></td>
-					<td>
-						<% if (terrenoPasado) { %>
-							<a href="TerrenosController?opcion=6&idTerreno=<%=idTerreno%>&idAlimento=<%=a.getId()%>"><img src="img/add.png" width="16px" alt="Agregar"></a>
-						<% } else { %>
-							<a href="AlimentosController?opcion=2&id=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-							<a href="alimento.jsp?id=<%=a.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
-						<% } %>
-					</td>
-				</tr>
-				<%
+				if (request.getAttribute("idTerreno") != null){
+					idTerreno = (int)request.getAttribute("idTerreno");
 				}
-			}
-			%>
-		</table>
-		<% if (!terrenoPasado) { %>
-			<div class="centeredContainer">
-				<button class="button" onclick="document.location='alimento.jsp'">Nuevo Alimento</button>
-			</div>
-		<% } %>
+
+				if (alimentos != null){
+					for (Alimento a : alimentos) {
+					%>
+					<tr>
+						<td><%=a.getNombre()%></td>
+						<td><%=a.getMedida()%></td>
+						<td><%=a.getPrecio()%></td>
+						<td>
+							<% if (idTerreno != 0) { %>
+								<a href="TerrenosController?opcion=6&idTerreno=<%=idTerreno%>&idAlimento=<%=a.getId()%>"><img src="img/add.png" width="16px" alt="Agregar"></a>
+							<% } else { %>
+								<a href="AlimentosController?opcion=2&id=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+								<a href="AlimentosController?opcion=5&id=<%=a.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+							<% } %>
+						</td>
+					</tr>
+					<%
+					}
+				}
+				%>
+			</table>
+			<% if (idTerreno == 0) { %>
+				<div class="centeredContainer">
+					<button class="button" onclick="document.location='AlimentosController?opcion=5&id=0'">Nuevo Alimento</button>
+				</div>
+			<% } 
+			}%>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

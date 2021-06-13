@@ -31,10 +31,8 @@
 				<th></th>
 			</tr>
 			<%
-			CestaDAO cest = new CestaDAO();
-			
-			ArrayList<Cesta> cestas = cest.listCestas();
-			if (cestas != null){
+			if (request.getAttribute("cestas") != null){
+				ArrayList<Cesta> cestas = (ArrayList<Cesta>)request.getAttribute("cestas");
 				for (Cesta c : cestas) {
 				%>
 				<tr>

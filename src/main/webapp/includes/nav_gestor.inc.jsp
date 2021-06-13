@@ -7,22 +7,22 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="usuarios.jsp">Usuarios</a>
+          <a class="nav-link" href="UsuariosController?opcion=5">Usuarios</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="terrenos.jsp">Terrenos</a>
+          <a class="nav-link" href="TerrenosController?opcion=8">Terrenos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="alimentos.jsp">Alimentos</a>
+          <a class="nav-link" href="AlimentosController?opcion=4">Alimentos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="confeccionarCestas.jsp">Confeccionar Cestas</a>
+          <a class="nav-link" href="CestasController?opcion=10">Confeccionar Cestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="propuestas.jsp">Propuestas</a>
+          <a class="nav-link" href="PaquetesController?opcion=8">Propuestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="almacen.jsp">Almacen</a>
+          <a class="nav-link" href="PaquetesController?opcion=9">Almacen</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="UsuariosController?opcion=4">Perfil</a>

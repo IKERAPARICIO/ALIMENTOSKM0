@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import dao.AlimentoDAO;
 import dao.PaqueteDAO;
 import dao.PorcionDAO;
+import dao.TerrenoDAO;
 
 public class Paquete implements Producto {
 	
@@ -129,6 +130,19 @@ public class Paquete implements Producto {
 	public void setTerreno(Terreno terreno) {
 		this.terreno = terreno;
 	}
+	
+	//
+	public String getNombreProductor() {
+		return this.terreno.getProductor().getNombre();
+	}
+	
+	public String getNombreAlimento() {
+		return this.alimento.getNombre();
+	}
+	
+	public String getNombreTerreno() {
+		return this.terreno.getNombre();
+	}
 
 	@Override
 	public double getPrecio() {
@@ -139,6 +153,15 @@ public class Paquete implements Producto {
 		return precio;
 	}
 	
+	public ArrayList<Paquete> obtenerPropuestas(String estado) {
+		ArrayList<Paquete> lista = null;
+		try {
+			lista = PaqueteDAO.getInstance().listPropuestas(estado);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
 	
 	public void buscarID(int id) {
 		Paquete p = null;

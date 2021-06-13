@@ -100,7 +100,7 @@ public class UsuarioDAO {
 	
 	public ArrayList<Usuario> listUsuarios(String rol) throws SQLException {
 		String st = "SELECT * from usuario ";
-		if(rol != "") {
+		if(rol != "" && rol != null) {
 			st += " WHERE rol = \"" + rol + "\"";
 		}
 		st += " ORDER BY nombre";

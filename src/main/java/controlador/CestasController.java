@@ -13,7 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.CestaDAO;
+import dao.PaqueteDAO;
+import dao.TerrenoDAO;
 import modelo.Cesta;
+import modelo.Porcion;
+import modelo.Terreno;
 import modelo.Usuario;
 
 /**
@@ -60,6 +64,15 @@ public class CestasController extends HttpServlet {
 			case "9":
 				verCestasDisponibles(request, response);
 				break;
+			case "10":
+				cargarCestas(request, response);
+				break;
+			case "11":
+				verPorcionesDisponibles(request, response);
+				break;
+			/*case "10":
+				abrirJustificante(request, response);
+				break;*/
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -70,16 +83,18 @@ public class CestasController extends HttpServlet {
 	 */
 	private void eliminarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta eliminada.";
+		ArrayList<Cesta> cestas = new ArrayList<Cesta>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Cesta cesta = new Cesta();
 			cesta.eliminar(id);
-		
+			cestas = cesta.obtenerCestas();
 		} catch (Exception e) {
 			msg = "ERROR al eliminar la cesta.";
 		}
-		
+
+		request.setAttribute("cestas",cestas);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("confeccionarCestas.jsp");
 		vista.forward(request, response);
@@ -91,22 +106,17 @@ public class CestasController extends HttpServlet {
 	private void quitarPorcion(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Porción quitada de la cesta.";
 		Cesta cesta = new Cesta();
-		int idCesta = 0;
 		try {
-			idCesta = Integer.parseInt(request.getParameter("idCesta"));
+			int idCesta = Integer.parseInt(request.getParameter("idCesta"));
 			int idPorcion = Integer.parseInt(request.getParameter("idPorcion"));
 			
 			cesta.buscarID(idCesta);
 			cesta.quitarPorcion(idPorcion);
-			//actualiza la cesta
-			//cesta.buscarID(idCesta);
-		
 		} catch (Exception e) {
 			msg = "ERROR al quitar la porción de la cesta.";
 		}
 		
-		//request.setAttribute("cesta",cesta);
-		request.setAttribute("id",idCesta);
+		request.setAttribute("cesta",cesta);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
@@ -114,17 +124,18 @@ public class CestasController extends HttpServlet {
 	
 	private void altaCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta creada.";
-		int id = 0;
 		try {
-			String nombre = request.getParameter("nombre");
-						
+			String nombre = request.getParameter("nombre");	
 			Cesta cesta = new Cesta(nombre);
-			id = cesta.insertar();
+			int id = cesta.insertar();
+			//carga el resto de datos
+			cesta.buscarID(id);
+			
+			request.setAttribute("cesta",cesta);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al crear la cesta.";
 		}
 		
-		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
@@ -132,18 +143,18 @@ public class CestasController extends HttpServlet {
 	
 	private void actualizarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta actualizada.";
-		int id = 0;
 		try {
-			id = Integer.parseInt(request.getParameter("id"));
+			int id = Integer.parseInt(request.getParameter("id"));
 			String nombre = request.getParameter("nombre");
 
 			Cesta cesta = new Cesta(id, nombre);
 			cesta.actualizar();
+			
+			request.setAttribute("cesta",cesta);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar la cesta.";
 		}
 		
-		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
@@ -151,14 +162,17 @@ public class CestasController extends HttpServlet {
 	
 	private void verDetalleCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = null;
-		int id = 0;
 		try {
-			id = Integer.parseInt(request.getParameter("id"));
+			int id = Integer.parseInt(request.getParameter("id"));
+			if (id != 0) {
+				Cesta cesta = new Cesta();
+				cesta.buscarID(id);
+				request.setAttribute("cesta",cesta);
+			}
 		} catch (NumberFormatException e) {
 			msg = "ERROR al cargar la cesta.";
 		}
 		
-		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
@@ -166,39 +180,45 @@ public class CestasController extends HttpServlet {
 	
 	private void agregarPorcion(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Porción agregada a la cesta.";
-		int idCesta = 0;
+		Cesta cesta = new Cesta();
 		try {
-			idCesta = Integer.parseInt(request.getParameter("idCesta"));
+			int idCesta = Integer.parseInt(request.getParameter("idCesta"));
 			int idPorcion = Integer.parseInt(request.getParameter("idPorcion"));
 			
-			Cesta cesta = new Cesta();
 			cesta.buscarID(idCesta);
 			cesta.agregarPorcion(idPorcion);
 		} catch (Exception e) {
 			msg = "ERROR al agregar la porción a la cesta.";
 		}
 		
-		request.setAttribute("id",idCesta);
+		request.setAttribute("cesta",cesta);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("cesta.jsp");
 		vista.forward(request, response);
 	}
 	
-	private void comprarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void comprarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = null;
 		int id = 0;
+		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
 		try {
 			id = Integer.parseInt(request.getParameter("id"));
 			
 			Cesta cesta = new Cesta();
 			cesta.buscarID(id);
-			cesta.comprar(id);
+			cesta.comprar(usuario.getId());
+
+			CestaDAO cDAO = new CestaDAO();
+			listaCestas = cDAO.listMyCestas(usuario.getId());	
 		} catch (NumberFormatException e) {
 			msg = "ERROR al comprar la cesta.";
 		}
 		
-		request.setAttribute("id",id);
+		request.setAttribute("listaCestas",listaCestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("miscestas",true);
 		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
 		vista.forward(request, response);
 	}
@@ -217,6 +237,7 @@ public class CestasController extends HttpServlet {
 		
 		request.setAttribute("listaCestas",listaCestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("miscestas",true);
 		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
 		vista.forward(request, response);
 	}
@@ -233,88 +254,41 @@ public class CestasController extends HttpServlet {
 		
 		request.setAttribute("listaCestas",listaCestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("miscestas",false);
 		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
 		vista.forward(request, response);
 	}
-/*	
-	private void porcionesCesta(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String msg = null;
-		Cesta cesta = new Cesta();
-		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			cesta.buscarID(id);
+	
+	private void cargarCestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		CestaDAO cest = new CestaDAO();
+		ArrayList<Cesta> cestas = cest.listCestas();
 		
-		} catch (Exception e) {
-			msg = "ERROR al cargar el cesta.";
-		}
-		
-		request.setAttribute("mensaje",msg);
-		request.setAttribute("cesta",cesta);
-		RequestDispatcher vista = request.getRequestDispatcher("almacenadoPorciones.jsp");
-		vista.forward(request, response);
+		request.setAttribute("cestas",cestas);
+		RequestDispatcher req = request.getRequestDispatcher("confeccionarCestas.jsp");
+		req.forward(request, response);
 	}
-
-	//ya se ha validado via javascript
-	private void crearPorciones(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	
+	
+	private void verPorcionesDisponibles(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		String msg = null;
-		Cesta cesta = new Cesta();
+		ArrayList<Porcion> porciones = new ArrayList<Porcion>();
+		int id = 0;
 		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			Double cantNew = Double.parseDouble(request.getParameter("cantNew"));
-			int numNew = Integer.parseInt(request.getParameter("numNew"));
-			Double cantDisp = Double.parseDouble(request.getParameter("cantDisp"));
-			
-			cesta.buscarID(id);
-				
-			for (int i = 0; i < numNew; i++) {
-				Porcion p = new Porcion(cantNew, cesta);
-				c.insertar();
-				//cesta.cesta.getCantidadDisponible() - 
-			}
-			//carga los datos actualizados
-			cesta.buscarID(id);
-			
-			msg = "Porción creada.";
-
-		}
-		catch (Exception e) {
-			msg = "ERROR al crear las porciones el cesta.";
+			id = Integer.parseInt(request.getParameter("id"));
+			PaqueteDAO pDAO = new PaqueteDAO();
+			porciones = pDAO.listPorcionesDisponibles();
+		} catch (Exception e) {
+			msg = "ERROR al cargar las porciones disponibles.";
 		}
 		
-		request.setAttribute("cesta",cesta);
+		request.setAttribute("porciones",porciones);
+		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
-		RequestDispatcher vista = request.getRequestDispatcher("almacenadoPorciones.jsp");
+		RequestDispatcher vista = request.getRequestDispatcher("cestaPorciones.jsp");
 		vista.forward(request, response);
 	}
 	
-	private void eliminarPorcion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String msg = "Porción eliminada.";
-		Cesta cesta = new Cesta();
-		try {
-			int id = Integer.parseInt(request.getParameter("id"));
-			
-			Porcion porcion = new Porcion();
-			porcion.buscarID(id);
-			int cestaId = porcion.getCesta().getId();
-			porcion.eliminar();
-			//carga los datos actualizados
-			//cesta.buscarID(cestaId);
-		
-		} catch (Exception e) {
-			msg = "ERROR al eliminar la porción.";
-		}
-		
-		request.setAttribute("cesta",cesta);
-		request.setAttribute("mensaje",msg);
-		RequestDispatcher vista = request.getRequestDispatcher("almacenadoPorciones.jsp");
-		vista.forward(request, response);
-	}
-	
-	private void verCesta(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
-		
-	}
-	*/
+	//abrirJustificante
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {

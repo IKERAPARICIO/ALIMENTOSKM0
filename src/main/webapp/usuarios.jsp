@@ -30,15 +30,8 @@
 				<th></th>
 			</tr>
 			<%
-			String rol = "";
-			String getRol = request.getParameter("rol");
-			if (getRol != null){
-				rol = getRol;
-			}
-			
-			UsuarioDAO uDAO = new UsuarioDAO();
-			ArrayList<Usuario> usuarios = uDAO.listUsuarios(rol);
-			if (usuarios != null){
+			if (request.getAttribute("usuarios") != null){
+				ArrayList<Usuario> usuarios = (ArrayList<Usuario>)request.getAttribute("usuarios");
 				for (Usuario u : usuarios) {
 				%>
 				<tr>
@@ -50,7 +43,7 @@
 					<td>
 						<% if(nivelAcceso > 8){ %>
 							<a href="UsuariosController?opcion=2&id=<%=u.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-							<a href="usuario.jsp?id=<%=u.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+							<a href="UsuariosController?opcion=6&id=<%=u.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
 						<% } %>
 					</td>
 				</tr>
@@ -61,7 +54,7 @@
 		</table>
 		<% if(nivelAcceso > 8){ %>
 			<div class="centeredContainer">
-				<button class="button" onclick="document.location='usuario.jsp'">Nuevo Usuario</button>
+				<button class="button" onclick="document.location='UsuariosController?opcion=6'">Nuevo Usuario</button>
 			</div>
 		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>

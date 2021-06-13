@@ -28,14 +28,12 @@
 				<th></th>
 			</tr>
 			<%
-			TerrenoDAO tDAO = new TerrenoDAO();
-			
-			ArrayList<Terreno> terrenos = tDAO.listTerrenos();
-			if (terrenos != null){
+			if (request.getAttribute("terrenos") != null){
+				ArrayList<Terreno> terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
 				for (Terreno t : terrenos) {
 				%>
 				<tr>
-					<td><%=t.getProductor().getNombre()%></td>
+					<td><%=t.getNombreProductor()%></td>
 					<td><%=t.getNombre()%></td>
 					<td><%=t.getCiudad()%></td>
 					<td><%=t.getMetros()%></td>

@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,9 +13,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.PaqueteDAO;
+import dao.TerrenoDAO;
 import modelo.Alimento;
 import modelo.Paquete;
 import modelo.Porcion;
+import modelo.Terreno;
 
 /**
  * Servlet implementation class GestionLibros
@@ -29,8 +33,9 @@ public class PaquetesController extends HttpServlet {
 
     /**
      * Dependiendo la opcion indicada, da de alta un paquete, lo elimina o actualiza
+     * @throws SQLException 
      */
-	private void procesarPaquetes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	private void procesarPaquetes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
 				aprobarPaquete(request, response);
@@ -53,6 +58,12 @@ public class PaquetesController extends HttpServlet {
 			case "7":
 				verCesta(request, response);
 				break;
+			case "8":
+				cargarPropuestas(request, response);
+				break;
+			case "9":
+				cargarAlmacen(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -63,17 +74,20 @@ public class PaquetesController extends HttpServlet {
 	 */
 	private void aprobarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Paquete aprobado.";
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			int cantidad = Integer.parseInt(request.getParameter("cant"));
 			
 			Paquete paquete = new Paquete();
 			paquete.aprobar(id,cantidad);
+			propuestas = paquete.obtenerPropuestas("");
 		
 		} catch (Exception e) {
 			msg = "ERROR al aprobar el paquete.";
 		}
 		
+		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
@@ -84,16 +98,19 @@ public class PaquetesController extends HttpServlet {
 	 */
 	private void rechazarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Paquete rechazado.";
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Paquete paquete = new Paquete();
 			paquete.rechazar(id);
+			propuestas = paquete.obtenerPropuestas("");
 		
 		} catch (Exception e) {
 			msg = "ERROR al rechazar el paquete.";
 		}
 		
+		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
@@ -201,6 +218,36 @@ public class PaquetesController extends HttpServlet {
 		
 	}
 	
+	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		String fEstado = "";
+		if (request.getParameter("fEstado") != null) {
+			fEstado = request.getParameter("fEstado");
+		}
+		
+		PaqueteDAO pDAO = new PaqueteDAO();
+		ArrayList<Paquete> propuestas = pDAO.listPropuestas(fEstado);	
+		
+		request.setAttribute("propuestas",propuestas);
+		request.setAttribute("fEstado",fEstado);
+		RequestDispatcher req = request.getRequestDispatcher("propuestas.jsp");
+		req.forward(request, response);
+	}
+	
+	private void cargarAlmacen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		String fEstado = "";
+		if (request.getParameter("fEstado") != null) {
+			fEstado = request.getParameter("fEstado");
+		}
+		
+		PaqueteDAO pDAO = new PaqueteDAO();
+		ArrayList<Paquete> almacen = pDAO.listAlmacen(fEstado);	
+		
+		request.setAttribute("almacen",almacen);
+		request.setAttribute("fEstado",fEstado);
+		RequestDispatcher req = request.getRequestDispatcher("almacen.jsp");
+		req.forward(request, response);
+	}
+	
 	/**
 	 *  TODO: quitar el metodo
 	 */
@@ -224,10 +271,20 @@ public class PaquetesController extends HttpServlet {
 	}*/
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarPaquetes(request, response);
+		try {
+			procesarPaquetes(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		procesarPaquetes(request, response);
+		try {
+			procesarPaquetes(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

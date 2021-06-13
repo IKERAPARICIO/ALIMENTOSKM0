@@ -17,6 +17,9 @@
 <script>
 	function askForQuantity(idPaquete,cantidadPropuesta){
 		var cantAceptada = prompt("Cantidad a aceptar: ", "");
+		if (cantAceptada === null) {
+			return;
+		}
 		cantAceptada = parseInt(cantAceptada);
 		if (cantAceptada < 1 || cantAceptada > cantidadPropuesta)
 	   	{
@@ -32,7 +35,7 @@
 	}
 
 	function doReload(fEstado){
-		document.location = 'propuestas.jsp?fEstado=' + fEstado;
+		document.location = 'PaquetesController?opcion=8&fEstado=' + fEstado;
 	}
 </script>
 <div id="contenedor">
@@ -42,12 +45,12 @@
 	<section>
 		<h1>Propuestas</h1>
 		<%
-		PaqueteDAO pDAO = new PaqueteDAO();
 		String estado = "";
-		if (request.getParameter("fEstado") != null) {
-			estado = request.getParameter("fEstado");
+		if (request.getAttribute("fEstado") != null) {
+			estado = (String)request.getAttribute("fEstado");
 		}
 		
+		PaqueteDAO pDAO = new PaqueteDAO();
 		ArrayList<String> estados = pDAO.getPropuestasStates();
 		%>
 		<label for="stateFilter">Estado:</label>
@@ -68,15 +71,16 @@
 				<th>ESTADO</th>
 				<th></th>
 			</tr>
-			<%			
-			if (pDAO.listPropuestas(estado) != null){
-				for (Paquete p : pDAO.listPropuestas(estado)) {
+			<%
+			if (request.getAttribute("propuestas") != null) {
+				ArrayList<Paquete> propuestas = (ArrayList<Paquete>)request.getAttribute("propuestas");
+				for (Paquete p : propuestas) {
 				%>
 				<tr>
-					<td><%=p.getTerreno().getProductor().getNombre()%></td>
-					<td><%=p.getAlimento().getNombre()%></td>
+					<td><%=p.getNombreProductor()%></td>
+					<td><%=p.getNombreAlimento()%></td>
 					<td><%=p.getCantidadPropuesta().toString()%></td>
-					<td><%=p.getTerreno().getNombre()%></td>
+					<td><%=p.getNombreTerreno()%></td>
 					<td><%=p.getFechaPorpuesta().toString()%></td>
 					<td><%=p.getEstado().toString()%></td>
 					<td>

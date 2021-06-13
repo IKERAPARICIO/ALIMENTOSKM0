@@ -103,7 +103,7 @@ public class CestaDAO {
 	}
 	
 	public ArrayList<Cesta> listMyCestas(int idUsuario) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = ? ORDER BY fechaCreacion");
+		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = ? ORDER BY fechaCreacion DESC");
 		ps.setInt(1, idUsuario);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Cesta> result = null;
@@ -111,7 +111,7 @@ public class CestaDAO {
 		while (rs.next()) {
 			if (result == null)
 				result = new ArrayList<>();
-				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion")));
+				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"), rs.getDate("fechaCompra")));
 		}
 		
 		rs.close();

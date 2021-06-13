@@ -103,6 +103,11 @@ public class Terreno {
 		return productor.getId();
 	}
 	
+	//
+	public String getNombreProductor() {
+		return this.productor.getNombre();
+	}
+	
 	//Acceso a DAO
 	public int insertar() {
 		int idTerreno = 0;
