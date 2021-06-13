@@ -39,11 +39,11 @@
 					<td><%=c.getId()%></td>
 					<td><%=c.getNombre()%></td>
 					<td><%=c.getFechaCreacion()%></td>
-					<td><%=c.getUsuarioNombre()%></td>
+					<td><%=c.getUsuarioNombreCompleto()%></td>
 					<td><%=c.getFechaCompra()%></td>
 					<td><%=c.getPrecio()%></td>
 					<td>
-						<% if (c.getUsuarioNombre() == "") {%>
+						<% if (c.getUsuarioNombreCompleto() == "") {%>
 							<a href="CestasController?opcion=1&id=<%=c.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<a href="CestasController?opcion=5&id=<%=c.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
 						<% } %>

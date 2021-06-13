@@ -164,14 +164,5 @@ public class UsuarioDAO {
 		rs.close();
 		ps.close();
 		return result;
-	}
-	
-	public ArrayList<String> getRols() {
-		ArrayList<String> lista = new ArrayList<String>();
-		for (Rol rol : Rol.values()) { 
-		    lista.add(rol.toString());
-		}
-		return lista;
-	}
-	
+	}	
 }

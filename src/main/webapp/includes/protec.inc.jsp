@@ -11,6 +11,8 @@ switch(nombrePagina){
 	case "usuario":
 		nivelPagina = 3;
 		break;
+	case "propuestas":
+	case "propuesta":
 	case "terreno":
 	case "terrenos":
 		nivelPagina = 5;
@@ -21,7 +23,6 @@ switch(nombrePagina){
 	case "cesta":
 	case "cestaPorciones":
 	case "confeccionarCestas":
-	case "propuestas":
 		nivelPagina = 9;
 		break;
 	default :

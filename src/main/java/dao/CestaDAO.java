@@ -111,7 +111,30 @@ public class CestaDAO {
 		while (rs.next()) {
 			if (result == null)
 				result = new ArrayList<>();
-				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"), rs.getDate("fechaCompra")));
+			result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"), rs.getDate("fechaCompra")));
+		}
+		
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
+	public ArrayList<Cesta> listCestasMyTerrenos(int idUsuario) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT DISTINCT cesta.* FROM CESTA "
+								+ "LEFT JOIN cesta_porcion ON cesta.idCesta = cesta_porcion.idCesta "
+								+ "LEFT JOIN porcion ON cesta_porcion.idPorcion = porcion.idPorcion "
+								+ "LEFT JOIN paquete ON porcion.idPaquete = paquete.idPaquete "
+								+ "LEFT JOIN terreno ON paquete.idTerreno = terreno.idTerreno "
+								+ "WHERE terreno.idUsuario = ? ORDER BY fechaCreacion DESC");
+		ps.setInt(1, idUsuario);
+		ResultSet rs = ps.executeQuery();
+		ArrayList<Cesta> result = null;
+		
+		while (rs.next()) {
+			if (result == null)
+				result = new ArrayList<>();
+			result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"),
+					rs.getDate("fechaCompra"), rs.getInt("idUsuario")));
 		}
 		
 		rs.close();

@@ -39,24 +39,33 @@ function confirmMsg(){
 		if (listaCestas != null){
 			int cId = 0;
 			Double cPrecio = 0.0;
+			String sinVender = "sin vender";
+			String comentario = sinVender;
 			for (Cesta cesta : listaCestas) {
 				cId = cesta.getId();
 				cPrecio = cesta.getPrecio();
+				if (cesta.getFechaCompra() != null){
+					comentario = cesta.getFechaCompra().toString();
+				}
+				if (nivelAcceso == 5 && !sinVender.equals(comentario)){
+					comentario += " - " + cesta.getUsuarioNombreCompleto();
+				}
 				%>
 				<div id="accordion">
 				  <div class="card">
 				    <div class="card-header" id="heading<%=cId%>">
 				      <h5 class="mb-0" >
 				        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse<%=cId%>" aria-expanded="false" aria-controls="collapse<%=cId%>">
-				          	<%=cesta.getNombre()%><%if (miscestas) {%> (<%=cesta.getFechaCompra()%>)<%}%>
-				          	
+				          	<%=cesta.getNombre()%><%if (miscestas) {%> (<%=comentario%>)<%}%>
 				        </button>
 				        <div class="precio-icono">
-				        <% if(nivelAcceso > 1 && !miscestas){ %>
-					        	<a href="CestasController?opcion=7&id=<%=cesta.getId()%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
-					    <% } else if (miscestas){ %>
-					        	<a href="CestasController?opcion=10&id=<%=cesta.getId()%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
-					    <% } %>
+				        <% if(nivelAcceso == 3){
+				        	   if (miscestas){ %>
+					        		<a href="CestasController?opcion=10&id=<%=cId%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
+					  		<% } else if (miscestas){ %>
+					        	<a href="CestasController?opcion=7&id=<%=cId%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
+					    <% 	   } 
+					       }%>
 					    </div>
 						<div class="precio">
 				        	<%=cPrecio%>&nbsp;<img src="img/euro.png" alt="Comprar" width="16px">
@@ -83,11 +92,11 @@ function confirmMsg(){
 								<%for (Porcion p : porciones) {
 									%>
 									<tr>
-										<td><%=p.getPaquete().getAlimento().getNombre()%></td>
+										<td><%=p.getNombreAlimento()%></td>
 										<td><%=p.getCantidad()%></td>
-										<td><%=p.getPaquete().getAlimento().getPrecio()%></td>
-										<td><%=p.getPaquete().getTerreno().getNombre()%></td>
-										<td><%=p.getPaquete().getTerreno().getProductor().getNombre()%></td>
+										<td><%=p.getPrecioAlimento()%></td>
+										<td><%=p.getNombreTerreno()%></td>
+										<td><%=p.getNombreProductor()%></td>
 										<td><%=p.getPrecio()%></td>
 									</tr>
 									<%

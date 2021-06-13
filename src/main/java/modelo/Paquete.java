@@ -36,6 +36,16 @@ public class Paquete implements Producto {
 		this.terreno = terreno;
 	}
 	
+	public Paquete(int idTerreno, int idAlimento, Double cantidadPropuesta) {
+		this.cantidadPropuesta = cantidadPropuesta;
+		Terreno t = new Terreno();
+		t.buscarID(idTerreno);
+		this.terreno = t;
+		Alimento a = new Alimento();
+		a.buscarID(idAlimento);
+		this.alimento = a;
+	}
+	
 	public Paquete(int id, int idTerreno, int idAlimento, Double cantidadPropuesta, Double cantidadAceptada, 
 			Double cantidadDisponible, Date fechaPropuesta, Date fechaAceptacion, String estado) {
 		this.id = id;
@@ -46,10 +56,14 @@ public class Paquete implements Producto {
 		this.fechaAceptacion = fechaAceptacion;
 		if (Estado.ACEPTADO.toString().equals(estado))
 			this.estado = Estado.ACEPTADO;
+		else if (Estado.ANULADO.toString().equals(estado))
+			this.estado = Estado.ANULADO;
 		else if (Estado.PROPUESTO.toString().equals(estado))
 			this.estado = Estado.PROPUESTO;
-		else
+		else if (Estado.RECHAZADO.toString().equals(estado))
 			this.estado = Estado.RECHAZADO;
+		else
+			this.estado = Estado.VENDIDO;
 		
 		Terreno t = new Terreno();
 		t.buscarID(idTerreno);
@@ -163,6 +177,30 @@ public class Paquete implements Producto {
 		return lista;
 	}
 	
+	public void insertar() {
+		try {
+			PaqueteDAO.getInstance().insert(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void eliminar(int id) {
+		try {
+			PaqueteDAO.getInstance().delete(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void actualizar() {
+		try {
+			PaqueteDAO.getInstance().update(this);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void buscarID(int id) {
 		Paquete p = null;
 		try {
@@ -214,11 +252,22 @@ public class Paquete implements Producto {
 			return false;
 	}
 	
+	public boolean estaAceptado() {
+		if (this.estado == Estado.ACEPTADO || this.estado == Estado.VENDIDO)
+			return true;
+		else
+			return false;
+	}
+	
 	public boolean estaGestionado() {
 		if (this.estado == Estado.ACEPTADO)
 			return true;
 		else
 			return false;
+	}
+	
+	public String getEstadoInicial() {
+		return Estado.PROPUESTO.toString();
 	}
 
 	public ArrayList<Porcion> obtenerPorciones() {

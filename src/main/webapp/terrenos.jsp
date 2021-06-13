@@ -38,8 +38,10 @@
 					<td><%=t.getCiudad()%></td>
 					<td><%=t.getMetros()%></td>
 					<td>
-						<a href="TerrenosController?opcion=2&id=<%=t.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-						<a href="TerrenosController?opcion=4&id=<%=t.getId()%>"><img src="img/edit.png" width="16px" alt="Editar"></a>
+						<% if(nivelAcceso > 8){ %>
+							<a href="TerrenosController?opcion=2&id=<%=t.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+							<a href="TerrenosController?opcion=4&id=<%=t.getId()%>"><img src="img/edit.png" width="16px" alt="Editar"></a>
+						<% } %>
 					</td>
 				</tr>
 				<%
@@ -47,10 +49,11 @@
 			}
 			%>
 		</table>
-		
-		<div class="centeredContainer">
-			<button class="button" onclick="document.location='TerrenosController?opcion=4&id=0'">Nuevo Terreno</button>
-		</div>
+		<% if(nivelAcceso > 8){ %>
+			<div class="centeredContainer">
+				<button class="button" onclick="document.location='TerrenosController?opcion=4&id=0'">Nuevo Terreno</button>
+			</div>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

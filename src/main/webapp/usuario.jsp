@@ -1,5 +1,5 @@
 <%@page import="modelo.Usuario"%>
-<%@page import="dao.UsuarioDAO"%>
+<%@page import="dao.CommonDAO"%>
 <%@page import="modelo.Productor"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -43,8 +43,8 @@ function showHideAttributes(){
 		String dni = "";
 		String direccion = "";
 		
-		UsuarioDAO uDAO = new UsuarioDAO();
-		ArrayList<String> roles = uDAO.getRols();
+		CommonDAO commonDAO = new CommonDAO();
+		ArrayList<String> roles = commonDAO.getRols();
 
 		//actualizar el usuario
 		if (request.getAttribute("id") != null){

@@ -135,10 +135,10 @@ public class Terreno {
 		}
 	}
 	
-	public ArrayList<Terreno> obtenerTerrenos() {
+	public ArrayList<Terreno> obtenerTerrenos(int idUsuario) {
 		ArrayList<Terreno> lista = null;
 		try {
-			lista = TerrenoDAO.getInstance().listTerrenos();
+			lista = TerrenoDAO.getInstance().listTerrenos(idUsuario);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -1,7 +1,9 @@
 package modelo;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 
+import dao.TerrenoDAO;
 import dao.UsuarioDAO;
 
 public class Productor extends Usuario {
@@ -60,7 +62,7 @@ public class Productor extends Usuario {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 	
 	public void buscarID(int id) {
 		Productor u = null;

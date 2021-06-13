@@ -25,8 +25,7 @@
 
 		//actualizar el alimento
 		if(request.getAttribute("alimento") != null){
-			Alimento alimento = new Alimento();
-			alimento = (Alimento)request.getAttribute("alimento");
+			Alimento alimento = (Alimento)request.getAttribute("alimento");
 			option = 3;
 
 			id = alimento.getId();

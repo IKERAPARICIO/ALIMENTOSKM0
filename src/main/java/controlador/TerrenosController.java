@@ -1,6 +1,7 @@
 package controlador;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,10 +13,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.TerrenoDAO;
 import modelo.Alimento;
 import modelo.Terreno;
+import modelo.Usuario;
 
 /**
  * Servlet implementation class GestionLibros
@@ -57,6 +60,9 @@ public class TerrenosController extends HttpServlet {
 				break;
 			case "8":
 				cargarTerrenos(request, response);
+				break;
+			case "9":
+				cargarSelectAlimentos(request, response);
 				break;
 			default:
 				System.out.println("Opcion no valida.");
@@ -101,7 +107,7 @@ public class TerrenosController extends HttpServlet {
 			
 			terreno = new Terreno();
 			terreno.eliminar(id);
-			terrenos = terreno.obtenerTerrenos();
+			terrenos = terreno.obtenerTerrenos(0);
 		} catch (Exception e) {
 			msg = "ERROR al eliminar el terreno.";
 		}
@@ -223,12 +229,44 @@ public class TerrenosController extends HttpServlet {
 	}
 	
 	private void cargarTerrenos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		//si es administrador lista todos los terrenos, si no solo los suyos
+		int idUsuario = 0;
+		if (usuario.obtenerPermisosRol() < 8) {
+			idUsuario = usuario.getId();
+		}
+		
 		TerrenoDAO tDAO = new TerrenoDAO();
-		ArrayList<Terreno> terrenos = tDAO.listTerrenos();	
+		ArrayList<Terreno> terrenos = tDAO.listTerrenos(idUsuario);	
 		
 		request.setAttribute("terrenos",terrenos);
 		RequestDispatcher req = request.getRequestDispatcher("terrenos.jsp");
 		req.forward(request, response);
+	}
+	
+	//llamada AJAX
+	private void cargarSelectAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		response.setContentType("text/html;charset=UTF-8");
+        try (PrintWriter out = response.getWriter()) {
+        	int id = Integer.parseInt(request.getParameter("id"));
+        	Terreno terreno = new Terreno();
+        	terreno.buscarID(id);
+        	ArrayList<Alimento> alimentos = terreno.obtenerAlimentos();
+        	StringBuilder result = new StringBuilder();
+        	result.append("<select id=\"producto\" name=\"producto\">");
+        	if (alimentos != null) {
+	        	for(Alimento alimento : alimentos) {
+	        		result.append("<option value=\""+alimento.getId()+"\">"+alimento.getNombre()+"</option>");
+	        	}
+        	}
+        	else {
+        		result.append("<option value=0>---sin alimentos---</option>");
+        	}
+        	result.append("</select>");
+        	
+            out.println(result.toString());
+        }
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

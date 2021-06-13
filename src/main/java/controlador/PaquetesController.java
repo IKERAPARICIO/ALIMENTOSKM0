@@ -12,6 +12,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import dao.PaqueteDAO;
 import dao.TerrenoDAO;
@@ -19,6 +20,7 @@ import modelo.Alimento;
 import modelo.Paquete;
 import modelo.Porcion;
 import modelo.Terreno;
+import modelo.Usuario;
 
 /**
  * Servlet implementation class GestionLibros
@@ -63,6 +65,21 @@ public class PaquetesController extends HttpServlet {
 				break;
 			case "9":
 				cargarAlmacen(request, response);
+				break;
+			/*case "10":
+				abrirJustificante(request, response);
+				break;*/
+			case "11":
+				altaPropuesta(request, response);
+				break;
+			case "12":
+				eliminarPropuesta(request, response);
+				break;
+			case "13":
+				actualizarPropuesta(request, response);
+				break;
+			case "14":
+				verDetallePropuesta(request, response);
 				break;
 			default:
 				System.out.println("Opcion no valida.");
@@ -218,14 +235,30 @@ public class PaquetesController extends HttpServlet {
 		
 	}
 	
-	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String msg = null;
 		String fEstado = "";
-		if (request.getParameter("fEstado") != null) {
-			fEstado = request.getParameter("fEstado");
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+
+		try {
+			if (request.getParameter("fEstado") != null) {
+				fEstado = request.getParameter("fEstado");
+			}
+			
+			PaqueteDAO pDAO = new PaqueteDAO();
+			//si es productor lista sus propuestas, si es gestor todas
+			if (usuario.obtenerPermisosRol() < 8) {
+				propuestas = pDAO.listMyPropuestas(fEstado,usuario.getId());
+			}
+			else {
+				propuestas = pDAO.listPropuestas(fEstado);
+			}
+			
+		} catch (Exception e) {
+			msg = "ERROR al cargar las cestas.";
 		}
-		
-		PaqueteDAO pDAO = new PaqueteDAO();
-		ArrayList<Paquete> propuestas = pDAO.listPropuestas(fEstado);	
 		
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("fEstado",fEstado);
@@ -248,27 +281,104 @@ public class PaquetesController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
-	/**
-	 *  TODO: quitar el metodo
-	 */
-	/*private void historicoPreciosPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String msg = "Histórico de precios del Paquete";
-		Map<String,String> historico = new HashMap<>();
+	private void altaPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+		String msg = "Propuesta incluida.";
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>(); 
+		try {
+			int idTerreno = Integer.parseInt(request.getParameter("terreno"));
+			int idAlimento = Integer.parseInt(request.getParameter("producto"));
+			double cantidadPropuesta = Double.parseDouble(request.getParameter("cantidadPropuesta"));
+			
+			Paquete paquete = new Paquete(idTerreno, idAlimento, cantidadPropuesta);
+			paquete.insertar();
+			
+			PaqueteDAO pDAO = new PaqueteDAO();
+			propuestas = pDAO.listMyPropuestas("",usuario.getId());
+		
+		} catch (NumberFormatException e) {
+			msg = "ERROR al introducir la Propuesta.";
+		}
+		
+		request.setAttribute("propuestas",propuestas);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
+		vista.forward(request, response);
+	}
+
+	private void eliminarPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String msg = "Propuesta eliminada.";
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Paquete paquete = new Paquete();
-			historico = paquete.getHistoricoPrecios(id);
-		
+			paquete.eliminar(id);
+			
+			PaqueteDAO pDAO = new PaqueteDAO();
+			propuestas = pDAO.listMyPropuestas("",usuario.getId());
 		} catch (Exception e) {
-			msg = "ERROR al buscar el historico de precios del paquete.";
+			msg = "ERROR al eliminar la propuesta.";
 		}
 		
+		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
-		request.setAttribute("historico",historico);
-		RequestDispatcher vista = request.getRequestDispatcher("paquetes.jsp");
+		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
-	}*/
+	}
+
+	private void actualizarPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+		String msg = "Propuesta actualizada.";	
+		Paquete paquete = new Paquete();
+		try {
+			int id = Integer.parseInt(request.getParameter("id"));
+			double cantidadPropuesta = Double.parseDouble(request.getParameter("cantidadPropuesta"));
+						
+			paquete.setId(id);
+			paquete.setCantidadPropuesta(cantidadPropuesta);
+			paquete.actualizar();
+			paquete.buscarID(id);
+			
+		} catch (NumberFormatException e) {
+			msg = "ERROR al modificar la propuesta.";
+		}
+
+		request.setAttribute("propuesta",paquete);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("propuesta.jsp");
+		vista.forward(request, response);
+	}
+
+	private void verDetallePropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+		String msg = null;
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		
+		ArrayList<Terreno> terrenos = new ArrayList<Terreno>();
+		try {
+			TerrenoDAO tDAO = new TerrenoDAO();
+			terrenos = tDAO.listTerrenos(usuario.getId());
+
+			int id = Integer.parseInt(request.getParameter("id"));
+			if (id != 0) {
+				Paquete paquete = new Paquete();
+				paquete.buscarID(id);
+				request.setAttribute("propuesta",paquete);
+			}
+		} catch (NumberFormatException e) {
+			msg = "ERROR al cargar el alimento.";
+		}
+
+		request.setAttribute("terrenos",terrenos);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("propuesta.jsp");
+		vista.forward(request, response);
+	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {

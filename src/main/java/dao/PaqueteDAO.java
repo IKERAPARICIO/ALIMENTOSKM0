@@ -26,24 +26,27 @@ public class PaqueteDAO {
 		return instance;
 	}
 	
-	/*public int insert(Paquete p) throws SQLException {
+	public int insert(Paquete p) throws SQLException {
 		int idPaquete = 0;
 		try {
 			PreparedStatement ps = con
 					.prepareStatement("INSERT INTO paquete (idTerreno, idAlimento, cantidadPropuesta, cantidadAceptada,"
-							+ "cantidadDisponible, fechaPropuesta, fechaAceptacion, estado) VALUES (?,?,?,?,?,?,?,?)");
-			ps.setString(1, p.get
-			ps.setInt(2, t.getProductorId());
-			ps.setDouble(3, t.getMetros());
-			ps.setString(4, t.getCiudad());
-			ps.setString(5, t.getDireccion());
+							+ "cantidadDisponible, fechaPropuesta, estado) VALUES (?,?,?,?,?,?,?)");
+			ps.setInt(1, p.getTerreno().getId());
+			ps.setInt(2, p.getAlimento().getId());
+			ps.setDouble(3, p.getCantidadPropuesta());
+			ps.setDouble(4, 0);
+			ps.setDouble(5, 0);
+			ps.setDate(6, new java.sql.Date(System.currentTimeMillis()));
+			ps.setString(7, p.getEstadoInicial());
+			
 			ps.executeUpdate();
 			ps.close();
 		} catch (Exception e) {
-			System.out.println("Error al introducir el paquete!");
+			System.out.println("Error al introducir la propuesta!");
 		}
 		return idPaquete;
-	}*/
+	}
 	
 	public void delete(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM paquete WHERE idPaquete = ?");
@@ -52,32 +55,46 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
-	/*public void update(Paquete t) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET nombre = ?, idUsuario = ?, metros = ?,"
-													+ " ciudad = ?, direccion = ? WHERE idPaquete = ?");
-		ps.setString(1, t.getNombre());
-		ps.setInt(2, t.getProductorId());
-		ps.setDouble(3, t.getMetros());
-		ps.setString(4, t.getCiudad());
-		ps.setString(5, t.getDireccion());
-		ps.setInt(6, t.getId());
+	public void update(Paquete p) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadPropuesta = ? WHERE idPaquete = ?");
+		ps.setDouble(1, p.getCantidadPropuesta());
+		ps.setInt(2, p.getId());
 
 		ps.executeUpdate();
 		ps.close();
-	}*/
+	}
 	
-	
-	public ArrayList<Paquete> listPropuestas(String estado) throws SQLException {
-		String orderBy = " ORDER BY fechaPropuesta";
+	public ArrayList<Paquete> listMyPropuestas(String estado, int idProductor) throws SQLException {
+		String selectSt = "SELECT * from paquete LEFT JOIN terreno ON paquete.idTerreno = terreno.idTerreno";
+		String orderBy = " ORDER BY fechaPropuesta DESC";
 		
 		String whereSt = "";
-		if(estado != "")
+		if (estado != "")
+			whereSt = " WHERE estado = \"" + estado + "\"";
+		if (idProductor != 0) {
+			if (estado != "")
+				whereSt += " AND";
+			else
+				whereSt += " WHERE";
+			whereSt += " idUsuario = " + idProductor + "";
+		}
+		
+		return listPaquetes(selectSt, whereSt, orderBy);
+	}
+	
+	public ArrayList<Paquete> listPropuestas(String estado) throws SQLException {
+		String selectSt = "SELECT * from paquete";
+		String orderBy = " ORDER BY fechaPropuesta DESC";
+		
+		String whereSt = "";
+		if (estado != "")
 			whereSt = " WHERE estado = \"" + estado + "\"";
 		
-		return listPaquetes(whereSt, orderBy);
+		return listPaquetes(selectSt, whereSt, orderBy);
 	}
 	
 	public ArrayList<Paquete> listAlmacen(String estado) throws SQLException {
+		String selectSt = "SELECT * from paquete";
 		String orderBy = " ORDER BY idAlimento,cantidadDisponible";
 		
 		//define el WHERE con los estados
@@ -95,18 +112,15 @@ public class PaqueteDAO {
 			whereSt += ")";
 		}
 		
-		return listPaquetes(whereSt, orderBy);
+		return listPaquetes(selectSt, whereSt, orderBy);
 	}
 	/**
 	 * 
 	 * @param fEstado: filtro para mostrar los estados GESTIONADO, PROPUESTO o vacío para TODOS
 	 */
-	public ArrayList<Paquete> listPaquetes(String whereSt, String orderBy) throws SQLException {
-		String sqlSt = "SELECT * from paquete";
-		//incluye el WHERE
-		sqlSt += whereSt;
-		//incluye el ORDER BY
-		sqlSt += orderBy;
+	public ArrayList<Paquete> listPaquetes(String selectSt, String whereSt, String orderBy) throws SQLException {
+		//construye el select
+		String sqlSt = selectSt.concat(whereSt).concat(orderBy);
 		PreparedStatement ps = con.prepareStatement(sqlSt);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Paquete> result = null;

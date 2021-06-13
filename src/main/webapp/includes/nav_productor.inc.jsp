@@ -7,19 +7,16 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="#">Mis Terrenos</a>
+          <a class="nav-link" href="TerrenosController?opcion=8">Mis Terrenos</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Nueva Propuesta</a>
+          <a class="nav-link" href="PaquetesController?opcion=8">Mis Propuestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Mis Cestas</a>
+          <a class="nav-link" href="CestasController?opcion=8">Mis Cestas</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Justificantes</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Perfil</a>
+          <a class="nav-link" href="UsuariosController?opcion=4">Perfil</a>
         </li>
       </ul>
     </div>

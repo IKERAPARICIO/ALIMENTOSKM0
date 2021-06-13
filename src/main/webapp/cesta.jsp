@@ -37,7 +37,7 @@
 			id = cesta.getId();
 			nombre = cesta.getNombre();
 			fechaCreacion = cesta.getFechaCreacion();
-			nombreUsuario = cesta.getUsuarioNombre();
+			nombreUsuario = cesta.getUsuarioNombreCompleto();
 			fechaCompra = cesta.getFechaCompra();
 			precio = cesta.getPrecio();
 		}

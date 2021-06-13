@@ -97,11 +97,11 @@ public class Cesta implements Producto {
 			return consumidor.getId();
 	}
 	
-	public String getUsuarioNombre() {
+	public String getUsuarioNombreCompleto() {
 		if(consumidor == null)
 			return "";
 		else
-			return consumidor.getNombre();
+			return consumidor.getNombreCompleto();
 	}
 
 	public void setUsuario(Usuario usuario) {

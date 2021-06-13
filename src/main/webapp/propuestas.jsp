@@ -84,11 +84,19 @@
 					<td><%=p.getFechaPorpuesta().toString()%></td>
 					<td><%=p.getEstado().toString()%></td>
 					<td>
-						<% if (p.estaSinGestionar()){ %>
+						<% if (nivelAcceso > 8 && p.estaSinGestionar()){ %>
 							<img src="img/approval.png" width="16px" alt="Aprobar" onclick="approveQuantity(<%=p.getId()%>,<%=p.getCantidadPropuesta()%>)">
 							<img src="img/edit.png" width="16px" alt="Parcialmente" onclick="askForQuantity(<%=p.getId()%>,<%=p.getCantidadPropuesta()%>)">
 							<a href="PaquetesController?opcion=2&id=<%=p.getId()%>"><img src="img/disapproval.png" width="16px" alt="Rechazar"></a>
-						<% } %>
+						<% }
+						else if (nivelAcceso == 5){ 
+							if (p.estaSinGestionar()){%>
+								<a href="PaquetesController?opcion=12&id=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+								<a href="PaquetesController?opcion=14&id=<%=p.getId()%>"><img src="img/edit.png" width="16px" alt="Editar"></a>
+							<% } else if (p.estaAceptado()){%>
+								<a href="PaquetesController?opcion=10&id=<%=p.getId()%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
+						<% } 
+						}%>
 					</td>
 				</tr>
 				<%
@@ -96,6 +104,11 @@
 			}
 			%>
 		</table>
+		<% if (nivelAcceso == 5){ %>
+			<div class="centeredContainer">
+				<button class="button" onclick="document.location='PaquetesController?opcion=14&id=0'">Nueva Propuesta</button>
+			</div>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

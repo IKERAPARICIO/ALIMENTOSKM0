@@ -136,6 +136,14 @@ public class UsuariosController extends HttpServlet {
 			String telefono = request.getParameter("telefono");
 			String sRol = request.getParameter("sRol");
 			
+			//si un Productor acutaliza su perfil no le pasa el sRol del formulario
+			//mira si es Productor actualizando su perfil o el gestor actualizando un Productor
+			HttpSession sesion = request.getSession();
+			Usuario usuarioSes = (Usuario)sesion.getAttribute("usuario");
+			if (usuarioSes.getRolName().equals(Rol.PRODUCTOR.toString())) {
+				sRol = usuarioSes.getRolName();
+			}
+				
 			if (sRol.equals(Rol.PRODUCTOR.toString())){
 				String dni = request.getParameter("dni");
 				String direccion = request.getParameter("direccion");

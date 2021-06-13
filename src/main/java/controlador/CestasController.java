@@ -223,15 +223,21 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
-	private void verMisCestas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
+	private void verMisCestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
 		try {
 			CestaDAO cDAO = new CestaDAO();
-			listaCestas = cDAO.listMyCestas(usuario.getId());
-		} catch (NumberFormatException e) {
+			//si es productor lista las cestas en las que hay porciones de sus terrenos, si es consumidor sus cestas compradas
+			if (usuario.obtenerPermisosRol() < 4) {
+				listaCestas = cDAO.listMyCestas(usuario.getId());
+			}
+			else {
+				listaCestas = cDAO.listCestasMyTerrenos(usuario.getId());
+			}
+		} catch (Exception e) {
 			msg = "ERROR al cargar las cestas.";
 		}
 		

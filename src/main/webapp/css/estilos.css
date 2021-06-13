@@ -329,3 +329,8 @@ footer .floatLeft .footertext {
     color: #78a206;
     text-decoration: none;
 }
+
+/*************************** SELECT AJAX ***************************/
+#productosSelect{
+	display: inline-block;
+}

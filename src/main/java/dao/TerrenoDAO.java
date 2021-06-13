@@ -75,8 +75,14 @@ public class TerrenoDAO {
 		ps.close();
 	}
 	
-	public ArrayList<Terreno> listTerrenos() throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT * from terreno ORDER BY nombre");
+	public ArrayList<Terreno> listTerrenos(int idUsuario) throws SQLException {
+		String st = "SELECT * from terreno";
+		if (idUsuario != 0) {
+			st += " WHERE idUsuario = " + idUsuario;
+		}
+		st += " ORDER BY nombre";
+			
+		PreparedStatement ps = con.prepareStatement(st);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Terreno> result = null;
 		

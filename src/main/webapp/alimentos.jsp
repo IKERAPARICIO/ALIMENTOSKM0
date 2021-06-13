@@ -49,7 +49,7 @@
 								<a href="TerrenosController?opcion=6&idTerreno=<%=idTerreno%>&idAlimento=<%=a.getId()%>"><img src="img/add.png" width="16px" alt="Agregar"></a>
 							<% } else { %>
 								<a href="AlimentosController?opcion=2&id=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
-								<a href="AlimentosController?opcion=5&id=<%=a.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+								<a href="AlimentosController?opcion=5&id=<%=a.getId()%>"><img src="img/edit.png" width="16px" alt="Editar"></a>
 							<% } %>
 						</td>
 					</tr>
