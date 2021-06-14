@@ -109,30 +109,19 @@ public class Terreno {
 	}
 	
 	//Acceso a DAO
-	public int insertar() {
+	public int insertar() throws SQLException {
 		int idTerreno = 0;
-		try {
-			idTerreno = TerrenoDAO.getInstance().insert(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		idTerreno = TerrenoDAO.getInstance().insert(this);
+		
 		return idTerreno;
 	}
 	
-	public void eliminar(int id) {
-		try {
-			TerrenoDAO.getInstance().delete(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void eliminar(int id) throws SQLException {
+		TerrenoDAO.getInstance().delete(id);
 	}
 	
-	public void actualizar() {
-		try {
-			TerrenoDAO.getInstance().update(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		TerrenoDAO.getInstance().update(this);
 	}
 	
 	public ArrayList<Terreno> obtenerTerrenos(int idUsuario) {

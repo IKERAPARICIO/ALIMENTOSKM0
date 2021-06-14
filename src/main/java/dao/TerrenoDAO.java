@@ -29,28 +29,26 @@ public class TerrenoDAO {
 	
 	public int insert(Terreno t) throws SQLException {
 		int idTerreno = 0;
-		try {
-			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO terreno (nombre, idUsuario, metros, ciudad, direccion) VALUES (?,?,?,?,?)", 
-							Statement.RETURN_GENERATED_KEYS );
-			ps.setString(1, t.getNombre());
-			ps.setInt(2, t.getProductorId());
-			ps.setDouble(3, t.getMetros());
-			ps.setString(4, t.getCiudad());
-			ps.setString(5, t.getDireccion());
-			
-			int rowAffected = ps.executeUpdate();
-			if(rowAffected == 1)
-			{
-				//obtiene el id del nuevo alimento insertado
-				ResultSet rs = ps.getGeneratedKeys();
-                if(rs.next())
-                	idTerreno = rs.getInt(1);
-			}
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al introducir el terreno!");
+
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO terreno (nombre, idUsuario, metros, ciudad, direccion) VALUES (?,?,?,?,?)", 
+						Statement.RETURN_GENERATED_KEYS );
+		ps.setString(1, t.getNombre());
+		ps.setInt(2, t.getProductorId());
+		ps.setDouble(3, t.getMetros());
+		ps.setString(4, t.getCiudad());
+		ps.setString(5, t.getDireccion());
+		
+		int rowAffected = ps.executeUpdate();
+		if(rowAffected == 1)
+		{
+			//obtiene el id del nuevo alimento insertado
+			ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next())
+            	idTerreno = rs.getInt(1);
 		}
+		ps.close();
+
 		return idTerreno;
 	}
 	

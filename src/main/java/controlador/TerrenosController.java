@@ -88,6 +88,8 @@ public class TerrenosController extends HttpServlet {
 			request.setAttribute("terreno",terreno);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el Terreno.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al introducir el Terreno.";
 		}
 
 		request.setAttribute("mensaje",msg);
@@ -107,9 +109,10 @@ public class TerrenosController extends HttpServlet {
 			
 			terreno = new Terreno();
 			terreno.eliminar(id);
-			terrenos = terreno.obtenerTerrenos(0);
 		} catch (Exception e) {
 			msg = "ERROR al eliminar el terreno.";
+		} finally {
+			terrenos = terreno.obtenerTerrenos(0);
 		}
 		
 		request.setAttribute("terrenos",terrenos);
@@ -136,6 +139,8 @@ public class TerrenosController extends HttpServlet {
 			terreno.actualizar();
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar el terreno.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al modificar el terreno.";
 		}
 		
 		request.setAttribute("terreno",terreno);
