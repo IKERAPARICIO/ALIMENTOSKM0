@@ -94,6 +94,10 @@ public class Porcion implements Producto {
 		return this.paquete.getAlimento().getPrecio();
 	}
 	
+	public Double getPrecioAlimento(Date fecha) {
+		return this.paquete.getAlimento().getPrecio(fecha);
+	}
+	
 	public String getNombreTerreno() {
 		return this.paquete.getTerreno().getNombre();
 	}
@@ -103,6 +107,14 @@ public class Porcion implements Producto {
 		double precio = 0;
 		
 		precio = this.paquete.getAlimento().getPrecio() * cantidad;
+		return precio;
+	}
+	
+	@Override
+	public double getPrecio(Date fecha) {
+		double precio = 0;
+		
+		precio = this.paquete.getAlimento().getPrecio(fecha) * cantidad;
 		return precio;
 	}
 	

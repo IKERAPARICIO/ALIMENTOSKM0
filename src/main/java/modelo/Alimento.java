@@ -1,5 +1,6 @@
 package modelo;
 
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,6 +59,17 @@ public class Alimento implements Producto {
 		double precio = 0;
 		try {
 			precio = AlimentoDAO.getInstance().getCurrentPrice(this.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return precio;
+	}
+	
+	//devuelve el precio en la fecha pasada
+	public double getPrecio(Date fecha) {
+		double precio = 0;
+		try {
+			precio = AlimentoDAO.getInstance().getDatePrice(this.id,fecha);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

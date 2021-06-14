@@ -1,5 +1,7 @@
 package controlador;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,10 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import dao.CestaDAO;
 import dao.PaqueteDAO;
 import dao.TerrenoDAO;
 import modelo.Cesta;
+import modelo.GeneradorPdf;
+import modelo.Paquete;
 import modelo.Porcion;
 import modelo.Terreno;
 import modelo.Usuario;
@@ -70,9 +78,9 @@ public class CestasController extends HttpServlet {
 			case "11":
 				verPorcionesDisponibles(request, response);
 				break;
-			/*case "10":
-				abrirJustificante(request, response);
-				break;*/
+			case "12":
+				descargarJustificante(request, response);
+				break;
 			default:
 				System.out.println("Opcion no valida.");
 		}
@@ -146,8 +154,10 @@ public class CestasController extends HttpServlet {
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			String nombre = request.getParameter("nombre");
+			String sPreparada = request.getParameter("preparada");
+			boolean preparada = "0".equals(sPreparada) ? false : true;
 
-			Cesta cesta = new Cesta(id, nombre);
+			Cesta cesta = new Cesta(id, nombre, preparada);
 			cesta.actualizar();
 			
 			request.setAttribute("cesta",cesta);
@@ -294,7 +304,52 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
-	//abrirJustificante
+	private void descargarJustificante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
+		String msg = null;
+		Document document = new Document(); 
+		String filePath = "C:\\tmp\\";
+		String fileNameEnd = "reciboConsumidor.pdf";
+	    try 
+	    { 
+	    	int idCesta = Integer.parseInt(request.getParameter("id"));	
+	    	String fileName = filePath+idCesta+"_"+fileNameEnd;
+	    	//PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Test.pdf"));
+	    	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+	    	document.open(); 
+	    	GeneradorPdf pdf = new GeneradorPdf();
+	    	pdf.crearReciboCesta(document,idCesta);
+	    	document.close(); 
+	    	writer.close(); 
+	    	msg = "Se ha generado el recibo en " + fileName + ". Preséntelo como justificante.";
+	    } catch (NumberFormatException e) {
+			msg = "ERROR al cargar la cesta.";
+		} catch (DocumentException e) 
+	    { 
+	    	e.printStackTrace(); 
+	    	msg = "Error al generar el documento pdf.";
+	    } catch (FileNotFoundException e) 
+	    { 
+	    	e.printStackTrace(); 
+	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
+	    }
+	    
+		
+		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		try {
+			CestaDAO cDAO = new CestaDAO();
+			listaCestas = cDAO.listMyCestas(usuario.getId());	
+		} catch (NumberFormatException e) {
+			msg = "ERROR al comprar la cesta.";
+		}
+		
+		request.setAttribute("listaCestas",listaCestas);
+		request.setAttribute("mensaje",msg);
+		request.setAttribute("miscestas",true);
+		RequestDispatcher vista = request.getRequestDispatcher("cestas.jsp");
+		vista.forward(request, response);
+	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {

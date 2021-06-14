@@ -61,8 +61,8 @@ function confirmMsg(){
 				        <div class="precio-icono">
 				        <% if(nivelAcceso == 3){
 				        	   if (miscestas){ %>
-					        		<a href="CestasController?opcion=10&id=<%=cId%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
-					  		<% } else if (miscestas){ %>
+					        		<a href="CestasController?opcion=12&id=<%=cId%>"><img src="img/invoice.png" alt="Justificante" width="24px"></a>
+					  		<% } else { %>
 					        	<a href="CestasController?opcion=7&id=<%=cId%>" onclick="return confirmMsg()"><img src="img/basket.png" alt="Comprar" width="16px"></a>
 					    <% 	   } 
 					       }%>
@@ -94,10 +94,10 @@ function confirmMsg(){
 									<tr>
 										<td><%=p.getNombreAlimento()%></td>
 										<td><%=p.getCantidad()%></td>
-										<td><%=p.getPrecioAlimento()%></td>
+										<td><%=p.getPrecioAlimento(cesta.getFechaCreacion())%></td>
 										<td><%=p.getNombreTerreno()%></td>
 										<td><%=p.getNombreProductor()%></td>
-										<td><%=p.getPrecio()%></td>
+										<td><%=p.getPrecio(cesta.getFechaCreacion())%></td>
 									</tr>
 									<%
 									}

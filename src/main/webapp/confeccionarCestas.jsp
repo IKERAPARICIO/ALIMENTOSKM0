@@ -25,6 +25,7 @@
 				<th>ID</th>
 				<th>CESTA</th>
 				<th>FECHA</th>
+				<th>PREPARADA</th>
 				<th>CONSUMIDOR</th>
 				<th>FECHA COMPRA</th>
 				<th>PRECIO</th>
@@ -39,11 +40,12 @@
 					<td><%=c.getId()%></td>
 					<td><%=c.getNombre()%></td>
 					<td><%=c.getFechaCreacion()%></td>
+					<td><%=c.isPreparada() ? "SI" : "NO"%></td>
 					<td><%=c.getUsuarioNombreCompleto()%></td>
-					<td><%=c.getFechaCompra()%></td>
+					<td><%=c.getStringFechaCompra()%></td>
 					<td><%=c.getPrecio()%></td>
 					<td>
-						<% if (c.getUsuarioNombreCompleto() == "") {%>
+						<% if (c.getUsuarioNombreCompleto().trim() == "") {%>
 							<a href="CestasController?opcion=1&id=<%=c.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<a href="CestasController?opcion=5&id=<%=c.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
 						<% } %>

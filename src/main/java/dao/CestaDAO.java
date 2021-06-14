@@ -30,10 +30,11 @@ public class CestaDAO {
 		int idCesta = 0;
 		try {
 			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion) VALUES (?,?,?)", Statement.RETURN_GENERATED_KEYS );
+					.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion, preparada) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS );
 			ps.setString(1, c.getNombre());
 			ps.setInt(2, c.getUsuarioId());
 			ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+			ps.setBoolean(4, false);
 			
 			int rowAffected = ps.executeUpdate();
 			if(rowAffected == 1)
@@ -58,12 +59,13 @@ public class CestaDAO {
 	}
 	
 	public void update(Cesta c) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("UPDATE cesta SET nombre = ?, idUsuario = ?, fechaCompra = ? "
-													+ "WHERE idCesta = ?");
+		PreparedStatement ps = con.prepareStatement("UPDATE cesta SET nombre = ?, idUsuario = ?, fechaCompra = ?, "
+													+ "preparada = ? WHERE idCesta = ?");
 		ps.setString(1, c.getNombre());
 		ps.setInt(2, c.getUsuarioId());
 		ps.setDate(3, c.getFechaCompra());
-		ps.setInt(4, c.getId());
+		ps.setBoolean(4, c.isPreparada());
+		ps.setInt(5, c.getId());
 
 		ps.executeUpdate();
 		ps.close();
@@ -78,7 +80,7 @@ public class CestaDAO {
 			if (result == null)
 				result = new ArrayList<>();
 				result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"),
-						rs.getDate("fechaCompra"), rs.getInt("idUsuario")));
+						rs.getDate("fechaCompra"), rs.getBoolean("preparada"), rs.getInt("idUsuario")));
 		}
 		
 		rs.close();
@@ -87,7 +89,9 @@ public class CestaDAO {
 	}
 	
 	public ArrayList<Cesta> listCestasDisponibles() throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = 0 ORDER BY fechaCreacion");
+		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = 0 "
+													+ "AND preparada = ? ORDER BY fechaCreacion");
+		ps.setBoolean(1, true);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Cesta> result = null;
 		
@@ -125,8 +129,9 @@ public class CestaDAO {
 								+ "LEFT JOIN porcion ON cesta_porcion.idPorcion = porcion.idPorcion "
 								+ "LEFT JOIN paquete ON porcion.idPaquete = paquete.idPaquete "
 								+ "LEFT JOIN terreno ON paquete.idTerreno = terreno.idTerreno "
-								+ "WHERE terreno.idUsuario = ? ORDER BY fechaCreacion DESC");
+								+ "WHERE terreno.idUsuario = ? AND cesta.preparada = ? ORDER BY fechaCreacion DESC");
 		ps.setInt(1, idUsuario);
+		ps.setBoolean(2, true);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Cesta> result = null;
 		
@@ -134,7 +139,7 @@ public class CestaDAO {
 			if (result == null)
 				result = new ArrayList<>();
 			result.add(new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"),
-					rs.getDate("fechaCompra"), rs.getInt("idUsuario")));
+					rs.getDate("fechaCompra"), rs.getBoolean("preparada"), rs.getInt("idUsuario")));
 		}
 		
 		rs.close();
@@ -149,7 +154,7 @@ public class CestaDAO {
 		Cesta result = null;
 		if (rs.next()) {
 			result = new Cesta(rs.getInt("idCesta"), rs.getString("nombre"), rs.getDate("fechaCreacion"),
-					 rs.getDate("fechaCompra"), rs.getInt("idUsuario"));
+					 rs.getDate("fechaCompra"), rs.getBoolean("preparada"), rs.getInt("idUsuario"));
 		}
 		rs.close();
 		ps.close();

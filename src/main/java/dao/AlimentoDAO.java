@@ -1,6 +1,7 @@
 package dao;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -101,6 +102,21 @@ public class AlimentoDAO {
 	public double getCurrentPrice(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT precioMedida FROM precio WHERE idAlimento = ? ORDER BY fecha DESC limit 1");
 		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		double result = 0;
+		if (rs.next()) {
+			result = rs.getDouble("precioMedida");
+		}
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
+	public double getDatePrice(int id, Date fecha) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT precioMedida FROM precio WHERE idAlimento = ? "
+				+ "AND fecha <= ? ORDER BY fecha DESC limit 1");
+		ps.setInt(1, id);
+		ps.setDate(2, fecha);
 		ResultSet rs = ps.executeQuery();
 		double result = 0;
 		if (rs.next()) {

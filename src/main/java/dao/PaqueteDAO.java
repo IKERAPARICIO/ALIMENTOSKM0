@@ -232,7 +232,6 @@ public class PaqueteDAO {
 		lista.add(Estado.PROPUESTO.toString());
 		lista.add(Estado.ACEPTADO.toString());
 		lista.add(Estado.RECHAZADO.toString());
-		lista.add(Estado.VENDIDO.toString());
 		lista.add(Estado.ANULADO.toString());
 		return lista;
 	}
@@ -240,7 +239,6 @@ public class PaqueteDAO {
 	public ArrayList<String> getAlmacenStates() {
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add(Estado.ACEPTADO.toString());
-		lista.add(Estado.VENDIDO.toString());
 		lista.add(Estado.ANULADO.toString());
 		return lista;
 	}

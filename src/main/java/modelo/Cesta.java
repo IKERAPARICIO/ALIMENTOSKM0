@@ -13,6 +13,7 @@ public class Cesta implements Producto {
 	private String nombre;
 	private Date fechaCreacion;
 	private Date fechaCompra;
+	private boolean preparada;
 	
 	Usuario consumidor = new Usuario();
 	ArrayList<Porcion> listaPorciones = new ArrayList<Porcion>();
@@ -25,9 +26,10 @@ public class Cesta implements Producto {
 		this.nombre = nombre;
 	}
 	
-	public Cesta(int id, String nombre) {
+	public Cesta(int id, String nombre, boolean preparada) {
 		this.id = id;
 		this.nombre = nombre;
+		this.preparada = preparada;
 	}
 
 	public Cesta(int id, String nombre, Date fechaCreacion) {
@@ -43,11 +45,12 @@ public class Cesta implements Producto {
 		this.fechaCompra = fechaCompra;
 	}
 	
-	public Cesta(int id, String nombre, Date fechaCreacion, Date fechaCompra, int idUsuario) {
+	public Cesta(int id, String nombre, Date fechaCreacion, Date fechaCompra, boolean preparada, int idUsuario) {
 		this.id = id;
 		this.nombre = nombre;
 		this.fechaCreacion = fechaCreacion;
 		this.fechaCompra = fechaCompra;
+		this.preparada = preparada;
 		
 		Usuario u = new Consumidor();
 		u.buscarID(idUsuario);
@@ -81,9 +84,24 @@ public class Cesta implements Producto {
 	public Date getFechaCompra() {
 		return fechaCompra;
 	}
+	
+	public String getStringFechaCompra() {
+		if (fechaCompra == null)
+			return "";
+		else
+			return fechaCompra.toString();
+	}
 
 	public void setFechaCompra(Date fechaCompra) {
 		this.fechaCompra = fechaCompra;
+	}
+	
+	public boolean isPreparada() {
+		return preparada;
+	}
+
+	public void setPreparada(boolean preparada) {
+		this.preparada = preparada;
 	}
 
 	public Usuario getUsuario() {
@@ -117,10 +135,27 @@ public class Cesta implements Producto {
 		}
 		if (listaPorciones != null) {
 			for (Porcion p : listaPorciones) {
-				precio = precio + p.getPrecio();
+				precio = precio + p.getPrecio(this.fechaCreacion);
 			}
 		}
-		return precio;
+		
+		return Math.round(precio * 100.0) / 100.0;
+	}
+	
+	@Override
+	public double getPrecio(Date fecha) {
+		double precio = 0;
+		
+		if (listaPorciones.isEmpty()) {
+			listaPorciones = this.obtenerPorciones();
+		}
+		if (listaPorciones != null) {
+			for (Porcion p : listaPorciones) {
+				precio = precio + p.getPrecio(fecha);
+			}
+		}
+		
+		return Math.round(precio * 100.0) / 100.0;
 	}
 
 	public int insertar() {

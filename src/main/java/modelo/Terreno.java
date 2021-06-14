@@ -15,7 +15,7 @@ public class Terreno {
 	private String ciudad;
 	private String direccion;
 	
-	Usuario productor = new Usuario();
+	Productor productor = new Productor();
 	
 	public Terreno() {
 		
@@ -34,7 +34,7 @@ public class Terreno {
 		this.ciudad = ciudad;
 		this.direccion = direccion;
 		
-		Usuario productor = new Usuario();
+		Productor productor = new Productor();
 		productor.buscarID(idUsuario);
 		this.productor = productor;
 	}
@@ -46,7 +46,7 @@ public class Terreno {
 		this.ciudad = ciudad;
 		this.direccion = direccion;
 		
-		Usuario productor = new Usuario();
+		Productor productor = new Productor();
 		productor.buscarID(idUsuario);
 		this.productor = productor;
 	}
@@ -91,11 +91,11 @@ public class Terreno {
 		this.direccion = direccion;
 	}
 
-	public Usuario getProductor() {
+	public Productor getProductor() {
 		return productor;
 	}
 
-	public void setProductor(Usuario productor) {
+	public void setProductor(Productor productor) {
 		this.productor = productor;
 	}
 	

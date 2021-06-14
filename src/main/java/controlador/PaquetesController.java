@@ -1,10 +1,10 @@
 package controlador;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,9 +14,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.pdf.PdfWriter;
+
 import dao.PaqueteDAO;
 import dao.TerrenoDAO;
-import modelo.Alimento;
+import modelo.GeneradorPdf;
 import modelo.Paquete;
 import modelo.Porcion;
 import modelo.Terreno;
@@ -66,9 +71,9 @@ public class PaquetesController extends HttpServlet {
 			case "9":
 				cargarAlmacen(request, response);
 				break;
-			/*case "10":
-				abrirJustificante(request, response);
-				break;*/
+			case "10":
+				descargarJustificante(request, response);
+				break;
 			case "11":
 				altaPropuesta(request, response);
 				break;
@@ -257,7 +262,7 @@ public class PaquetesController extends HttpServlet {
 			}
 			
 		} catch (Exception e) {
-			msg = "ERROR al cargar las cestas.";
+			msg = "ERROR al cargar las propuestas.";
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -281,6 +286,53 @@ public class PaquetesController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	private void descargarJustificante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String msg = null;
+		Document document = new Document(); 
+		String filePath = "C:\\tmp\\";
+		String fileNameEnd = "reciboProductor.pdf";
+	    try 
+	    { 
+	    	int idPaquete = Integer.parseInt(request.getParameter("id"));	
+	    	String fileName = filePath+idPaquete+"_"+fileNameEnd;
+	    	//PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Test.pdf"));
+	    	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
+	    	document.open(); 
+	    	GeneradorPdf pdf = new GeneradorPdf();
+	    	pdf.crearReciboPaquete(document,idPaquete);
+	    	document.close(); 
+	    	writer.close(); 
+	    	msg = "Se ha generado el recibo en " + fileName + ". Preséntelo como justificante.";
+	    } catch (NumberFormatException e) {
+			msg = "ERROR al cargar la propuesta.";
+		} catch (DocumentException e) 
+	    { 
+	    	e.printStackTrace(); 
+	    	msg = "Error al generar el documento pdf.";
+	    } catch (FileNotFoundException e) 
+	    { 
+	    	e.printStackTrace(); 
+	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
+	    }
+	    
+		
+		String fEstado = "";
+		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
+		HttpSession sesion = request.getSession();
+		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		try {			
+			PaqueteDAO pDAO = new PaqueteDAO();
+			propuestas = pDAO.listMyPropuestas(fEstado,usuario.getId());
+		} catch (Exception e) {
+			msg += "ERROR al cargar las propuestas.";
+		}
+
+		request.setAttribute("propuestas",propuestas);
+		request.setAttribute("mensaje",msg);
+		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
+		vista.forward(request, response);
+	}
+
 	private void altaPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = "Propuesta incluida.";
 		HttpSession sesion = request.getSession();

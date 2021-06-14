@@ -60,10 +60,8 @@ public class Paquete implements Producto {
 			this.estado = Estado.ANULADO;
 		else if (Estado.PROPUESTO.toString().equals(estado))
 			this.estado = Estado.PROPUESTO;
-		else if (Estado.RECHAZADO.toString().equals(estado))
-			this.estado = Estado.RECHAZADO;
 		else
-			this.estado = Estado.VENDIDO;
+			this.estado = Estado.RECHAZADO;
 		
 		Terreno t = new Terreno();
 		t.buscarID(idTerreno);
@@ -105,7 +103,7 @@ public class Paquete implements Producto {
 		this.cantidadDisponible = cantidadDisponible;
 	}
 
-	public Date getFechaPorpuesta() {
+	public Date getFechaPropuesta() {
 		return fechaPropuesta;
 	}
 
@@ -146,8 +144,12 @@ public class Paquete implements Producto {
 	}
 	
 	//
-	public String getNombreProductor() {
-		return this.terreno.getProductor().getNombre();
+	public Productor getProductor() {
+		return this.terreno.getProductor();
+	}
+	
+	public String getNombreCompletoProductor() {
+		return this.terreno.getProductor().getNombreCompleto();
 	}
 	
 	public String getNombreAlimento() {
@@ -162,9 +164,16 @@ public class Paquete implements Producto {
 	public double getPrecio() {
 		double precio = 0;
 		
-		precio = this.getAlimento().getPrecio() * this.cantidadAceptada; 
+		precio = this.getAlimento().getPrecio(this.fechaAceptacion) * this.cantidadAceptada; 
+		return Math.round(precio * 100.0) / 100.0;
+	}
+	
+	@Override
+	public double getPrecio(Date fecha) {
+		double precio = 0;
 		
-		return precio;
+		precio = this.getAlimento().getPrecio(fecha) * this.cantidadAceptada; 
+		return Math.round(precio * 100.0) / 100.0;
 	}
 	
 	public ArrayList<Paquete> obtenerPropuestas(String estado) {
@@ -253,7 +262,7 @@ public class Paquete implements Producto {
 	}
 	
 	public boolean estaAceptado() {
-		if (this.estado == Estado.ACEPTADO || this.estado == Estado.VENDIDO)
+		if (this.estado == Estado.ACEPTADO)
 			return true;
 		else
 			return false;

@@ -25,8 +25,9 @@
 		String nombre = "";
 		Date fechaCreacion = null;
 		String nombreUsuario = "";
-		Date fechaCompra = null;
+		String sFechaCompra = "";
 		double precio = 0;
+		boolean preparada = false;
 		
 		Cesta cesta = new Cesta();
 		//actualizar la cesta
@@ -38,8 +39,9 @@
 			nombre = cesta.getNombre();
 			fechaCreacion = cesta.getFechaCreacion();
 			nombreUsuario = cesta.getUsuarioNombreCompleto();
-			fechaCompra = cesta.getFechaCompra();
+			sFechaCompra = cesta.getStringFechaCompra();
 			precio = cesta.getPrecio();
+			preparada = cesta.isPreparada();
 		}
 	%>
 
@@ -48,9 +50,14 @@
 		<form name="cesta" action="CestasController" method="post">
 			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
 			<% if(id != 0){ %>
+				<label for="preparada">Preparada:</label>
+				<select id="preparada" name="preparada">
+					<option value="0" <%if(!preparada){%> selected <%} %>>NO</option>
+					<option value="1" <%if(preparada){%> selected <%} %>>SI</option>
+				</select><br>
 				<label for="fechaCreacion">Fecha Creacion:</label><input type="text" name="fechaCreacion" value="<%=fechaCreacion%>" id="fechaCreacion" DISABLED><br>
 				<label for="nombreUsuario">Usuario:</label><input type="text" name="nombreUsuario" value="<%=nombreUsuario%>" id="nombreUsuario" DISABLED><br>
-				<label for="fechaCompra">Fecha Compra:</label><input type="text" name="fechaCompra" value="<%=fechaCompra%>" id="fechaCompra" DISABLED><br>
+				<label for="fechaCompra">Fecha Compra:</label><input type="text" name="fechaCompra" value="<%=sFechaCompra%>" id="fechaCompra" DISABLED><br>
 				<label for="precio">Precio:</label><input type="text" name="precio" value="<%=precio%>" id="nombre" DISABLED><br>
 			<% } %>
 			<input type="hidden" name="opcion" value="<%=option%>">

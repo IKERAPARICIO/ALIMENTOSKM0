@@ -77,11 +77,11 @@
 				for (Paquete p : propuestas) {
 				%>
 				<tr>
-					<td><%=p.getNombreProductor()%></td>
+					<td><%=p.getNombreCompletoProductor()%></td>
 					<td><%=p.getNombreAlimento()%></td>
 					<td><%=p.getCantidadPropuesta().toString()%></td>
 					<td><%=p.getNombreTerreno()%></td>
-					<td><%=p.getFechaPorpuesta().toString()%></td>
+					<td><%=p.getFechaPropuesta().toString()%></td>
 					<td><%=p.getEstado().toString()%></td>
 					<td>
 						<% if (nivelAcceso > 8 && p.estaSinGestionar()){ %>

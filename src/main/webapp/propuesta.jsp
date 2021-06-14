@@ -60,32 +60,32 @@
 	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
-		int id = 0; 
-		int option = 11;
-		Double cantidadPropuesta = 0.0;
-		Date fechaPropuesta = null;
-		String sEstado = "";
-		String nombreTerreno = "";
-		String nombreAlimento = "";
-		
-		//carga los terrenos del usuario, solo para crearlos nuevos
-		ArrayList<Terreno> terrenos = new ArrayList<Terreno>();
-		if(request.getAttribute("terrenos") != null){
-			terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
-		}
-		
-		//actualizar la propuesta
-		if(request.getAttribute("propuesta") != null){
-			Paquete paquete = (Paquete)request.getAttribute("propuesta");
-			option = 13;
+	int id = 0; 
+			int option = 11;
+			Double cantidadPropuesta = 0.0;
+			Date fechaPropuesta = null;
+			String sEstado = "";
+			String nombreTerreno = "";
+			String nombreAlimento = "";
+			
+			//carga los terrenos del usuario, solo para crearlos nuevos
+			ArrayList<Terreno> terrenos = new ArrayList<Terreno>();
+			if(request.getAttribute("terrenos") != null){
+		terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
+			}
+			
+			//actualizar la propuesta
+			if(request.getAttribute("propuesta") != null){
+		Paquete paquete = (Paquete)request.getAttribute("propuesta");
+		option = 13;
 
-			id = paquete.getId();
-			cantidadPropuesta = paquete.getCantidadPropuesta();
-			fechaPropuesta = paquete.getFechaPorpuesta();
-			sEstado = paquete.getEstado().toString();
-			nombreTerreno = paquete.getNombreTerreno();
-			nombreAlimento = paquete.getNombreAlimento();
-		}
+		id = paquete.getId();
+		cantidadPropuesta = paquete.getCantidadPropuesta();
+		fechaPropuesta = paquete.getFechaPropuesta();
+		sEstado = paquete.getEstado().toString();
+		nombreTerreno = paquete.getNombreTerreno();
+		nombreAlimento = paquete.getNombreAlimento();
+			}
 	%>
 
 	<section>
