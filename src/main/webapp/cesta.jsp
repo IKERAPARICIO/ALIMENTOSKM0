@@ -48,17 +48,17 @@
 	<section>
 		<h1>Detalle Cesta</h1>
 		<form name="cesta" action="CestasController" method="post">
-			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
+			<label for="nombre" class="XL">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
 			<% if(id != 0){ %>
-				<label for="preparada">Preparada:</label>
+				<label for="preparada" class="XL">Preparada:</label>
 				<select id="preparada" name="preparada">
 					<option value="0" <%if(!preparada){%> selected <%} %>>NO</option>
 					<option value="1" <%if(preparada){%> selected <%} %>>SI</option>
 				</select><br>
-				<label for="fechaCreacion">Fecha Creacion:</label><input type="text" name="fechaCreacion" value="<%=fechaCreacion%>" id="fechaCreacion" DISABLED><br>
-				<label for="nombreUsuario">Usuario:</label><input type="text" name="nombreUsuario" value="<%=nombreUsuario%>" id="nombreUsuario" DISABLED><br>
-				<label for="fechaCompra">Fecha Compra:</label><input type="text" name="fechaCompra" value="<%=sFechaCompra%>" id="fechaCompra" DISABLED><br>
-				<label for="precio">Precio:</label><input type="text" name="precio" value="<%=precio%>" id="nombre" DISABLED><br>
+				<label for="fechaCreacion" class="XL">Fecha Creacion:</label><input type="text" name="fechaCreacion" value="<%=fechaCreacion%>" id="fechaCreacion" DISABLED><br>
+				<label for="nombreUsuario" class="XL">Usuario:</label><input type="text" name="nombreUsuario" value="<%=nombreUsuario%>" id="nombreUsuario" DISABLED><br>
+				<label for="fechaCompra" class="XL">Fecha Compra:</label><input type="text" name="fechaCompra" value="<%=sFechaCompra%>" id="fechaCompra" DISABLED><br>
+				<label for="precio" class="XL">Precio:</label><input type="text" name="precio" value="<%=precio%>" id="nombre" DISABLED><br>
 			<% } %>
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
@@ -90,7 +90,7 @@
 						<td><%=p.getNombreProductor()%></td>
 						<td><%=p.getFechaAceptacionPaquete()%></td>
 						<td>
-							<% if ("".equals(nombreUsuario)){ %>
+							<% if ("".equals(nombreUsuario.trim())){ %>
 								<a href="CestasController?opcion=2&idCesta=<%=id%>&idPorcion=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<% } %>
 						</td>

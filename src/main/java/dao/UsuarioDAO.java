@@ -45,25 +45,23 @@ public class UsuarioDAO {
 	
 	public int insert(Usuario u, String dni, String direccion) throws SQLException {
 		int idUsuario = 0;
-		try {
-			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO usuario (nick, pass, nombre, apellidos, mail, ciudad, telefono,"
-							+ "rol, dni, direccion) VALUES (?,?,?,?,?,?,?,?,?,?)");
-			ps.setString(1, u.getNick());
-			ps.setString(2, u.getPassword());
-			ps.setString(3, u.getNombre());
-			ps.setString(4, u.getApellidos());
-			ps.setString(5, u.getMail());
-			ps.setString(6, u.getCiudad());
-			ps.setString(7, u.getTelefono());
-			ps.setString(8, u.getRolName());
-			ps.setString(9, dni);
-			ps.setString(10, direccion);
-			ps.executeUpdate();
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al introducir el usuario!");
-		}
+
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO usuario (nick, pass, nombre, apellidos, mail, ciudad, telefono,"
+						+ "rol, dni, direccion) VALUES (?,?,?,?,?,?,?,?,?,?)");
+		ps.setString(1, u.getNick());
+		ps.setString(2, u.getPassword());
+		ps.setString(3, u.getNombre());
+		ps.setString(4, u.getApellidos());
+		ps.setString(5, u.getMail());
+		ps.setString(6, u.getCiudad());
+		ps.setString(7, u.getTelefono());
+		ps.setString(8, u.getRolName());
+		ps.setString(9, dni);
+		ps.setString(10, direccion);
+		ps.executeUpdate();
+		ps.close();
+
 		return idUsuario;
 	}
 	
@@ -75,27 +73,23 @@ public class UsuarioDAO {
 	}
 	
 	public void update(Usuario u, String dni, String direccion) throws SQLException {
-		try {
-			PreparedStatement ps = con.prepareStatement("UPDATE usuario SET nick = ?, pass = ?, nombre = ?, apellidos = ?,"
-													+ " mail = ?, ciudad = ?, telefono = ?, rol = ?, dni = ?,"
-													+ " direccion = ? WHERE idUsuario = ?");
-			ps.setString(1, u.getNick());
-			ps.setString(2, u.getPassword());
-			ps.setString(3, u.getNombre());
-			ps.setString(4, u.getApellidos());
-			ps.setString(5, u.getMail());
-			ps.setString(6, u.getCiudad());
-			ps.setString(7, u.getTelefono());
-			ps.setString(8, u.getRolName());
-			ps.setString(9, dni);
-			ps.setString(10, direccion);
-			ps.setInt(11, u.getId());
-	
-			ps.executeUpdate();
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al actualizar el usuario!");
-		}
+		PreparedStatement ps = con.prepareStatement("UPDATE usuario SET nick = ?, pass = ?, nombre = ?, apellidos = ?,"
+												+ " mail = ?, ciudad = ?, telefono = ?, rol = ?, dni = ?,"
+												+ " direccion = ? WHERE idUsuario = ?");
+		ps.setString(1, u.getNick());
+		ps.setString(2, u.getPassword());
+		ps.setString(3, u.getNombre());
+		ps.setString(4, u.getApellidos());
+		ps.setString(5, u.getMail());
+		ps.setString(6, u.getCiudad());
+		ps.setString(7, u.getTelefono());
+		ps.setString(8, u.getRolName());
+		ps.setString(9, dni);
+		ps.setString(10, direccion);
+		ps.setInt(11, u.getId());
+
+		ps.executeUpdate();
+		ps.close();
 	}
 	
 	public ArrayList<Usuario> listUsuarios(String rol) throws SQLException {

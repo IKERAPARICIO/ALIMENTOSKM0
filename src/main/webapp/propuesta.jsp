@@ -54,6 +54,21 @@
              document.getElementById("productosSelect").innerHTML = xhr.responseText;
          }
      }
+
+     function validarDatos(){
+   		result = true;
+   		cantidadPropuesta = parseFloat(document.getElementById("cantidadPropuesta").value);
+   		idTerreno = document.getElementById("terreno").value;
+   		if (cantidadPropuesta <= 0){
+   			alert("Cantidad incorrecta, debe ser mayor que 0.");
+   			result = false;
+   		}
+   		else if (idTerreno == 0){
+   			alert("Debe seleccionar un terreno!");
+   			result = false;
+   		}
+   		return result;
+   	}
  </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
@@ -61,21 +76,21 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
 	int id = 0; 
-			int option = 11;
-			Double cantidadPropuesta = 0.0;
-			Date fechaPropuesta = null;
-			String sEstado = "";
-			String nombreTerreno = "";
-			String nombreAlimento = "";
-			
-			//carga los terrenos del usuario, solo para crearlos nuevos
-			ArrayList<Terreno> terrenos = new ArrayList<Terreno>();
-			if(request.getAttribute("terrenos") != null){
+	int option = 11;
+	Double cantidadPropuesta = 0.0;
+	Date fechaPropuesta = null;
+	String sEstado = "";
+	String nombreTerreno = "";
+	String nombreAlimento = "";
+	
+	//carga los terrenos del usuario, solo para crearlos nuevos
+	ArrayList<Terreno> terrenos = new ArrayList<Terreno>();
+	if(request.getAttribute("terrenos") != null){
 		terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
-			}
+	}
 			
-			//actualizar la propuesta
-			if(request.getAttribute("propuesta") != null){
+	//actualizar la propuesta
+	if(request.getAttribute("propuesta") != null){
 		Paquete paquete = (Paquete)request.getAttribute("propuesta");
 		option = 13;
 
@@ -85,15 +100,15 @@
 		sEstado = paquete.getEstado().toString();
 		nombreTerreno = paquete.getNombreTerreno();
 		nombreAlimento = paquete.getNombreAlimento();
-			}
+	}
 	%>
 
 	<section>
 		<h1>Propuesta</h1>
 		<form name="propuesta" action="PaquetesController" method="post">
-			<label for="terreno">Terreno:</label>
+			<label for="terreno" class="XXL">Terreno:</label>
 			<% if (option == 11){ %>
-				<select id="terreno" name="terreno" onchange="cargarAlimentos()">
+				<select id="terreno" name="terreno" onchange="cargarAlimentos()" required>
 					<option value="0">---seleccione un Terreno---</option>
 					<% for(Terreno t : terrenos){ %>
 						<option value="<%=t.getId()%>"><%=t.getNombre()%></option>	
@@ -102,7 +117,7 @@
 			  <%} else{ %>
 			  	<input type="text" name="terreno" value="<%=nombreTerreno%>" id="terreno" DISABLED><br>
 			<% } %>
-			<label for="producto">Producto:</label>
+			<label for="producto" class="XXL">Producto:</label>
 			<% if (option == 11){ %>
 				<!-- Uso de AJAX para cargar el producto en funcion del Terreno seleccionado -->
 				<div id="productosSelect">
@@ -110,8 +125,8 @@
 			<% } else{ %>
 				<input type="text" name="producto" value="<%=nombreAlimento%>" id="producto" DISABLED><br>
 			<% } %>
-			<label for="cantidadPropuesta">Cantidad Propuesta:</label><input type="text" name="cantidadPropuesta" value="<%=cantidadPropuesta%>" id="cantidadPropuesta"><br>
-	
+			<label for="cantidadPropuesta" class="XXL">Cantidad Propuesta:</label><input type="number" step="0.05" name="cantidadPropuesta" value="<%=cantidadPropuesta%>" id="cantidadPropuesta" required><br>
+			
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
 			<div class="centeredContainer">

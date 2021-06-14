@@ -78,16 +78,20 @@ public class UsuariosController extends HttpServlet {
 				String dni = request.getParameter("dni");
 				String direccion = request.getParameter("direccion");
 				Productor usuario = new Productor(nick, password, nombre, apellidos, mail, ciudad, telefono, sRol, dni, direccion);
+				usuarios = usuario.obtenerUsuarios("");
 				usuario.insertar();
 				usuarios = usuario.obtenerUsuarios("");
 			}
 			else {
 				Usuario usuario = new Usuario(nick, password, nombre, apellidos, mail, ciudad, telefono, sRol);
+				usuarios = usuario.obtenerUsuarios("");
 				usuario.insertar();
 				usuarios = usuario.obtenerUsuarios("");
 			}
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el usuario.";
+		} catch (Exception e) {
+			msg = "ERROR al introducir el usuario, compruebe que no exista ya otro usuario con el mismo Nick.";
 		}
 		
 		request.setAttribute("usuarios",usuarios);
@@ -103,14 +107,22 @@ public class UsuariosController extends HttpServlet {
 	private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario eliminado.";
 		ArrayList<Usuario> usuarios = new ArrayList<Usuario>();
+		Usuario usuario = new Usuario();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
+			usuario.buscarID(id);
+			if (usuario.obtenerPermisosRol() > 8) {
+				msg = "No es posible eliminar un usuario con esos privilegios a través de la web.";
+			}
+			else {
+				usuario.eliminar(id);
+			}
 			
-			Usuario usuario = new Usuario();
-			usuario.eliminar(id);
+		} catch (SQLException e) {
+			msg = "ERROR al eliminar el usuario, puede que tenga referencias de Terrenos o Cestas.";
+		}
+		finally {
 			usuarios = usuario.obtenerUsuarios("");
-		} catch (Exception e) {
-			msg = "ERROR al eliminar el usuario.";
 		}
 		
 		request.setAttribute("usuarios",usuarios);
@@ -156,8 +168,10 @@ public class UsuariosController extends HttpServlet {
 			}
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar el usuario.";
+		} catch (Exception e) {
+			msg = "ERROR al actualizar el usuario, compruebe que no exista ya otro usuario con el mismo Nick.";
 		} 		
-		
+
 		request.setAttribute("id",id);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("usuario.jsp");

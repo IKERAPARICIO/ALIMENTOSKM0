@@ -65,8 +65,9 @@
 					<td><%=p.getPrecio()%></td>
 					<td><%=p.getEstado().toString()%></td>
 					<td>
-						<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Anular"></a>
-						<% if (p.estaGestionado()){ %>
+						<% if (!p.estaAnulado()){ %>
+							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Anular"></a>
+						<%} if (p.estaGestionado()){ %>
 							<a href="PaquetesController?opcion=4&id=<%=p.getId()%>"><img src="img/multiply.png" width="16px" alt="Porciones"></a>
 						<% } %>
 					</td>

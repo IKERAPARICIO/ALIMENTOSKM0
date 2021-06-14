@@ -65,7 +65,9 @@
 			<tr>
 				<th>PRODUCTOR</th>
 				<th>PRODUCTO</th>
-				<th>CANTIDAD</th>
+				<th>PROPUESTO</th>
+				<th>ACEPTADO</th>
+				<th>MEDIDA</th>
 				<th>TERRENO</th>
 				<th>FECHA</th>
 				<th>ESTADO</th>
@@ -80,6 +82,8 @@
 					<td><%=p.getNombreCompletoProductor()%></td>
 					<td><%=p.getNombreAlimento()%></td>
 					<td><%=p.getCantidadPropuesta().toString()%></td>
+					<td><%=p.getCantidadAceptada().toString()%></td>
+					<td><%=p.getMedidaAlimento()%></td>
 					<td><%=p.getNombreTerreno()%></td>
 					<td><%=p.getFechaPropuesta().toString()%></td>
 					<td><%=p.getEstado().toString()%></td>

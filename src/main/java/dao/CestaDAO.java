@@ -28,26 +28,23 @@ public class CestaDAO {
 	
 	public int insert(Cesta c) throws SQLException {
 		int idCesta = 0;
-		try {
-			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion, preparada) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS );
-			ps.setString(1, c.getNombre());
-			ps.setInt(2, c.getUsuarioId());
-			ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-			ps.setBoolean(4, false);
-			
-			int rowAffected = ps.executeUpdate();
-			if(rowAffected == 1)
-			{
-				//obtiene el id del nuevo alimento insertado
-				ResultSet rs = ps.getGeneratedKeys();
-                if(rs.next())
-                	idCesta = rs.getInt(1);
-			}
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al introducir el cesta!");
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO cesta (nombre, idUsuario, fechaCreacion, preparada) VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS );
+		ps.setString(1, c.getNombre());
+		ps.setInt(2, c.getUsuarioId());
+		ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
+		ps.setBoolean(4, false);
+		
+		int rowAffected = ps.executeUpdate();
+		if(rowAffected == 1)
+		{
+			//obtiene el id del nuevo alimento insertado
+			ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next())
+            	idCesta = rs.getInt(1);
 		}
+		ps.close();
+
 		return idCesta;
 	}
 	

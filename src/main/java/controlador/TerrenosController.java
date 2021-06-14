@@ -254,10 +254,11 @@ public class TerrenosController extends HttpServlet {
         	terreno.buscarID(id);
         	ArrayList<Alimento> alimentos = terreno.obtenerAlimentos();
         	StringBuilder result = new StringBuilder();
-        	result.append("<select id=\"producto\" name=\"producto\">");
+        	result.append("<select id=\"producto\" name=\"producto\" required>");
         	if (alimentos != null) {
 	        	for(Alimento alimento : alimentos) {
-	        		result.append("<option value=\""+alimento.getId()+"\">"+alimento.getNombre()+"</option>");
+	        		result.append("<option value=\""+alimento.getId()+"\">"+alimento.getNombre()+ 
+	        				" (" + alimento.getPrecio() + " " + alimento.getMedida() + ")</option>");
 	        	}
         	}
         	else {

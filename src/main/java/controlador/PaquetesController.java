@@ -140,17 +140,21 @@ public class PaquetesController extends HttpServlet {
 	
 	private void anularPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = "Paquete anulado.";
-		
+		ArrayList<Paquete> almacen = new ArrayList<Paquete>();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Paquete paquete = new Paquete();
 			paquete.anular(id);
+			
+			PaqueteDAO pDAO = new PaqueteDAO();
+			almacen = pDAO.listAlmacen("");	
 		
 		} catch (Exception e) {
 			msg = "ERROR al anular el paquete.";
 		}
 		
+		request.setAttribute("almacen",almacen);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("almacen.jsp");
 		vista.forward(request, response);
@@ -223,7 +227,7 @@ public class PaquetesController extends HttpServlet {
 			int paqueteId = porcion.getPaquete().getId();
 			porcion.eliminar();
 			//carga los datos actualizados
-			//paquete.buscarID(paqueteId);
+			paquete.buscarID(paqueteId);
 		
 		} catch (Exception e) {
 			msg = "ERROR al eliminar la porción.";
@@ -346,12 +350,13 @@ public class PaquetesController extends HttpServlet {
 			
 			Paquete paquete = new Paquete(idTerreno, idAlimento, cantidadPropuesta);
 			paquete.insertar();
-			
-			PaqueteDAO pDAO = new PaqueteDAO();
-			propuestas = pDAO.listMyPropuestas("",usuario.getId());
-		
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir la Propuesta.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al introducir la Propuesta.";
+		} finally {
+			PaqueteDAO pDAO = new PaqueteDAO();
+			propuestas = pDAO.listMyPropuestas("",usuario.getId());
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -398,6 +403,8 @@ public class PaquetesController extends HttpServlet {
 			
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar la propuesta.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al modificar la propuesta.";
 		}
 
 		request.setAttribute("propuesta",paquete);

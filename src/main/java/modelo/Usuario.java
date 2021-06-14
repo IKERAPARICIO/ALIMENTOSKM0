@@ -125,28 +125,16 @@ public class Usuario {
 		return rol.toString();
 	}
 
-	public void insertar() {
-		try {
-			UsuarioDAO.getInstance().insert(this,"","");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void insertar() throws SQLException {
+		UsuarioDAO.getInstance().insert(this,"","");
 	}
 	
-	public void eliminar(int id) {
-		try {
-			UsuarioDAO.getInstance().delete(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void eliminar(int id) throws SQLException {
+		UsuarioDAO.getInstance().delete(id);
 	}
 	
-	public void actualizar() {
-		try {
-			UsuarioDAO.getInstance().update(this,"","");
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		UsuarioDAO.getInstance().update(this,"","");
 	}
 	
 	public String getNombreCompleto () {
@@ -204,7 +192,7 @@ public class Usuario {
 			return Rol.GESTOR;
 		}
 		else {
-			return Rol.USUARIO;
+			return null;
 		}
 	}
 	

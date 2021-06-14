@@ -84,22 +84,22 @@ function showHideAttributes(){
 	<section>
 		<h1>Usuario</h1>
 		<form name="usuario" action="UsuariosController" method="post">
-			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
-			<label for="apellidos">apellidos:</label><input type="text" name="apellidos" value="<%=apellidos%>" id="apellidos"><br>
-			<label for="nick">nick:</label><input type="text" name="nick" value="<%=nick%>" id="nick"><br>
-			<label for="password">pass:</label><input type="text" name="password" value="<%=pass%>" id="password"><br>
+			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre" required><br>
+			<label for="apellidos">Apellidos:</label><input type="text" name="apellidos" value="<%=apellidos%>" id="apellidos" required><br>
+			<label for="nick">Nick:</label><input type="text" name="nick" value="<%=nick%>" id="nick" required><br>
+			<label for="password">Pass:</label><input type="password" name="password" value="<%=pass%>" id="password" required><br>
 			<% if(nivelAcceso > 8){ %>
-				<label for="rol">Rol:</label>
-				<select id="sRol" name="sRol" onload="showHideAttributes()" onchange="showHideAttributes(this)">
-					<% for(String rol : roles){ %>
-						<option value="<%=rol%>" <%if(rol.equals(sRol)){%> selected <%} %>><%=rol%></option>
-				  	<% } %>
-				</select><br>
-			<% } %>
-			<label for="mail">mail:</label><input type="text" name="mail" value="<%=mail%>" id="mail"><br>
-			<label for="ciudad">ciudad:</label><input type="text" name="ciudad" value="<%=ciudad%>" id="ciudad"><br>
-			<label for="telefono">telefono:</label><input type="text" name="telefono" value="<%=telefono%>" id="telefono"><br>
-			
+				<label for="rol">Rol:</label><% if(option == 3){%><input type="text" name="sRol" value="<%=sRol%>" id="sRol" READONLY><br>
+				<% } else{ %><select id="sRol" name="sRol" onload="showHideAttributes()" onchange="showHideAttributes(this)">
+						<% for(String rol : roles){ %>
+							<option value="<%=rol%>" <%if(rol.equals(sRol)){%> selected <%} %>><%=rol%></option>
+					  	<% } %>
+					</select><br>
+				<% } 	
+			 } %>
+			<label for="mail">Mail:</label><input type="email" name="mail" value="<%=mail%>" id="mail"><br>
+			<label for="ciudad">Ciudad:</label><input type="text" name="ciudad" value="<%=ciudad%>" id="ciudad"><br>
+			<label for="telefono">Telefono:</label><input type="number" name="telefono" value="<%=telefono%>" id="telefono"><br>
 			<!-- solo si es produtor -->
 			<div id="attrProductor" style="display: none">
 				<label for="dni">DNI:</label><input type="text" name="dni" value="<%=dni%>" id="dni"><br>
@@ -109,7 +109,7 @@ function showHideAttributes(){
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
 			<div class="centeredContainer">
-				<input type="submit" name="guardar" value="Guardar" onclick="return validarDatos();">
+				<input type="submit" name="guardar" value="Guardar">
 			</div>
 		</form>
 

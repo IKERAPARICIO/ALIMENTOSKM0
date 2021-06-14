@@ -142,6 +142,8 @@ public class CestasController extends HttpServlet {
 			request.setAttribute("cesta",cesta);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al crear la cesta.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al insertar la cesta.";
 		}
 		
 		request.setAttribute("mensaje",msg);
@@ -151,18 +153,24 @@ public class CestasController extends HttpServlet {
 	
 	private void actualizarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta actualizada.";
+		Cesta cesta = new Cesta();
+		int id = 0;
 		try {
-			int id = Integer.parseInt(request.getParameter("id"));
+			id = Integer.parseInt(request.getParameter("id"));
 			String nombre = request.getParameter("nombre");
 			String sPreparada = request.getParameter("preparada");
 			boolean preparada = "0".equals(sPreparada) ? false : true;
 
-			Cesta cesta = new Cesta(id, nombre, preparada);
+			cesta = new Cesta(id, nombre, preparada);
 			cesta.actualizar();
-			
-			request.setAttribute("cesta",cesta);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar la cesta.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al modificar la cesta.";
+		} finally {
+			//carga el resto de datos
+			cesta.buscarID(id);
+			request.setAttribute("cesta",cesta);
 		}
 		
 		request.setAttribute("mensaje",msg);

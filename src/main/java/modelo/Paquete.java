@@ -159,6 +159,10 @@ public class Paquete implements Producto {
 	public String getNombreTerreno() {
 		return this.terreno.getNombre();
 	}
+	
+	public String getMedidaAlimento() {
+		return this.alimento.getMedida();
+	}
 
 	@Override
 	public double getPrecio() {
@@ -186,28 +190,16 @@ public class Paquete implements Producto {
 		return lista;
 	}
 	
-	public void insertar() {
-		try {
-			PaqueteDAO.getInstance().insert(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void insertar() throws SQLException {
+		PaqueteDAO.getInstance().insert(this);
 	}
 	
-	public void eliminar(int id) {
-		try {
-			PaqueteDAO.getInstance().delete(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void eliminar(int id) throws SQLException {
+		PaqueteDAO.getInstance().delete(id);
 	}
 	
-	public void actualizar() {
-		try {
-			PaqueteDAO.getInstance().update(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		PaqueteDAO.getInstance().update(this);
 	}
 	
 	public void buscarID(int id) {
@@ -270,6 +262,13 @@ public class Paquete implements Producto {
 	
 	public boolean estaGestionado() {
 		if (this.estado == Estado.ACEPTADO)
+			return true;
+		else
+			return false;
+	}
+	
+	public boolean estaAnulado() {
+		if (this.estado == Estado.ANULADO)
 			return true;
 		else
 			return false;

@@ -94,30 +94,19 @@ public class Alimento implements Producto {
 		return historico;
 	}
 	
-	public int insertar() {
+	public int insertar() throws SQLException {
 		int idAlimento = 0;
-		try {
-			idAlimento = AlimentoDAO.getInstance().insert(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		idAlimento = AlimentoDAO.getInstance().insert(this);
+
 		return idAlimento;
 	}
 	
-	public void eliminar(int id) {
-		try {
-			AlimentoDAO.getInstance().delete(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void eliminar(int id) throws SQLException {
+		AlimentoDAO.getInstance().delete(id);
 	}
 	
-	public void actualizar() {
-		try {
-			AlimentoDAO.getInstance().update(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		AlimentoDAO.getInstance().update(this);
 	}
 	
 	public ArrayList<Alimento> obtenerAlimentos() {
@@ -128,6 +117,17 @@ public class Alimento implements Producto {
 			e.printStackTrace();
 		}
 		return lista;
+	}
+	
+	public boolean estaEnTerrenos(){
+		boolean encontrado = false;
+		try {
+			encontrado = AlimentoDAO.getInstance().hasTerrenos(this.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return encontrado;
 	}
 	
 	public void buscarID(int id) {

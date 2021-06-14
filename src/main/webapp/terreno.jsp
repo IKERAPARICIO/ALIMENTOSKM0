@@ -53,23 +53,22 @@
 	<section>
 		<h1>Detalle Terreno</h1>
 		<form name="terreno" action="TerrenosController" method="post">
-			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
+			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre" required><br>
 			<label for="idUsuario">Productor:</label>
-			<select name=idUsuario>
+			<select name="idUsuario" required>
 				<option value="">--sin productor asignado--</option>
-				<% for(Usuario u : productores){ %>
-					<option value="<%=u.getId()%>" <%if(idProductor == u.getId()){%> selected <%} %>><%=u.getNombreCompleto()%></option>
+				<% for(Usuario u : productores){ %><option value="<%=u.getId()%>" <%if(idProductor == u.getId()){%> selected <%} %>><%=u.getNombreCompleto()%></option>
 			  	<% } %>
 			</select><br>
-			<label for="metros">Metros:</label><input type="text" name="metros" value="<%=metros%>" id="metros"><br>
-			<label for="ciudad">Ciudad:</label><input type="text" name="ciudad" value="<%=ciudad%>" id="ciudad"><br>
-			<label for="direccion">Dirección:</label><input type="text" name="direccion" value="<%=direccion%>" id="direccion"><br>
+			<label for="metros">Metros:</label><input type="number" step="0.05" name="metros" value="<%=metros%>" id="metros" required><br>
+			<label for="ciudad">Ciudad:</label><input type="text" name="ciudad" value="<%=ciudad%>" id="ciudad" required><br>
+			<label for="direccion">Dirección:</label><input type="text" name="direccion" value="<%=direccion%>" id="direccion" required><br>
 	
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
 			<input type="hidden" name="idUsuario" value="<%=idProductor%>">
 			<div class="centeredContainer">
-				<input type="submit" name="guardar" value="Guardar" onclick="return validarDatos();">
+				<input type="submit" name="guardar" value="Guardar">
 			</div>
 		</form>
 		

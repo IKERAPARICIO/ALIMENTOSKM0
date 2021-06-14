@@ -142,10 +142,12 @@ public class GeneradorPdf {
         table.addCell(cesta.getFechaCompra().toString());
         table.addCell("Resumen porciones");
         String resumen = "";
-        for(Porcion p: porciones) {
-        	if (!resumen.equals(""))
-        		resumen += " , ";
-        	resumen += p.getNombreAlimento();
+        if (porciones != null) {
+	        for(Porcion p: porciones) {
+	        	if (!resumen.equals(""))
+	        		resumen += " , ";
+	        	resumen += p.getNombreAlimento();
+	        }
         }
         table.addCell(resumen);
  

@@ -28,23 +28,21 @@ public class PaqueteDAO {
 	
 	public int insert(Paquete p) throws SQLException {
 		int idPaquete = 0;
-		try {
-			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO paquete (idTerreno, idAlimento, cantidadPropuesta, cantidadAceptada,"
-							+ "cantidadDisponible, fechaPropuesta, estado) VALUES (?,?,?,?,?,?,?)");
-			ps.setInt(1, p.getTerreno().getId());
-			ps.setInt(2, p.getAlimento().getId());
-			ps.setDouble(3, p.getCantidadPropuesta());
-			ps.setDouble(4, 0);
-			ps.setDouble(5, 0);
-			ps.setDate(6, new java.sql.Date(System.currentTimeMillis()));
-			ps.setString(7, p.getEstadoInicial());
-			
-			ps.executeUpdate();
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al introducir la propuesta!");
-		}
+		
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO paquete (idTerreno, idAlimento, cantidadPropuesta, cantidadAceptada,"
+						+ "cantidadDisponible, fechaPropuesta, estado) VALUES (?,?,?,?,?,?,?)");
+		ps.setInt(1, p.getTerreno().getId());
+		ps.setInt(2, p.getAlimento().getId());
+		ps.setDouble(3, p.getCantidadPropuesta());
+		ps.setDouble(4, 0);
+		ps.setDouble(5, 0);
+		ps.setDate(6, new java.sql.Date(System.currentTimeMillis()));
+		ps.setString(7, p.getEstadoInicial());
+		
+		ps.executeUpdate();
+		ps.close();
+
 		return idPaquete;
 	}
 	

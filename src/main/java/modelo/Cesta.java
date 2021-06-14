@@ -158,30 +158,19 @@ public class Cesta implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 
-	public int insertar() {
+	public int insertar() throws SQLException {
 		int idCesta = 0;
-		try {
-			idCesta = CestaDAO.getInstance().insert(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		idCesta = CestaDAO.getInstance().insert(this);
+
 		return idCesta;
 	}
 	
-	public void eliminar(int id) {
-		try {
-			CestaDAO.getInstance().delete(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void eliminar(int id) throws SQLException {
+		CestaDAO.getInstance().delete(id);
 	}
 	
-	public void actualizar() {
-		try {
-			CestaDAO.getInstance().update(this);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		CestaDAO.getInstance().update(this);
 	}
 	
 	public ArrayList<Cesta> obtenerCestas() {

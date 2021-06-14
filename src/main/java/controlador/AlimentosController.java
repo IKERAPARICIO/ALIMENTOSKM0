@@ -61,18 +61,24 @@ public class AlimentosController extends HttpServlet {
 	private void altaAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento incluido.";
 		ArrayList<Alimento> alimentos = new ArrayList<Alimento>(); 
+		Alimento alimento = new Alimento();
 		try {
 			String nombre = request.getParameter("nombre");
 			String medida = request.getParameter("medida");
 			double precio = Double.parseDouble(request.getParameter("precio"));
 			
-			Alimento alimento = new Alimento(nombre, medida);
+			alimento = new Alimento(nombre, medida);
 			int idAlimento = alimento.insertar();
 			alimento.setId(idAlimento);
 			alimento.setPrecio(precio);
-			alimentos = alimento.obtenerAlimentos();
+			
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el Alimento.";
+		} catch (SQLException e) {
+			msg = "ERROR al introducir el Alimento, compruebe que no sea un nombre ya existente.";
+		}
+		finally {
+			alimentos = alimento.obtenerAlimentos();
 		}
 		
 		request.setAttribute("alimentos",alimentos);
@@ -91,7 +97,13 @@ public class AlimentosController extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Alimento alimento = new Alimento();
-			alimento.eliminar(id);
+			alimento.buscarID(id);
+			if (alimento.estaEnTerrenos()) {
+				msg = "ERROR al eliminar el alimento, puede que tenga referencias de Terrenos.";
+			}
+			else {
+				alimento.eliminar(id);
+			}
 			alimentos = alimento.obtenerAlimentos();
 		} catch (Exception e) {
 			msg = "ERROR al eliminar el alimento.";
@@ -124,6 +136,8 @@ public class AlimentosController extends HttpServlet {
 			alimentos = alimento.obtenerAlimentos();
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar el alimento.";
+		} catch (SQLException e) {
+			msg = "ERROR en la BBDD al modificar el alimento.";
 		}
 		
 		request.setAttribute("alimentos",alimentos);

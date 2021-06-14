@@ -16,7 +16,6 @@ body{
     margin-top: 10px;
     padding: 10px;
     background-color: #A8DDFD;
-    width: 400px;
     text-align: left;
     border: 1px solid #97C6E3;
     border-radius: 10px;
@@ -43,11 +42,28 @@ section{
 section form label{
 	padding:5px;
 	display:inline-block;
-	width: 80px;
+	width: 120px;
+	margin-left: 5px;
 }
 
-section input[type=text]{
+section form label.XL{
+	width: 140px;
+}
+
+section form label.XXL{
+	width: 165px;
+}
+
+section input {
 	width: 300px;
+}
+
+section input.XL {
+	width: 280px;
+}
+
+section select {
+	width: 290px;
 }
 
 section table{

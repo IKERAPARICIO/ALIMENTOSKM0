@@ -47,21 +47,12 @@ public class Productor extends Usuario {
 	}
 
 	//sobrescribe los metodos de la clase padre
-	public void insertar() {
-		super.insertar();
-		try {
-			UsuarioDAO.getInstance().insert(this,this.getDni(),this.getDireccion());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void insertar() throws SQLException {
+		UsuarioDAO.getInstance().insert(this,this.getDni(),this.getDireccion());
 	}
 	
-	public void actualizar() {
-		try {
-			UsuarioDAO.getInstance().update(this,this.getDni(),this.getDireccion());
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void actualizar() throws SQLException {
+		UsuarioDAO.getInstance().update(this,this.getDni(),this.getDireccion());
 	}	
 	
 	public void buscarID(int id) {

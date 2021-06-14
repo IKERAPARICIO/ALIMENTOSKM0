@@ -33,23 +33,21 @@ public class AlimentoDAO {
 	 */
 	public int insert(Alimento a) throws SQLException {
 		int idAlimento = 0;
-		try {
-			PreparedStatement ps = con
-					.prepareStatement("INSERT INTO alimento (nombre, medida) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS );
-			ps.setString(1, a.getNombre());
-			ps.setString(2, a.getMedida());
-			int rowAffected = ps.executeUpdate();
-			if(rowAffected == 1)
-			{
-				//obtiene el id del nuevo alimento insertado
-				ResultSet rs = ps.getGeneratedKeys();
-                if(rs.next())
-                	idAlimento = rs.getInt(1);
-			}
-			ps.close();
-		} catch (Exception e) {
-			System.out.println("Error al introducir el alimento!");
+
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO alimento (nombre, medida) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS );
+		ps.setString(1, a.getNombre());
+		ps.setString(2, a.getMedida());
+		int rowAffected = ps.executeUpdate();
+		if(rowAffected == 1)
+		{
+			//obtiene el id del nuevo alimento insertado
+			ResultSet rs = ps.getGeneratedKeys();
+            if(rs.next())
+            	idAlimento = rs.getInt(1);
 		}
+		ps.close();
+
 		return idAlimento;
 	}
 	
@@ -178,6 +176,20 @@ public class AlimentoDAO {
 		ps.executeUpdate();
 		ps.close();
 	}
+	
+	public boolean hasTerrenos(int id) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM terreno_alimento WHERE idAlimento = ?");
+		ps.setInt(1, id);
+		ResultSet rs = ps.executeQuery();
+		boolean result = false;
+		if (rs.next()) {
+			result = true;
+		}
+		rs.close();
+		ps.close();
+		return result;
+	}
+	
 	
 	public Map getPriceHistory(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM precio WHERE idAlimento = ? ORDER BY fecha DESC");

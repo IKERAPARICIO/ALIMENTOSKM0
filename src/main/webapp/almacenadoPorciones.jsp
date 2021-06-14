@@ -102,11 +102,12 @@ function validateForm() {
 		if (paquete.getId() != 0){
 			ArrayList<Porcion> porciones = paquete.obtenerPorciones();
 			%>
-			<label for="alimento">Producto:</label><input type="text" name="alimento" value="<%=paquete.getAlimento().getNombre()%>" id="alimento" DISABLED><br>
-			<label for="productor">Productor:</label><input type="text" name="productor" value="<%=paquete.getTerreno().getProductor().getNombre()%>" id="productor" DISABLED><br>
-			<label for="cantIni">Cantidad Inicial:</label><input type="text" name="cantIni" value="<%=paquete.getCantidadAceptada()%>" id="cantIni" DISABLED><br>
-			<label for="cantDisp">Cantidad Disponible:</label><input type="text" name="cantDisp" value="<%=paquete.getCantidadDisponible()%>" id="cantDisp" DISABLED><br>
-				
+			<form>
+				<label for="alimento" class="XXL">Producto:</label><input type="text" name="alimento" value="<%=paquete.getAlimento().getNombre()%>" id="alimento" DISABLED><br>
+				<label for="productor" class="XXL">Productor:</label><input type="text" name="productor" value="<%=paquete.getTerreno().getProductor().getNombre()%>" id="productor" DISABLED><br>
+				<label for="cantIni" class="XXL">Cantidad Inicial:</label><input type="text" name="cantIni" value="<%=paquete.getCantidadAceptada()%>" id="cantIni" DISABLED><br>
+				<label for="cantDisp" class="XXL">Cantidad Disponible:</label><input type="text" name="cantDisp" value="<%=paquete.getCantidadDisponible()%>" id="cantDisp" DISABLED><br>
+			</form>	
 			<h1>Porciones</h1>
 			<table>
 				<tr>
@@ -123,7 +124,7 @@ function validateForm() {
 						<td><%=p.incluidaEnCesta()%></td>
 						<td>
 							<% if (p.incluidaEnCesta()){ %>
-								<a href="PaquetesController?opcion=7&id=<%=p.getId()%>"><img src="img/basket.png" width="16px" alt="Ver Cesta"></a>
+								<a href="CestasController?opcion=5&id=<%=p.getCestaId()%>"><img src="img/basket.png" width="16px" alt="Ver Cesta"></a>
 							<% } else{ %>
 								<a href="PaquetesController?opcion=6&id=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<% } %>

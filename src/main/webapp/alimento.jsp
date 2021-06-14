@@ -12,6 +12,18 @@
 </head>
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+<script>
+function validarDatos(){
+	result = true;
+	precio = parseFloat(document.getElementById("precio").value);
+
+	if (precio <= 0){
+		alert("Precio incorrecto, debe ser mayor que 0.");
+		result = false;
+	}
+	return result;
+}
+</script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
 	<%@include file="/includes/protec.inc.jsp"%>
@@ -38,13 +50,13 @@
 	<section>
 		<h1>Alimento</h1>
 		<form name="alimento" action="AlimentosController" method="post">
-			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre"><br>
+			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre" required><br>
 			<label for="medida">Medida:</label>
-			<select id="medida" name="medida">
+			<select id="medida" name="medida" required>
 				<option value="KG" <%= ("KG".equals(medida)) ? "selected" : "" %>>KG</option>
 			  	<option value="UNIDAD" <%= ("UNIDAD".equals(medida)) ? "selected" : "" %>>UNIDAD</option>
 			</select><br>
-			<label for="medida">Precio:</label><input type="text" name="precio" value="<%=precio%>"  id="precio"><br>
+			<label for="medida">Precio:</label><input type="number" step="0.05" name="precio" value="<%=precio%>"  id="precio"><br>
 			
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
