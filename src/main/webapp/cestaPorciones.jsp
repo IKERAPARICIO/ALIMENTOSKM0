@@ -32,14 +32,15 @@
 						<th></th>
 					</tr>
 				</tr>
-			<%  ArrayList<Porcion> porciones = (ArrayList<Porcion>)request.getAttribute("porciones");
+			<%  //muestra las porciones pasadas
+				ArrayList<Porcion> porciones = (ArrayList<Porcion>)request.getAttribute("porciones");
 				int id = (int)request.getAttribute("id");
 				for (Porcion p : porciones) {
 				%>
 				<tr>
 					<td><%=p.getNombreAlimento()%></td>
 					<td><%=p.getCantidad()%></td>
-					<td><%=p.getPrecioAlimento()%></td>
+					<td><%=p.getPrecio()%></td>
 					<td><%=p.getNombreTerreno()%></td>
 					<td><%=p.getNombreProductor()%></td>
 					<td><%=p.getPrecio()%></td>

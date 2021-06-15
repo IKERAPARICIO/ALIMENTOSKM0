@@ -10,6 +10,7 @@
 </head>
 <body class="loginBack">
 <script>
+//si es invitado actualiza el valor de opcion antes de llamar al Servlet
 function setGuestAccess(){
 	document.getElementById("opcion").value = 3;
 	document.getElementById("loginForm").submit(); 

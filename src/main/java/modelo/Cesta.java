@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import dao.CestaDAO;
-import dao.TerrenoDAO;
 
+/**
+ * Clase para trabajar con cestas
+ * @author Iker Aparicio
+ */
 public class Cesta implements Producto {
 	
 	private int id;
@@ -18,6 +21,7 @@ public class Cesta implements Producto {
 	Usuario consumidor = new Usuario();
 	ArrayList<Porcion> listaPorciones = new ArrayList<Porcion>();
 	
+	//****************** Constructores ******************
 	public Cesta() {
 		
 	}
@@ -57,6 +61,7 @@ public class Cesta implements Producto {
 		this.consumidor = u;
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -85,13 +90,6 @@ public class Cesta implements Producto {
 		return fechaCompra;
 	}
 	
-	public String getStringFechaCompra() {
-		if (fechaCompra == null)
-			return "";
-		else
-			return fechaCompra.toString();
-	}
-
 	public void setFechaCompra(Date fechaCompra) {
 		this.fechaCompra = fechaCompra;
 	}
@@ -108,24 +106,11 @@ public class Cesta implements Producto {
 		return consumidor;
 	}
 	
-	public int getUsuarioId() {
-		if(consumidor == null)
-			return 0;
-		else
-			return consumidor.getId();
-	}
-	
-	public String getUsuarioNombreCompleto() {
-		if(consumidor == null)
-			return "";
-		else
-			return consumidor.getNombreCompleto();
-	}
-
 	public void setUsuario(Usuario usuario) {
 		this.consumidor = usuario;
 	}
 
+	//****************** Override de Interfaz Producto******************
 	@Override
 	public double getPrecio() {
 		double precio = 0;
@@ -158,6 +143,7 @@ public class Cesta implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 
+	//****************** Métodos DAO ******************
 	public int insertar() throws SQLException {
 		int idCesta = 0;
 		idCesta = CestaDAO.getInstance().insert(this);
@@ -183,6 +169,10 @@ public class Cesta implements Producto {
 		return lista;
 	}
 	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Cesta c = null;
 		try {
@@ -199,6 +189,40 @@ public class Cesta implements Producto {
 		}
 	}
 	
+	/**
+	 * @return Devuelve el id del Consumidor de la clase, 0 si es null
+	 */
+	public int getUsuarioId() {
+		if(consumidor == null)
+			return 0;
+		else
+			return consumidor.getId();
+	}
+	
+	
+	/**
+	 * @return Devuelve el nombre completo del Consumidor de la clase, vacio si es null
+	 */
+	public String getUsuarioNombreCompleto() {
+		if(consumidor == null)
+			return "";
+		else
+			return consumidor.getNombreCompleto();
+	}
+
+	/**
+	 * @return Devuelve el valor del atributo fechaCompra, vacio si es null
+	 */
+	public String getStringFechaCompra() {
+		if (fechaCompra == null)
+			return "";
+		else
+			return fechaCompra.toString();
+	}
+	
+	/**
+	 * @return Devuelve el listado de porciones incluidas en la Cesta
+	 */
 	public ArrayList<Porcion> obtenerPorciones() {
 		ArrayList<Porcion> porciones = null;
 		try {
@@ -209,6 +233,10 @@ public class Cesta implements Producto {
 		return porciones;
 	}
 	
+	/**
+	 * Elimina la porcion pasada de la Cesta
+	 * @param idPorcion: id de la porcion
+	 */
 	public void quitarPorcion(int idPorcion) {
 		try {
 			CestaDAO.getInstance().removePorcion(this.id, idPorcion);
@@ -217,6 +245,10 @@ public class Cesta implements Producto {
 		}
 	}
 	
+	/**
+	 * Agrega la porcion pasada a la Cesta
+	 * @param idPorcion: id de la porcion
+	 */
 	public void agregarPorcion(int idPorcion) {
 		try {
 			CestaDAO.getInstance().addPorcion(this.id, idPorcion);
@@ -225,6 +257,10 @@ public class Cesta implements Producto {
 		}
 	}
 	
+	/**
+	 * Incluye el usuario pasado como comprador de la Cesta
+	 * @param idUsuario: id del usuario
+	 */
 	public void comprar(int idUsuario) {
 		try {
 			CestaDAO.getInstance().addUser(this.id, idUsuario);

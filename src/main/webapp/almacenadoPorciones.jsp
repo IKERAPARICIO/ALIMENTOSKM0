@@ -100,6 +100,7 @@ function validateForm() {
 		<%
 		Paquete paquete = (Paquete)request.getAttribute("paquete");
 		if (paquete.getId() != 0){
+			//muestra el paquete pasado
 			ArrayList<Porcion> porciones = paquete.obtenerPorciones();
 			%>
 			<form>
@@ -116,6 +117,7 @@ function validateForm() {
 					<th></th>
 				</tr>
 				<%	
+				//muestra las porciones del paquete pasado
 				if (porciones != null){
 					for (Porcion p : porciones) {
 					%>
@@ -135,6 +137,7 @@ function validateForm() {
 				}
 				%>
 			</table>
+			<!-- botonera con las opciones para incluir nuevas porciones -->
 			<div class="centeredContainer">
 				<form name="paquete" action="PaquetesController" method="post">
 					Cantidad:<input type="text" type="number" step="1.00" name="cantNew" value="0" id="cantNew" required>
@@ -147,9 +150,7 @@ function validateForm() {
 					<input type="submit" name="crear" value="Crear Porciones" onclick="return validateForm()">
 				</form>
 			</div>
-		<% } else {
-			msgJsp = "No existe el paquete.";
-		} %>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

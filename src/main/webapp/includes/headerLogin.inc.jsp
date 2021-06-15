@@ -1,6 +1,3 @@
-<%
-String msgJsp = null;
-%>
 <header>
 	<div class="cabizq">
 		<div class="logo">

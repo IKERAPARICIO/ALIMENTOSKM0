@@ -30,10 +30,8 @@ switch(nombrePagina){
 		nivelPagina = 1;
 	break;
 }
-
+//si no tiene acceso a la pagina redirecciona al login con un mensaje de error
 if (nivelPagina > nivelAcceso){
-	msgJsp = "No tiene acceso para ver la página indicada!";
-	//response.sendRedirect("index.jsp");
-	response.sendRedirect("index.jsp");
+	response.sendRedirect("LoginController?opcion=4&error=2");
 }
 %>

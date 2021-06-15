@@ -13,6 +13,10 @@ import java.util.Map;
 import modelo.Alimento;
 import singleton.DBConnection;
 
+/**
+ * Clase para acceso a datos de Alimentos
+ * @author Family
+ */
 public class AlimentoDAO {
 	private Connection con = null;
 	
@@ -30,6 +34,9 @@ public class AlimentoDAO {
 	
 	/**
 	 * Inserta el alimento pasado y devuelve el id que le corresponde
+	 * @param a: Alimento
+	 * @return id del alimento insertado
+	 * @throws SQLException
 	 */
 	public int insert(Alimento a) throws SQLException {
 		int idAlimento = 0;
@@ -51,6 +58,11 @@ public class AlimentoDAO {
 		return idAlimento;
 	}
 	
+	/**
+	 * Elimina el alimento con id pasado
+	 * @param id: id del alimento a eliminar
+	 * @throws SQLException
+	 */
 	public void delete(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM alimento WHERE idAlimento = ?");
 		ps.setInt(1, id);
@@ -58,6 +70,11 @@ public class AlimentoDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Actualiza el alimento de id pasado con el resto de atributos
+	 * @param a: alimento a actualizar
+	 * @throws SQLException
+	 */
 	public void update(Alimento a) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE alimento SET nombre = ?, medida = ? WHERE idAlimento = ?");
 		ps.setString(1, a.getNombre());
@@ -68,6 +85,10 @@ public class AlimentoDAO {
 		ps.close();
 	}
 	
+	/**
+	 * @return Listado de alimentos completo ordenados por nombre
+	 * @throws SQLException
+	 */
 	public ArrayList<Alimento> listAlimentos() throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * from alimento ORDER BY nombre");
 		ResultSet rs = ps.executeQuery();
@@ -84,6 +105,11 @@ public class AlimentoDAO {
 		return result;
 	}
 	
+	/**
+	 * @param id: id de alimento
+	 * @return Alimento con id pasado
+	 * @throws SQLException
+	 */
 	public Alimento finID(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM alimento WHERE idAlimento = ?");
 		ps.setInt(1, id);
@@ -97,6 +123,12 @@ public class AlimentoDAO {
 		return result;
 	}
 	
+	/**
+	 * Obtiene el precio actual del alimento indicado
+	 * @param id: id del alimento
+	 * @return precio actual
+	 * @throws SQLException
+	 */
 	public double getCurrentPrice(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT precioMedida FROM precio WHERE idAlimento = ? ORDER BY fecha DESC limit 1");
 		ps.setInt(1, id);
@@ -110,6 +142,13 @@ public class AlimentoDAO {
 		return result;
 	}
 	
+	/**
+	 * Obtiene el precio del alimento indicado en la fecha indicada
+	 * @param id: id del alimento
+	 * @param fecha: fecha a buscar el precio
+	 * @return precio a fecha pasada
+	 * @throws SQLException
+	 */
 	public double getDatePrice(int id, Date fecha) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT precioMedida FROM precio WHERE idAlimento = ? "
 				+ "AND fecha <= ? ORDER BY fecha DESC limit 1");
@@ -125,6 +164,12 @@ public class AlimentoDAO {
 		return result;
 	}
 	
+	/**
+	 * Comprueba que el alimento tenga un precio en la fecha actual
+	 * @param id: id del alimento
+	 * @return true si tiene precio y false si no
+	 * @throws SQLException
+	 */
 	public boolean hasPriceToday(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT precioMedida FROM precio WHERE idAlimento = ? AND fecha = ?");
 		ps.setInt(1, id);
@@ -140,7 +185,10 @@ public class AlimentoDAO {
 	}
 	
 	/**
-	 * actualiza el precio del alimento. Si tiene precio en el dia actual lo actualiza
+	 * Pone precio al alimento indicado con fecha de hoy. Si tiene precio en el dia actual lo actualiza, si no lo inserta como nuevo.
+	 * @param id: id del alimento
+	 * @param precio: precio para el alimento
+	 * @throws SQLException
 	 */
 	public void setCurrentPrice(int id, double precio) throws SQLException {
 		if (hasPriceToday(id)) {
@@ -151,6 +199,12 @@ public class AlimentoDAO {
 		}
 	}
 	
+	/**
+	 * Inserta el precio al alimento indicado con fecha de hoy
+	 * @param id: id del alimento
+	 * @param precio: precio para el alimento
+	 * @throws SQLException
+	 */
 	private void newTodayPrice(int id, double precio) throws SQLException {
 		try {			
 			PreparedStatement ps = con
@@ -158,8 +212,6 @@ public class AlimentoDAO {
 			ps.setInt(1, id);
 			ps.setDouble(2, precio);
 			ps.setDate(3, new java.sql.Date(System.currentTimeMillis()));
-			// Since Java 8
-			//ps.setDate(2, java.sql.Date.valueOf(java.time.LocalDate.now()));
 			ps.executeUpdate();
 			ps.close();
 		 } catch (Exception e) {
@@ -167,6 +219,12 @@ public class AlimentoDAO {
 		 }
 	}
 	
+	/**
+	 * Actualiza el precio al alimento indicado con fecha de hoy
+	 * @param id: id del alimento
+	 * @param precio: precio para el alimento
+	 * @throws SQLException
+	 */
 	private void updateTodayPrice(int id, double precio) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE precio SET precioMedida = ? WHERE idAlimento = ? AND fecha = ?");
 		ps.setDouble(1, precio);
@@ -177,6 +235,12 @@ public class AlimentoDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Comprueba si el alimento pasado esta incluido en algún terreno
+	 * @param id: id del terreno
+	 * @return true si está en algún terreno y false si no lo está
+	 * @throws SQLException
+	 */
 	public boolean hasTerrenos(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM terreno_alimento WHERE idAlimento = ?");
 		ps.setInt(1, id);
@@ -190,7 +254,11 @@ public class AlimentoDAO {
 		return result;
 	}
 	
-	
+	/**
+	 * @param id: id del alimento
+	 * @return Historico de precios en un Map con fecha y precio
+	 * @throws SQLException
+	 */
 	public Map getPriceHistory(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM precio WHERE idAlimento = ? ORDER BY fecha DESC");
 		ps.setInt(1, id);

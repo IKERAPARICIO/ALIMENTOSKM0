@@ -18,7 +18,6 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Alimentos</h1>
-
 		<table>
 			<tr>
 				<th>ALIMENTO</th>
@@ -27,6 +26,7 @@
 				<th></th>
 			</tr>
 			<%
+			//si se ha pasado un terreno para incluir alimentos se recoge su id 
 			ArrayList<Alimento> alimentos = new ArrayList<Alimento>();
 			int idTerreno = 0;
 			if (request.getAttribute("idTerreno") != null){

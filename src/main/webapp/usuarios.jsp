@@ -19,7 +19,6 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Usuarios</h1>
-
 		<table>
 			<tr>
 				<th>NOMBRE</th>
@@ -30,6 +29,7 @@
 				<th></th>
 			</tr>
 			<%
+			//muestra los usuarioas pasados
 			if (request.getAttribute("usuarios") != null){
 				ArrayList<Usuario> usuarios = (ArrayList<Usuario>)request.getAttribute("usuarios");
 				for (Usuario u : usuarios) {

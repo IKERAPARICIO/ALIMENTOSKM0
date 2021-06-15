@@ -11,23 +11,26 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import dao.UsuarioDAO;
 import modelo.Consumidor;
 import modelo.Usuario;
 
 /**
- * Servlet implementation class LoginController
+ * Servlet para procesar las peticiones de Login
+ * @author Iker Aparicio
  */
 @WebServlet("/LoginController")
 public class LoginController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
-     * @see HttpServlet#HttpServlet()
+     * Constructor vacío
      */
     public LoginController() {
     }
 
+    /**
+     * Recoge la opcion indicada y la procesa
+     */
     private void procesarLogin(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
@@ -43,14 +46,18 @@ public class LoginController extends HttpServlet {
 				cargarPaginaInicio(request, response);
 				break;
 			default:
-				System.out.println("Opcion no valida.");
+				System.out.println("Opción no valida.");
 		}
 	}
     
+    /**
+     * Comprueba que el nick y password pasados sean validos:
+     * - Si es incorrecto vuelve a la pagina login con un mensaje
+     * - Si es correcto carga la pagina inicial segun el rol del usuario validado y guarda en las variables de sesion el usurio y su nivel de acceso
+     */
 	private void checkLogin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		String nick = request.getParameter("nick");
 		String pass = request.getParameter("pass");
-		//if(username.isEmpty() || password.isEmpty() )
 		Usuario usuario = new Usuario();
 		int idUsuario = usuario.idUsuarioValido(nick, pass);
 
@@ -58,7 +65,6 @@ public class LoginController extends HttpServlet {
 		{ 
 			usuario.buscarID(idUsuario);
 			int nivelAcceso = usuario.obtenerPermisosRol();
-			//session.setAttribute("session","TRUE");  
 			HttpSession sesion = request.getSession();
             sesion.setAttribute("usuario", usuario);
             sesion.setAttribute("nivelAcceso", nivelAcceso);
@@ -77,12 +83,14 @@ public class LoginController extends HttpServlet {
 		else
 		{
 			request.setAttribute("mensaje","Datos de usuario no válidos.");
-			
 			RequestDispatcher req = request.getRequestDispatcher("index.jsp");
 			req.include(request, response);
 		}
 	}
 	
+	/**
+	 * Carga la pagina principal de los usuarios invitados y especifica su nivel de acceso
+	 */
 	private void accesoInvitado(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		HttpSession sesion = request.getSession();
 		sesion.setAttribute("nivelAcceso", 1);
@@ -91,6 +99,11 @@ public class LoginController extends HttpServlet {
 		req.forward(request, response);
 	}
 
+	/**
+	 * Da de alta un Consumidor con los datos pasados:
+	 * - Si faltan datos por completar lo indica en la misma pagina
+	 * - Si es correcto le da la bienvenida y reenvia al Login
+	 */
 	private void registroUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String nombre = request.getParameter("nombre");
 		String apellidos = request.getParameter("apellidos");
@@ -111,42 +124,62 @@ public class LoginController extends HttpServlet {
 		{
 			//alta de Consumidor
 			String sRol = "CONSUMIDOR";
-			Consumidor consumidor = new Consumidor(nick,pass,nombre,apellidos,mail,ciudad,telefono,sRol);
-			consumidor.setPassword(pass);
-			consumidor.insertar();
+			String msg = "";
+			try {
+				Consumidor consumidor = new Consumidor(nick,pass,nombre,apellidos,mail,ciudad,telefono,sRol);
+				consumidor.setPassword(pass);
+				consumidor.insertar();
+				msg = "Bienvenid@ " + nombre + "! Acceda con su datos de usuario.";
+			} catch (Exception e) {
+				msg = "ERROR al crear el usuario.";
+			}
 			
-			request.setAttribute("mensaje","Bienvenid@ " + nombre + "! Acceda con su datos de usuario.");
+			request.setAttribute("mensaje",msg);
 			RequestDispatcher req = request.getRequestDispatcher("index.jsp");
 			req.forward(request, response);
 		}
 	}
 
+	/**
+	 * Carga la pagina inicial de login y en caso de indicarse algun error lo muestra 
+	 */
 	private void cargarPaginaInicio(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		//HttpSession sesion = request.getSession();
-		//sesion.invalidate();
-		
-		request.setAttribute("mensaje","No tiene permisos para ver la página indicada.");
+		HttpSession sesion = request.getSession();
+		sesion.invalidate();
+		String msg = "";
+		if (request.getParameter("error") != null) {
+			int error = Integer.parseInt(request.getParameter("error"));
+			if (error == 1) {
+				msg = "Sesión cerrada, vuelva a validarse.";
+			}
+			else if (error == 2) {
+				msg = "No tiene permisos para ver la página indicada.";
+			}
+		}
+		request.setAttribute("mensaje",msg);
 		RequestDispatcher req = request.getRequestDispatcher("index.jsp");
 		req.forward(request, response);
 	}
+	
 	/**
-	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+	 * todas las peticiones GET se gestionan a traves de procesarLogin()
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		response.getWriter().append("Served at: ").append(request.getContextPath());
+		try {
+			procesarLogin(request, response);
+		} catch (IOException | ServletException | SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 * todas las peticiones POST se gestionan a traves de procesarLogin()
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarLogin(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
-
 }

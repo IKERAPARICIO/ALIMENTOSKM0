@@ -1,14 +1,14 @@
 package modelo;
 
-import java.sql.SQLException;
-import java.util.ArrayList;
-
-import dao.TerrenoDAO;
-
+/**
+ * Clase para trabajar con Gestores
+ * @author Iker Aparicio
+ */
 public class Gestor extends Usuario {
 	
 	private Rol rol = Rol.GESTOR;
 	
+	//****************** Constructores ******************
 	public Gestor() {
 		super();
 	}

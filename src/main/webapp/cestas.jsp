@@ -25,7 +25,10 @@ function confirmMsg(){
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<%
+		//carga las cestas pasadas
 		ArrayList<Cesta> listaCestas = (ArrayList<Cesta>)request.getAttribute("listaCestas");
+		
+		//definie si mostrar las cestas propias o todas y en funcion del valor muestra la cabecera
 		Boolean miscestas = false;
 		if (request.getAttribute("miscestas") != null) {
 			miscestas = (boolean)request.getAttribute("miscestas");
@@ -41,6 +44,8 @@ function confirmMsg(){
 			Double cPrecio = 0.0;
 			String sinVender = "sin vender";
 			String comentario = sinVender;
+			
+			//muestra las cestas
 			for (Cesta cesta : listaCestas) {
 				cId = cesta.getId();
 				cPrecio = cesta.getPrecio();
@@ -89,12 +94,13 @@ function confirmMsg(){
 										<th>PRECIO TOTAL</th>
 									</tr>
 								</tr>
-								<%for (Porcion p : porciones) {
+								<%//muestra las porciones de las cestas
+								  for (Porcion p : porciones) {
 									%>
 									<tr>
 										<td><%=p.getNombreAlimento()%></td>
 										<td><%=p.getCantidad()%></td>
-										<td><%=p.getPrecioAlimento(cesta.getFechaCreacion())%></td>
+										<td><%=p.getPrecio(cesta.getFechaCreacion())%></td>
 										<td><%=p.getNombreTerreno()%></td>
 										<td><%=p.getNombreProductor()%></td>
 										<td><%=p.getPrecio(cesta.getFechaCreacion())%></td>

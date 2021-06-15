@@ -18,19 +18,21 @@ import modelo.Usuario;
 import modelo.Productor;
 
 /**
- * Servlet implementation class UsuariosServlet
+ * Servlet para procesar las peticiones de Usuarios
+ * @author Iker Aparicio
  */
 @WebServlet("/UsuariosController")
 public class UsuariosController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-    //constructor vacio
+	 /**
+     * Constructor vacío
+     */
     public UsuariosController() {
     }
     
     /**
-     * Dependiendo la opcion indicada, da de alta un usuario, lo elimina o actualiza
-     * @throws SQLException 
+     * Recoge la opcion indicada y la procesa
      */
 	private void procesarUsuarios(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
@@ -58,8 +60,7 @@ public class UsuariosController extends HttpServlet {
 	}
 	
 	/**
-	 * Da de alta el usuario segun los parametros pasados y vuelve a la pagina de alta con un mensaje de resultado.
-	 * @throws SQLException 
+	 * Da de alta el usuario segun los parametros pasados y vuelve a la pagina de listado de usuarios con un mensaje de resultado.
 	 */
 	private void altaUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario incluido.";
@@ -102,7 +103,6 @@ public class UsuariosController extends HttpServlet {
 	
 	/**
 	 * Elimina el usuario que tiene el id pasado y vuelve a la pagina del listado de usuario con un mensaje de resultado.
-	 * @throws SQLException 
 	 */
 	private void eliminarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario eliminado.";
@@ -132,7 +132,7 @@ public class UsuariosController extends HttpServlet {
 	}
 	
 	/**
-	 * Modifica el precio del usuario que tiene el id pasado y vuelve a la pagina del listado de usuarios con un mensaje de resultado.
+	 * Modifica el precio del usuario que tiene el id pasado y vuelve a la pagina del usuario con un mensaje de resultado.
 	 */
 	private void actualizarUsuario(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Usuario actualizado.";
@@ -178,6 +178,9 @@ public class UsuariosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el usuario segun la sesion actual y llama a la pagina de usuario
+	 */
 	private void cargarPerfil(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -187,6 +190,9 @@ public class UsuariosController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * Carga el listado de usuarios y llama a la pagina del listado de usuarios
+	 */
 	private void cargarUsuarios(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		String rol = request.getParameter("rol");
 		
@@ -199,6 +205,9 @@ public class UsuariosController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * Carga el usuarios de id pasado y llama a la pagina de usuario
+	 */
 	private void cargarPaginaUsuario(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		if(request.getParameter("id") != null) {
 			request.setAttribute("id",Integer.parseInt(request.getParameter("id")));
@@ -208,20 +217,24 @@ public class UsuariosController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * todas las peticiones GET se gestionan a traves de procesarUsuarios()
+	 */
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     	try {
 			procesarUsuarios(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+    /**
+     * todas las peticiones POST se gestionan a traves de procesarUsuarios()
+     */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarUsuarios(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

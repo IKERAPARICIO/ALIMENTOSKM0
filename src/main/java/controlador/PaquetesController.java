@@ -16,7 +16,6 @@ import javax.servlet.http.HttpSession;
 
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
 import com.itextpdf.text.pdf.PdfWriter;
 
 import dao.PaqueteDAO;
@@ -29,20 +28,22 @@ import modelo.Terreno;
 import modelo.Usuario;
 
 /**
- * Servlet implementation class GestionLibros
+ * Servlet para procesar las peticiones de Paquetes
+ * @author Iker Aparicio
  */
 @WebServlet("/PaquetesController")
 public class PaquetesController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    //Constructor vacio
+    /**
+     * Constructor vacío
+     */
     public PaquetesController() {
     }
 
-    /**
-     * Dependiendo la opcion indicada, da de alta un paquete, lo elimina o actualiza
-     * @throws SQLException 
-     */
+   /**
+    * Recoge la opcion indicada y la procesa
+    */
 	private void procesarPaquetes(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
 			case "1":
@@ -62,9 +63,6 @@ public class PaquetesController extends HttpServlet {
 				break;
 			case "6":
 				eliminarPorcion(request, response);
-				break;
-			case "7":
-				verCesta(request, response);
 				break;
 			case "8":
 				cargarPropuestas(request, response);
@@ -88,7 +86,7 @@ public class PaquetesController extends HttpServlet {
 				verDetallePropuesta(request, response);
 				break;
 			default:
-				System.out.println("Opcion no valida.");
+				System.out.println("Opción no valida.");
 		}
 	}
 
@@ -116,7 +114,7 @@ public class PaquetesController extends HttpServlet {
 	}
 	
 	/**
-	 * Aprueba parcialmente el paquete que tiene el id pasado y vuelve a la pagina del listado de paquetes con un mensaje de resultado.
+	 * Rechaza el paquete que tiene el id pasado y vuelve a la pagina del listado de paquetes con un mensaje de resultado.
 	 */
 	private void rechazarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Paquete rechazado.";
@@ -137,6 +135,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Finaliza el paquete que tiene el id pasado y vuelve a la pagina del listado de paquetes con un mensaje de resultado.
+	 */
 	private void finalizarPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = "Paquete finalizado, se ha actualizado su cantidad a 0.";
 		ArrayList<Paquete> almacen = new ArrayList<Paquete>();
@@ -162,6 +163,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el paquete que tiene el id pasado y llama a la pagina de sus porciones
+	 */
 	private void porcionesPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		Paquete paquete = new Paquete();
@@ -179,7 +183,10 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
-	//ya se ha validado via javascript
+	/**
+	 * Crea las porciones con los parametros pasados en el paquete que tiene el id pasado y llama a la pagina de sus porciones
+	 * Previamente se ha hecho la validacion Javascript del numero de porciones y cantidades validas
+	 */
 	private void crearPorciones(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		Paquete paquete = new Paquete();
@@ -190,23 +197,13 @@ public class PaquetesController extends HttpServlet {
 			Double cantDisp = Double.parseDouble(request.getParameter("cantDisp"));
 			
 			paquete.buscarID(id);
-			
-			//se valida si hay cantidad suficiente
-			/*Double cantNecesaria = cantNew * numNew;
-			if (cantNecesaria <= 0 || cantNecesaria > cantDisp) {
-				msg = "Parametros de Cantidad y Número Porciones no válidos.";
-			}*/
-				
 			for (int i = 0; i < numNew; i++) {
 				Porcion p = new Porcion(cantNew, paquete);
 				p.insertar();
-				//paquete.paquete.getCantidadDisponible() - 
 			}
 			//carga los datos actualizados
 			paquete.buscarID(id);
-			
 			msg = "Porción creada.";
-
 		}
 		catch (Exception e) {
 			msg = "ERROR al crear las porciones el paquete.";
@@ -218,6 +215,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Elimina la porcion indicada y llama a la pagina de las porciones del paquete en el que se encontraba
+	 */
 	private void eliminarPorcion(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = "Porción eliminada.";
 		Paquete paquete = new Paquete();
@@ -240,12 +240,11 @@ public class PaquetesController extends HttpServlet {
 		RequestDispatcher vista = request.getRequestDispatcher("almacenadoPorciones.jsp");
 		vista.forward(request, response);
 	}
-	
-	private void verCesta(HttpServletRequest request, HttpServletResponse response) {
-		// TODO Auto-generated method stub
 		
-	}
-	
+	/**
+	 * Carga el listado de propuestas segun el estado pasado y llama a la pagina de propuestas
+	 * Si es productor lista sus propuestas, si es gestor todas
+	 */
 	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		//por defecto carga las PROPUESTAS
@@ -258,17 +257,13 @@ public class PaquetesController extends HttpServlet {
 			if (request.getParameter("fEstado") != null) {
 				fEstado = request.getParameter("fEstado");
 			}
-			
-			
 			PaqueteDAO pDAO = new PaqueteDAO();
-			//si es productor lista sus propuestas, si es gestor todas
 			if (usuario.obtenerPermisosRol() < 8) {
 				propuestas = pDAO.listMyPropuestas(fEstado,usuario.getId());
 			}
 			else {
 				propuestas = pDAO.listPropuestas(fEstado);
 			}
-			
 		} catch (Exception e) {
 			msg = "ERROR al cargar las propuestas.";
 		}
@@ -279,6 +274,9 @@ public class PaquetesController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * Carga el listado de paquetes segun el parametro de cantidad disponible pasado y llama a la pagina de almacen
+	 */
 	private void cargarAlmacen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		//por defecto carga los paquetes con alguna cantidad disponible
 		String sDisponible = "si";
@@ -296,6 +294,9 @@ public class PaquetesController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * Genera un PDF para el Productor como recibo de la propuesta aceptada indicada y vuelve a mostrar sus propuestas
+	 */
 	private void descargarJustificante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		Document document = new Document(); 
@@ -305,7 +306,6 @@ public class PaquetesController extends HttpServlet {
 	    { 
 	    	int idPaquete = Integer.parseInt(request.getParameter("id"));	
 	    	String fileName = filePath+idPaquete+"_"+fileNameEnd;
-	    	//PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Test.pdf"));
 	    	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 	    	document.open(); 
 	    	GeneradorPdf pdf = new GeneradorPdf();
@@ -325,7 +325,7 @@ public class PaquetesController extends HttpServlet {
 	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
 	    }
 	    
-		
+	    //carga su listado de propuestas para mostrarlo el la pagina
 		String fEstado = "";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		HttpSession sesion = request.getSession();
@@ -343,11 +343,13 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Da de alta la propuesta segun los parametros pasados y vuelve a la pagina de las propuestas del usuario con un mensaje de resultado.
+	 */
 	private void altaPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = "Propuesta incluida.";
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
-		
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>(); 
 		try {
 			int idTerreno = Integer.parseInt(request.getParameter("terreno"));
@@ -371,6 +373,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Elimina la propuesta de id pasado y vuelve a la pagina de las propuestas del usuario con un mensaje de resultado.
+	 */
 	private void eliminarPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Propuesta eliminada.";
 		HttpSession sesion = request.getSession();
@@ -395,6 +400,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Actualiza la propuesta segun los parametros pasados y vuelve a la pagina de la propuesta
+	 */
 	private void actualizarPropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Propuesta actualizada.";	
 		Paquete paquete = new Paquete();
@@ -405,8 +413,7 @@ public class PaquetesController extends HttpServlet {
 			paquete.setId(id);
 			paquete.setCantidadPropuesta(cantidadPropuesta);
 			paquete.actualizar();
-			paquete.buscarID(id);
-			
+			paquete.buscarID(id);	
 		} catch (NumberFormatException e) {
 			msg = "ERROR al modificar la propuesta.";
 		} catch (SQLException e) {
@@ -419,6 +426,9 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Carga la propuesta indicada y su terreno y llama a la pagina de la propuesta 
+	 */
 	private void verDetallePropuesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = null;
 		HttpSession sesion = request.getSession();
@@ -445,20 +455,24 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * todas las peticiones GET se gestionan a traves de procesarPaquetes()
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarPaquetes(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * todas las peticiones POST se gestionan a traves de procesarPaquetes()
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarPaquetes(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

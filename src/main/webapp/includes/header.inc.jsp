@@ -1,10 +1,9 @@
 <%
 HttpSession sesion = request.getSession();
 int nivelAcceso = 0;
-String msgJsp = null;
-//si el usuario no existe, vamos a login
+//si el usuario no existe, redirecciona a login con un mensaje de error
 if (sesion.getAttribute("nivelAcceso")==null){ 
-	response.sendRedirect("index.jsp");
+	response.sendRedirect("LoginController?opcion=4&error=1");
 }
 else{
 	//devulve: 1 para invitado, 3 consumidor, 5 productor y 9 gestor

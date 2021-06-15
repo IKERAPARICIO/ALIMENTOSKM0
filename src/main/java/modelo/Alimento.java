@@ -8,14 +8,18 @@ import java.util.Map;
 
 import dao.AlimentoDAO;
 
+/**
+ * Clase para trabajar con alimentos
+ * @author Iker Aparicio
+ */
 public class Alimento implements Producto {
 
 	private int id;
 	private String nombre;
 	private String medida;
 	
-	public Alimento() {
-		
+	//****************** Constructores ******************
+	public Alimento() {	
 	}
 	
 	public Alimento(int id, String nombre, String medida) {
@@ -29,6 +33,7 @@ public class Alimento implements Producto {
 		this.medida = medida;
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -53,8 +58,8 @@ public class Alimento implements Producto {
 		this.medida = medida;
 	}
 
+	//****************** Override de Interfaz Producto ******************
 	@Override
-	//devuelve el precio actual del alimento
 	public double getPrecio() {
 		double precio = 0;
 		try {
@@ -65,7 +70,7 @@ public class Alimento implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 	
-	//devuelve el precio en la fecha pasada
+	@Override
 	public double getPrecio(Date fecha) {
 		double precio = 0;
 		try {
@@ -76,24 +81,7 @@ public class Alimento implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 	
-	public void setPrecio(double precio) {
-		try {
-			AlimentoDAO.getInstance().setCurrentPrice(this.id,precio);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public Map getHistoricoPrecios(int id) {
-		Map<String,String> historico = new HashMap<>();
-		try {
-			historico = AlimentoDAO.getInstance().getPriceHistory(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return historico;
-	}
-	
+	//****************** Métodos DAO ******************
 	public int insertar() throws SQLException {
 		int idAlimento = 0;
 		idAlimento = AlimentoDAO.getInstance().insert(this);
@@ -119,17 +107,10 @@ public class Alimento implements Producto {
 		return lista;
 	}
 	
-	public boolean estaEnTerrenos(){
-		boolean encontrado = false;
-		try {
-			encontrado = AlimentoDAO.getInstance().hasTerrenos(this.id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		
-		return encontrado;
-	}
-	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Alimento a = null;
 		try {
@@ -143,5 +124,45 @@ public class Alimento implements Producto {
 			this.medida = a.getMedida();
 		}
 	}
-
+	
+	/**
+	 * Actualiza el precio del Alimento
+	 * @param precio: nuevo precio
+	 */
+	public void setPrecio(double precio) {
+		try {
+			AlimentoDAO.getInstance().setCurrentPrice(this.id,precio);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * @param id: id del Alimento
+	 * @return Histórico de precios del Alimento
+	 */
+	public Map getHistoricoPrecios(int id) {
+		Map<String,String> historico = new HashMap<>();
+		try {
+			historico = AlimentoDAO.getInstance().getPriceHistory(id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return historico;
+	}
+	
+	/**
+	 * Mira si el Alimento actual esta incluido en algún Terreno
+	 * @return true si lo está y false si no
+	 */
+	public boolean estaEnTerrenos(){
+		boolean encontrado = false;
+		try {
+			encontrado = AlimentoDAO.getInstance().hasTerrenos(this.id);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		return encontrado;
+	}
 }

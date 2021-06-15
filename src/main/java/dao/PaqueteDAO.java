@@ -11,6 +11,10 @@ import modelo.Paquete;
 import modelo.Porcion;
 import singleton.DBConnection;
 
+/**
+ * Clase para acceso a datos de Paquetes
+ * @author Iker Aparicio
+ */
 public class PaqueteDAO {
 	private Connection con = null;
 	
@@ -26,6 +30,12 @@ public class PaqueteDAO {
 		return instance;
 	}
 	
+	/**
+	 * Inserta el paquete pasado y devuelve el id que le corresponde
+	 * @param p: Paquete
+	 * @return id del paquete insertado
+	 * @throws SQLException
+	 */
 	public int insert(Paquete p) throws SQLException {
 		int idPaquete = 0;
 		
@@ -46,6 +56,11 @@ public class PaqueteDAO {
 		return idPaquete;
 	}
 	
+	/**
+	 * Elimina el paquete con id pasado
+	 * @param id: id del paquete a eliminar
+	 * @throws SQLException
+	 */
 	public void delete(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM paquete WHERE idPaquete = ?");
 		ps.setInt(1, id);
@@ -53,6 +68,11 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Actualiza el paquete de id pasado con el resto de atributos
+	 * @param p: paquete a actualizar
+	 * @throws SQLException
+	 */
 	public void update(Paquete p) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadPropuesta = ? WHERE idPaquete = ?");
 		ps.setDouble(1, p.getCantidadPropuesta());
@@ -62,6 +82,13 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * 
+	 * @param estado: filtro para estado de la propuesta
+	 * @param idProductor: id del productor
+	 * @return Listado de propuestas del productor pasado en el estado indicado
+	 * @throws SQLException
+	 */
 	public ArrayList<Paquete> listMyPropuestas(String estado, int idProductor) throws SQLException {
 		String selectSt = "SELECT * from paquete LEFT JOIN terreno ON paquete.idTerreno = terreno.idTerreno";
 		String orderBy = " ORDER BY fechaPropuesta DESC";
@@ -80,6 +107,12 @@ public class PaqueteDAO {
 		return listPaquetes(selectSt, whereSt, orderBy);
 	}
 	
+	/**
+	 * 
+	 * @param estado: filtro para estado de la propuesta
+	 * @return Listado de todas las propuestas en el estado indicado
+	 * @throws SQLException
+	 */
 	public ArrayList<Paquete> listPropuestas(String estado) throws SQLException {
 		String selectSt = "SELECT * from paquete";
 		String orderBy = " ORDER BY fechaPropuesta DESC";
@@ -91,11 +124,16 @@ public class PaqueteDAO {
 		return listPaquetes(selectSt, whereSt, orderBy);
 	}
 	
+	/**
+	 * 
+	 * @param disponible: true si cantidad disponible tiene que ser > 0, false para ver todos
+	 * @return Listado de paquetes segun la disponibilidad indicada
+	 * @throws SQLException
+	 */
 	public ArrayList<Paquete> listAlmacen(Boolean disponible) throws SQLException {
 		String selectSt = "SELECT * from paquete";
 		String orderBy = " ORDER BY fechaPropuesta DESC,cantidadDisponible DESC";
 		
-		//define el WHERE con los estados y disponibilidad
 		String whereSt = "";
 		if(disponible)
 			whereSt = " WHERE cantidadDisponible > 0";
@@ -112,11 +150,16 @@ public class PaqueteDAO {
 		
 		return listPaquetes(selectSt, whereSt, orderBy);
 	}
+	
 	/**
 	 * 
-	 * @param fEstado: filtro para mostrar los estados GESTIONADO, PROPUESTO o vacío para TODOS
+	 * @param selectSt: sentencia select
+	 * @param whereSt: sentencia where
+	 * @param orderBy: sentencia order
+	 * @return Listado de paquetes segun las sentencias select, where y order indicadas
+	 * @throws SQLException
 	 */
-	public ArrayList<Paquete> listPaquetes(String selectSt, String whereSt, String orderBy) throws SQLException {
+	private ArrayList<Paquete> listPaquetes(String selectSt, String whereSt, String orderBy) throws SQLException {
 		//construye el select
 		String sqlSt = selectSt.concat(whereSt).concat(orderBy);
 		PreparedStatement ps = con.prepareStatement(sqlSt);
@@ -136,6 +179,11 @@ public class PaqueteDAO {
 		return result;
 	}
 	
+	/**
+	 * @param id: id del paquete
+	 * @return Paquete con id pasado
+	 * @throws SQLException
+	 */
 	public Paquete finID(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM paquete WHERE idPaquete = ?");
 		ps.setInt(1, id);
@@ -151,6 +199,12 @@ public class PaqueteDAO {
 		return result;
 	}
 	
+	/**
+	 * Aprueba el paquete pasado con la cantidad indicada y pone la fecha actual como fecha de aceptacion
+	 * @param id: id del paquete
+	 * @param cantidad: cantidad aceptada
+	 * @throws SQLException
+	 */
 	public void approve(int id, Double cantidad) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadAceptada = ?, cantidadDisponible = ?,"
 				+ "fechaAceptacion = ?, estado = ? WHERE idPaquete = ?");
@@ -164,6 +218,11 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Rechaza el paquete pasado con la cantidad indicada y pone la fecha actual como fecha de aceptacion
+	 * @param id: id del paquete
+	 * @throws SQLException
+	 */
 	public void disApprove(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadAceptada = ?, cantidadDisponible = ?,"
 				+ "fechaAceptacion = ?, estado = ? WHERE idPaquete = ?");
@@ -177,6 +236,11 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Archiva el paquete pasado y deja la cantidad disponible a 0
+	 * @param id: id del paquete
+	 * @throws SQLException
+	 */
 	public void archive(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET estado = ?, cantidadDisponible = ? WHERE idPaquete = ?");
 		ps.setString(1, Estado.FINALIZADO.toString());
@@ -187,6 +251,11 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * @param id: id del paquete
+	 * @return Listado de porciones del paquete indicado
+	 * @throws SQLException
+	 */
 	public ArrayList<Porcion> getPorciones(int id) throws SQLException{	
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM porcion LEFT JOIN cesta_porcion "
 				+ "ON porcion.idPorcion = cesta_porcion.idPorcion WHERE idPaquete = ?");		
@@ -203,6 +272,12 @@ public class PaqueteDAO {
 		return result;
 	}
 	
+	/**
+	 * Actualiza la cantidad disponible indicada del paquete indicado
+	 * @param id: id del paquete
+	 * @param cantidadNueva: cantidad a actualizar
+	 * @throws SQLException
+	 */
 	public void updateCantidadDisponible(int id, Double cantidadNueva) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadDisponible = ? WHERE idPaquete = ?");
 		ps.setDouble(1, cantidadNueva);
@@ -212,8 +287,12 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
+	/**
+	 * @return Listado de porciones disponibles, todavía no se han incluido en ninguna cesta
+	 * @throws SQLException
+	 */
 	public ArrayList<Porcion> listPorcionesDisponibles() throws SQLException{	
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM porcion WHERE idPorcion NOT IN (SELECT idPorcion FROM cesta_porcion)");		;
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM porcion WHERE idPorcion NOT IN (SELECT idPorcion FROM cesta_porcion)");
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Porcion> result = null;
 		while (rs.next()) {
@@ -226,6 +305,9 @@ public class PaqueteDAO {
 		return result;
 	}
 	
+	/**
+	 * @return Listado de strings de posibles estados para las propuestas
+	 */
 	public ArrayList<String> getPropuestasStates() {
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add(Estado.PROPUESTO.toString());
@@ -235,11 +317,13 @@ public class PaqueteDAO {
 		return lista;
 	}
 	
+	/**
+	 * @return Listado de strings de posibles estados para los paquetes almacenados
+	 */
 	public ArrayList<String> getAlmacenStates() {
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add(Estado.ACEPTADO.toString());
 		lista.add(Estado.FINALIZADO.toString());
 		return lista;
 	}
-	
 }

@@ -3,10 +3,12 @@ package modelo;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.CestaDAO;
-import dao.PaqueteDAO;
 import dao.TerrenoDAO;
 
+/**
+ * Clase para trabajar con terrenos
+ * @author Iker Aparicio
+ */
 public class Terreno {
 
 	private int id;
@@ -17,6 +19,7 @@ public class Terreno {
 	
 	Productor productor = new Productor();
 	
+	//****************** Constructores ******************
 	public Terreno() {
 		
 	}
@@ -51,6 +54,7 @@ public class Terreno {
 		this.productor = productor;
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -103,12 +107,7 @@ public class Terreno {
 		return productor.getId();
 	}
 	
-	//
-	public String getNombreCompletoProductor() {
-		return this.productor.getNombreCompleto();
-	}
-	
-	//Acceso a DAO
+	//****************** Métodos DAO ******************
 	public int insertar() throws SQLException {
 		int idTerreno = 0;
 		idTerreno = TerrenoDAO.getInstance().insert(this);
@@ -134,6 +133,10 @@ public class Terreno {
 		return lista;
 	}
 	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Terreno t = null;
 		try {
@@ -151,6 +154,17 @@ public class Terreno {
 		}
 	}
 	
+	/**
+	 * @return nombre completo del Productor del Terreno
+	 */
+	public String getNombreCompletoProductor() {
+		return this.productor.getNombreCompleto();
+	}
+	
+	/**
+	 * Elimina el alimento pasado del Terreno
+	 * @param idAlimento: id del alimento
+	 */
 	public void quitarAlimento(int idAlimento) {
 		try {
 			TerrenoDAO.getInstance().removeAlimento(this.id, idAlimento);
@@ -159,6 +173,10 @@ public class Terreno {
 		}
 	}
 	
+	/**
+	  * Incluye el alimento pasado al Terreno
+	 * @param idAlimento: id del alimento
+	 */
 	public void agregarAlimento(int idAlimento) {
 		try {
 			TerrenoDAO.getInstance().addAlimento(this.id, idAlimento);
@@ -167,6 +185,9 @@ public class Terreno {
 		}
 	}
 	
+	/**
+	 * @return lista de todos los Alimentos del Terreno
+	 */
 	public ArrayList<Alimento> obtenerAlimentos() {
 		ArrayList<Alimento> alimentos = null;
 		try {
@@ -177,6 +198,9 @@ public class Terreno {
 		return alimentos;
 	}
 	
+	/**
+	 * @return lista de todos los Alimentos que no se han incluido en el Terreno
+	 */
 	public ArrayList<Alimento> obtenerAlimentosDisponibles() {
 		ArrayList<Alimento> alimentos = null;
 		try {

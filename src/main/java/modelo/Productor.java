@@ -6,12 +6,17 @@ import java.util.ArrayList;
 import dao.TerrenoDAO;
 import dao.UsuarioDAO;
 
+/**
+ * Clase para trabajar con Productores
+ * @author Iker Aparicio
+ */
 public class Productor extends Usuario {
 	
 	private String dni;
 	private String direccion;
 	private Rol rol = Rol.PRODUCTOR;
 	
+	//****************** Constructores ******************
 	public Productor() {
 		super();
 	}
@@ -30,6 +35,7 @@ public class Productor extends Usuario {
 		this.direccion = direccion;
 	}
 
+	//****************** Setters y Getters ******************
 	public String getDni() {
 		return dni;
 	}
@@ -46,6 +52,7 @@ public class Productor extends Usuario {
 		this.direccion = direccion;
 	}
 
+	//****************** Métodos DAO ******************
 	//sobrescribe los metodos de la clase padre
 	public void insertar() throws SQLException {
 		UsuarioDAO.getInstance().insert(this,this.getDni(),this.getDireccion());

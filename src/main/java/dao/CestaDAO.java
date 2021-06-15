@@ -11,6 +11,10 @@ import modelo.Cesta;
 import modelo.Porcion;
 import singleton.DBConnection;
 
+/**
+ * Clase para acceso a datos de Cestas
+ * @author Iker Aparicio
+ */
 public class CestaDAO {
 	private Connection con = null;
 	
@@ -26,6 +30,12 @@ public class CestaDAO {
 		return instance;
 	}
 	
+	/**
+	 * Inserta la cesta pasada y devuelve el id que le corresponde
+	 * @param c: Cesta
+	 * @return id de la cesta insertada
+	 * @throws SQLException
+	 */
 	public int insert(Cesta c) throws SQLException {
 		int idCesta = 0;
 		PreparedStatement ps = con
@@ -48,6 +58,11 @@ public class CestaDAO {
 		return idCesta;
 	}
 	
+	/**
+	 * Elimina la cesta con id pasado
+	 * @param id: id de la cesta a eliminar
+	 * @throws SQLException
+	 */
 	public void delete(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM cesta WHERE idCesta = ?");
 		ps.setInt(1, id);
@@ -55,6 +70,11 @@ public class CestaDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Actualiza la cesta de id pasado con el resto de atributos
+	 * @param c: cesta a actualizar
+	 * @throws SQLException
+	 */
 	public void update(Cesta c) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE cesta SET nombre = ?, idUsuario = ?, fechaCompra = ?, "
 													+ "preparada = ? WHERE idCesta = ?");
@@ -68,6 +88,10 @@ public class CestaDAO {
 		ps.close();
 	}
 	
+	/**
+	 * @return Listado de cestas completo ordenadas por fecha de creacion
+	 * @throws SQLException
+	 */
 	public ArrayList<Cesta> listCestas() throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * from cesta ORDER BY fechaCreacion DESC");
 		ResultSet rs = ps.executeQuery();
@@ -85,6 +109,10 @@ public class CestaDAO {
 		return result;
 	}
 	
+	/**
+	 * @return Listado de cestas disponibles (preparada a TRUE) ordenadas por fecha de creacion
+	 * @throws SQLException
+	 */
 	public ArrayList<Cesta> listCestasDisponibles() throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = 0 "
 													+ "AND preparada = ? ORDER BY fechaCreacion");
@@ -102,7 +130,12 @@ public class CestaDAO {
 		ps.close();
 		return result;
 	}
-	
+
+	/**
+	 * @param idUsuario: id del usuario consumidor
+	 * @return Listado de cestas compradas por el usuario pasado ordenadas por fecha de creacion
+	 * @throws SQLException
+	 */
 	public ArrayList<Cesta> listMyCestas(int idUsuario) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * from cesta WHERE idUsuario = ? ORDER BY fechaCreacion DESC");
 		ps.setInt(1, idUsuario);
@@ -120,6 +153,11 @@ public class CestaDAO {
 		return result;
 	}
 	
+	/**
+	 * @param idUsuario: id del usuario productor
+	 * @return Listado de cestas en las que se ha incluido algun producto del usuario pasado ordenadas por fecha de creacion
+	 * @throws SQLException
+	 */
 	public ArrayList<Cesta> listCestasMyTerrenos(int idUsuario) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT DISTINCT cesta.* FROM CESTA "
 								+ "LEFT JOIN cesta_porcion ON cesta.idCesta = cesta_porcion.idCesta "
@@ -144,6 +182,11 @@ public class CestaDAO {
 		return result;
 	}
 	
+	/**
+	 * @param id: id de la cesta
+	 * @return Cesta con id pasado
+	 * @throws SQLException
+	 */
 	public Cesta finID(int id) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM cesta WHERE idCesta = ?");
 		ps.setInt(1, id);
@@ -158,6 +201,12 @@ public class CestaDAO {
 		return result;
 	}
 	
+	/**
+	 * 
+	 * @param id: id de la cesta
+	 * @return Listado de porciones incluidas en la cesta pasada
+	 * @throws SQLException
+	 */
 	public ArrayList<Porcion> getPorciones(int id) throws SQLException{	
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM porcion LEFT JOIN cesta_porcion "
 				+ "ON porcion.idPorcion = cesta_porcion.idPorcion WHERE idCesta = ?");		
@@ -174,6 +223,12 @@ public class CestaDAO {
 		return result;
 	}
 	
+	/**
+	 * Elimina la porcion indicada de la cesta indicada
+	 * @param idCesta: id de la cesta
+	 * @param idPorcion: id de la porcion
+	 * @throws SQLException
+	 */
 	public void removePorcion(int idCesta, int idPorcion) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("DELETE FROM cesta_porcion WHERE idCesta = ? AND idPorcion = ?");
 		ps.setInt(1, idCesta);
@@ -182,6 +237,12 @@ public class CestaDAO {
 		ps.close();
 	}
 	
+	/**
+	 * Incluye la porcion indicada en la cesta indicada
+	 * @param idCesta: id de la cesta
+	 * @param idPorcion: id de la porcion
+	 * @throws SQLException
+	 */
 	public void addPorcion(int idCesta, int idPorcion) throws SQLException {
 		try {
 			PreparedStatement ps = con
@@ -195,6 +256,12 @@ public class CestaDAO {
 		}
 	}
 	
+	/**
+	 * Incluye el usuario indicado como comprador en la cesta indicada y pone la fecha actual como fecha de compra
+	 * @param idCesta: id de la cesta
+	 * @param idUsuario: id del usuario
+	 * @throws SQLException
+	 */
 	public void addUser(int idCesta, int idUsuario) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE cesta SET idUsuario = ?, fechaCompra = ? "
 													+ "WHERE idCesta = ?");
@@ -204,5 +271,4 @@ public class CestaDAO {
 		ps.executeUpdate();
 		ps.close();
 	}
-	
 }

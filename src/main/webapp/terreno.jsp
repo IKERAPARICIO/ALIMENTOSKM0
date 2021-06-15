@@ -29,6 +29,7 @@ function validarDatos(){
 	return result;
 }
 
+//al cargar la pagina deshabilita las opciones de edicion segun el nivel de acceso del usuario 
 window.onload=function() {
 	permisoEdicion = document.getElementById("permisoEdicion").value;
 	if (permisoEdicion == "false"){
@@ -57,9 +58,9 @@ window.onload=function() {
 	String ciudad = "";
 	String direccion = "";
 	
+	//si se ha pasado un terreno, carga los valores para poder actualizarlo
 	int id = 0;
 	Terreno terreno = new Terreno();
-	//actualizar el terreno
 	if(request.getAttribute("terreno") != null){
 		terreno = (Terreno)request.getAttribute("terreno");
 		option = 3;
@@ -112,6 +113,7 @@ window.onload=function() {
 						<th></th>
 					</tr>
 				<%
+				//muestar los alimentos del terreno
 				for (Alimento a : alimentos) { %>
 					<tr>
 						<td><%=a.getNombre()%></td>

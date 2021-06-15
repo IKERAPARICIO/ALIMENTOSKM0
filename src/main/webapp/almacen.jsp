@@ -13,9 +13,10 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
-	function doReload(sDisponible){
-		document.location = 'PaquetesController?opcion=9&sDisponible=' + sDisponible;
-	}
+//recarga la pagina con el valor del select
+function doReload(sDisponible){
+	document.location = 'PaquetesController?opcion=9&sDisponible=' + sDisponible;
+}
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
@@ -24,11 +25,11 @@
 	<section>
 		<h1>Almacén</h1>
 		<%
+		//define el valor del select
 		String sDisponible = "si";
 		if (request.getAttribute("sDisponible") != null) {
 			sDisponible = (String)request.getAttribute("sDisponible");
 		}
-
 		%>
 		<label for="dispFilter">Mostrar:</label>
 		<select name="dispFilter" onchange="doReload(this.value);">
@@ -48,6 +49,7 @@
 					<th></th>
 				</tr>
 				<%
+				//muestar los paquetes recogidos
 				ArrayList<Paquete> almacen = (ArrayList<Paquete>)request.getAttribute("almacen");
 				for (Paquete p : almacen) {
 				%>
@@ -63,9 +65,8 @@
 						if (!p.estaFinalizado()){
 						%>
 							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/finish.png" width="16px" alt="Finalizar"></a>
-						<%} if (true || p.estaGestionado()){ %>
-							<a href="PaquetesController?opcion=4&id=<%=p.getId()%>"><img src="img/multiply.png" width="16px" alt="Porciones"></a>
-						<% } %>
+						<%} %>
+						<a href="PaquetesController?opcion=4&id=<%=p.getId()%>"><img src="img/multiply.png" width="16px" alt="Porciones"></a>
 					</td>
 				</tr>
 				<%}%>

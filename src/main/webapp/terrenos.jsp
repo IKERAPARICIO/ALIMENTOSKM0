@@ -31,6 +31,7 @@
 					<th></th>
 				</tr>
 			<%
+				//muestra los terrenos pasados
 				ArrayList<Terreno> terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
 				for (Terreno t : terrenos) {
 				%>

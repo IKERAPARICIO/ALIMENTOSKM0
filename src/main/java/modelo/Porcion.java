@@ -6,6 +6,10 @@ import java.util.ArrayList;
 
 import dao.PorcionDAO;
 
+/**
+ * Clase para trabajar con porciones
+ * @author Iker Aparicio
+ */
 public class Porcion implements Producto {
 
 	private int id;
@@ -14,6 +18,7 @@ public class Porcion implements Producto {
 	private Paquete paquete;
 	private Cesta cesta;
 	
+	//****************** Constructores ******************
 	public Porcion() {
 		
 	}
@@ -45,6 +50,7 @@ public class Porcion implements Producto {
 		this.cesta = cesta;
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -77,31 +83,7 @@ public class Porcion implements Producto {
 		return cesta.getId();
 	}
 
-	//
-	public String getNombreAlimento() {
-		return this.paquete.getAlimento().getNombre();
-	}
-	
-	public String getNombreProductor() {
-		return this.paquete.getTerreno().getProductor().getNombre();
-	}
-	
-	public Date getFechaAceptacionPaquete() {
-		return this.paquete.getFechaAceptacion();
-	}
-	
-	public Double getPrecioAlimento() {
-		return this.paquete.getAlimento().getPrecio();
-	}
-	
-	public Double getPrecioAlimento(Date fecha) {
-		return this.paquete.getAlimento().getPrecio(fecha);
-	}
-	
-	public String getNombreTerreno() {
-		return this.paquete.getTerreno().getNombre();
-	}
-	
+	//****************** Override de Interfaz Producto ******************
 	@Override
 	public double getPrecio() {
 		double precio = 0;
@@ -118,14 +100,7 @@ public class Porcion implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 	
-	public boolean incluidaEnCesta() {
-		if (cesta.getId() == 0)
-			return false;
-		else
-			return true;
-	}
-	
-	//Acceso a DAO
+	//****************** Métodos DAO ******************
 	public int insertar() {
 		int idPorcion = 0;
 		try {
@@ -162,6 +137,10 @@ public class Porcion implements Producto {
 		return lista;
 	}
 	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Porcion p = null;
 		try {
@@ -176,4 +155,42 @@ public class Porcion implements Producto {
 		}
 	}
 	
+	/** 
+	 * @return nombre del Alimento al que pertenece el Paquete de la Porcion
+	 */
+	public String getNombreAlimento() {
+		return this.paquete.getAlimento().getNombre();
+	}
+	
+	/** 
+	 * @return nombre completo del Productor al que pertenece el Terreno del Paquete de la Porcio
+	 */
+	public String getNombreProductor() {
+		return this.paquete.getTerreno().getProductor().getNombre();
+	}
+	
+	/** 
+	 * @return fecha de aceptación del Paquete de la Porcion
+	 */
+	public Date getFechaAceptacionPaquete() {
+		return this.paquete.getFechaAceptacion();
+	}
+	
+	/**
+	 * @return nombre del Terreno al que pertenece el Paquete de la Porcion
+	 */
+	public String getNombreTerreno() {
+		return this.paquete.getTerreno().getNombre();
+	}
+	
+	/**
+	 * Mira si la Porcion esá incluida en alguna cesta
+	 * @return true si lo está, false en caso contrario
+	 */
+	public boolean incluidaEnCesta() {
+		if (cesta.getId() == 0)
+			return false;
+		else
+			return true;
+	}
 }

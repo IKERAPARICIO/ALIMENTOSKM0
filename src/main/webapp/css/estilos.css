@@ -94,17 +94,6 @@ section table th {
 }
 
 /*************************** NAVIGATION BAR STYLE ***************************/
-/* Modify the backgorund color 
-.navbar-custom {
-    background-color: #78a206;
-}
-
-/* Modify brand and text color 
-.navbar-custom .navbar-brand,
-.navbar-custom .navbar-text {
-    color: #fff;
-}*/
-
 .bg-custom {
     background-color: #78a206;
 }
@@ -117,34 +106,6 @@ section table th {
     padding-right: 25px;
     padding-left: 25px;
 }
-
-/*
-nav ul
-	list-style:none;
-	margin:0;
-}
-
-nav ul li{
-	float:left;
-	width:14%;
-}
-
-nav ul li a{
-	display:inline-block;
-	width:100%;
-	height:20px;
-	text-decoration:none;
-	text-align:center;
-	font-weight:bold;
-	padding:8px 0 8px 0;
-	margin-left:-17px;
-	background-color:#78a206;
-    color: #fff;
-}
-
-nav ul li a:hover{
-	background-color:#78a206bd;
-}*/
 
 /*************************** HEADER STYLE ***************************/
 header{
@@ -213,7 +174,6 @@ footer a {
 	text-decoration:none;
 	color: #fff;
 }
-
 
 /*************************** BUTTON ***************************/
 .centeredContainer{

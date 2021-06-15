@@ -16,6 +16,7 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
+//deshabilita las opciones de edicion si la cesta ya ha sido comprada
 window.onload=function() {
 	permisoEdicion = document.getElementById("nombreUsuario").value;
 	if (permisoEdicion.trim() != ""){
@@ -40,8 +41,8 @@ window.onload=function() {
 		double precio = 0;
 		boolean preparada = false;
 		
+		//si se ha pasado una cesta, carga los valores para poder actualizarla
 		Cesta cesta = new Cesta();
-		//actualizar la cesta
 		if(request.getAttribute("cesta") != null){
 			cesta = (Cesta)request.getAttribute("cesta");
 			option = 4;
@@ -55,7 +56,6 @@ window.onload=function() {
 			preparada = cesta.isPreparada();
 		}
 	%>
-
 	<section>
 		<h1>Detalle Cesta</h1>
 		<form name="cesta" action="CestasController" method="post">
@@ -79,6 +79,7 @@ window.onload=function() {
 		</form>
 		
 		<%
+		//muestra las porciones de la cesta
 		if(id != 0){
 			ArrayList<Porcion> porciones = cesta.obtenerPorciones();
 			%> <h2>Porciones</h2> <%

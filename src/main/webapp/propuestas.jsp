@@ -15,28 +15,30 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
-	function askForQuantity(idPaquete,cantidadPropuesta){
-		var cantAceptada = prompt("Cantidad a aceptar: ", "");
-		if (cantAceptada === null) {
-			return;
-		}
-		cantAceptada = parseInt(cantAceptada);
-		if (cantAceptada < 1 || cantAceptada > cantidadPropuesta)
-	   	{
-	   		alert("Valor incorrecto!!");
-	   	}
-		else{
-			approveQuantity(idPaquete,cantAceptada);
-		}
+//si se aprueba parcialmente un paquete debera indicar la cantidad a aprobar. se valida si es correcto lo indicado.
+function askForQuantity(idPaquete,cantidadPropuesta){
+	var cantAceptada = prompt("Cantidad a aceptar: ", "");
+	if (cantAceptada === null) {
+		return;
 	}
+	cantAceptada = parseInt(cantAceptada);
+	if (cantAceptada < 1 || cantAceptada > cantidadPropuesta)
+   	{
+   		alert("Valor incorrecto!!");
+   	}
+	else{
+		approveQuantity(idPaquete,cantAceptada);
+	}
+}
 
-	function approveQuantity(idPaquete,cantAceptada){
-		document.location.href="PaquetesController?opcion=1&id="+idPaquete+"&cant="+cantAceptada;
-	}
+function approveQuantity(idPaquete,cantAceptada){
+	document.location.href="PaquetesController?opcion=1&id="+idPaquete+"&cant="+cantAceptada;
+}
 
-	function doReload(fEstado){
-		document.location = 'PaquetesController?opcion=8&fEstado=' + fEstado;
-	}
+//recarga la pagina con el cambio de filtro
+function doReload(fEstado){
+	document.location = 'PaquetesController?opcion=8&fEstado=' + fEstado;
+}
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
@@ -51,6 +53,7 @@
 			estado = (String)request.getAttribute("fEstado");
 		}
 		
+		//carga los estados posibles
 		PaqueteDAO pDAO = new PaqueteDAO();
 		ArrayList<String> estados = pDAO.getPropuestasStates();
 		%>
@@ -76,6 +79,7 @@
 					<th></th>
 				</tr>
 				<%
+				//muestra las propuestas pasadas
 				ArrayList<Paquete> propuestas = (ArrayList<Paquete>)request.getAttribute("propuestas");
 				for (Paquete p : propuestas) {
 				%>

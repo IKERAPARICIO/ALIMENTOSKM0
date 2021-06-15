@@ -1,13 +1,8 @@
 <%
-	String msg = (String)request.getAttribute("mensaje");
-	if(msg != null){ 
-	%>
-		<div id="msg"><%=msg%></div>
-	<%
-	}
-	if (msgJsp != null){ 
-	%>
-		<div id="msg"><%=msgJsp%></div>
-	<%
-	}
+String msg = (String)request.getAttribute("mensaje");
+if(msg != null){ 
+%>
+	<div id="msg"><%=msg%></div>
+<%
+}
 %>

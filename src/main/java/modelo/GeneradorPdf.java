@@ -13,6 +13,10 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 
+/**
+ * Clase para generar documentos PDF
+ * @author Iker Aparicio
+ */
 public class GeneradorPdf {
 	private static String ENTIDAD = "Ayuntamiento de Trapagaran";
     private static Font catFont = new Font(Font.FontFamily.TIMES_ROMAN, 18,
@@ -22,6 +26,12 @@ public class GeneradorPdf {
     private static Font smallBold = new Font(Font.FontFamily.TIMES_ROMAN, 12,
             Font.BOLDITALIC);
 
+    /**
+     * Completa el fichero PDF pasado con los datos del paquete indicado
+     * @param document: fichero PDF
+     * @param idPaquete: id del paquete
+     * @throws DocumentException
+     */
     public void crearReciboPaquete(Document document, int idPaquete) throws DocumentException {
     	this.addMetaData(document);
     	this.addTitle(document,"Propuesta Aceptada por el "+ENTIDAD);
@@ -29,6 +39,12 @@ public class GeneradorPdf {
     	this.addFooter(document);
     }
     
+    /**
+     * Completa el fichero PDF pasado con los datos de la cesta indicada
+     * @param document: fichero PDF
+     * @param idCesta: id de la cesta
+     * @throws DocumentException
+     */
     public void crearReciboCesta(Document document, int idCesta) throws DocumentException {
     	this.addMetaData(document);
     	this.addTitle(document,"Cesta Comprada por Consumidor");
@@ -36,7 +52,10 @@ public class GeneradorPdf {
     	this.addFooter(document);
     }
     
-    // iText allows to add metadata to the PDF which can be viewed in your Adobe
+    /**
+     * Incluye metadata al PDF para ser consultada en Adobe
+     * @param document
+     */
     private void addMetaData(Document document) {
         document.addTitle("AlimentosKM0");
         document.addSubject("Generacion de recibos");
@@ -45,6 +64,12 @@ public class GeneradorPdf {
         document.addCreator(ENTIDAD);
     }
 
+    /**
+     * Incluye una cabecera al documento
+     * @param document: documento a completar
+     * @param cabecera: valor de la cabecera
+     * @throws DocumentException
+     */
     private void addTitle(Document document, String cabecera) throws DocumentException {
         Paragraph preface = new Paragraph();
         // We add one empty line
@@ -57,6 +82,12 @@ public class GeneradorPdf {
         document.add(preface);
     }
 
+    /**
+     * Incluye la informacion del paquete al documento
+     * @param document: documento a completar
+     * @param idPaquete: id del paquete
+     * @throws DocumentException
+     */
     private void addContentPropuesta(Document document, int idPaquete) throws DocumentException {   
     	Paquete paquete = new Paquete();
     	paquete.buscarID(idPaquete);
@@ -83,6 +114,7 @@ public class GeneradorPdf {
         c4.setGrayFill(0.7f);
         table.addCell(c4);
 
+        //contenido de la tabla
         table.addCell("Productor");
         table.addCell(productor.getNombreCompleto());
         table.addCell("DNI");
@@ -108,6 +140,12 @@ public class GeneradorPdf {
         document.add(table);
     }
     
+    /**
+     * Incluye la informacion de la cesta al documento
+     * @param document: documento a completar
+     * @param idCesta: id de la cesta
+     * @throws DocumentException
+     */
     private void addContentCesta(Document document, int idCesta) throws DocumentException {   
     	Cesta cesta = new Cesta();
     	cesta.buscarID(idCesta);
@@ -134,6 +172,7 @@ public class GeneradorPdf {
         c4.setGrayFill(0.7f);
         table.addCell(c4);
 
+        //cnontenido
         table.addCell("Nombre Usuario");
         table.addCell(cesta.getUsuarioNombreCompleto());
         table.addCell("Nombre Cesta");
@@ -154,6 +193,11 @@ public class GeneradorPdf {
         document.add(table);
     }
     
+    /**
+     * Incluye el pie al documento
+     * @param document: documento a completar
+     * @throws DocumentException
+     */
     private void addFooter(Document document) throws DocumentException {
         Paragraph footer = new Paragraph();
         addEmptyLine(footer, 1);
@@ -164,6 +208,11 @@ public class GeneradorPdf {
         document.add(footer);
     }
 
+    /**
+     * Incluye líneas en blanco al párrafo pasado
+     * @param paragraph: párrafo
+     * @param number: número de líneas en blanco
+     */
     private void addEmptyLine(Paragraph paragraph, int number) {
         for (int i = 0; i < number; i++) {
             paragraph.add(new Paragraph(" "));

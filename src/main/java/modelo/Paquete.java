@@ -4,11 +4,12 @@ import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.AlimentoDAO;
 import dao.PaqueteDAO;
-import dao.PorcionDAO;
-import dao.TerrenoDAO;
 
+/**
+ * Clase para trabajar con Paquetes
+ * @author Iker Aparicio
+ */
 public class Paquete implements Producto {
 	
 	private int id;
@@ -22,6 +23,7 @@ public class Paquete implements Producto {
 	private Alimento alimento;
 	private Terreno terreno;
 	
+	//****************** Constructores ******************
 	public Paquete() {
 		
 	}
@@ -71,6 +73,7 @@ public class Paquete implements Producto {
 		this.alimento = a;
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -143,27 +146,7 @@ public class Paquete implements Producto {
 		this.terreno = terreno;
 	}
 	
-	//
-	public Productor getProductor() {
-		return this.terreno.getProductor();
-	}
-	
-	public String getNombreCompletoProductor() {
-		return this.terreno.getProductor().getNombreCompleto();
-	}
-	
-	public String getNombreAlimento() {
-		return this.alimento.getNombre();
-	}
-	
-	public String getNombreTerreno() {
-		return this.terreno.getNombre();
-	}
-	
-	public String getMedidaAlimento() {
-		return this.alimento.getMedida();
-	}
-
+	//****************** Override de Interfaz Producto ******************
 	@Override
 	public double getPrecio() {
 		double precio = 0;
@@ -180,16 +163,7 @@ public class Paquete implements Producto {
 		return Math.round(precio * 100.0) / 100.0;
 	}
 	
-	public ArrayList<Paquete> obtenerPropuestas(String estado) {
-		ArrayList<Paquete> lista = null;
-		try {
-			lista = PaqueteDAO.getInstance().listPropuestas(estado);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return lista;
-	}
-	
+	//****************** Métodos DAO ******************
 	public void insertar() throws SQLException {
 		PaqueteDAO.getInstance().insert(this);
 	}
@@ -202,6 +176,10 @@ public class Paquete implements Producto {
 		PaqueteDAO.getInstance().update(this);
 	}
 	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Paquete p = null;
 		try {
@@ -222,50 +200,23 @@ public class Paquete implements Producto {
 		}
 	}
 	
-	public void aprobar(int id, Double cantidad) throws SQLException {
-		PaqueteDAO.getInstance().approve(id, cantidad);
+	/**
+	 * @param estado: nombre del estado
+	 * @return Lista de propuestas filtradas por su estado
+	 */
+	public ArrayList<Paquete> obtenerPropuestas(String estado) {
+		ArrayList<Paquete> lista = null;
+		try {
+			lista = PaqueteDAO.getInstance().listPropuestas(estado);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
 	}
 	
-	public void rechazar(int id) throws SQLException {
-		PaqueteDAO.getInstance().disApprove(id);
-	}
-	
-	public void finalizar(int id) throws SQLException {
-		PaqueteDAO.getInstance().archive(id);
-	}
-	
-	public boolean estaSinGestionar() {
-		if (this.estado == Estado.PROPUESTO)
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean estaAceptado() {
-		if (this.estado == Estado.ACEPTADO)
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean estaGestionado() {
-		if (this.estado == Estado.ACEPTADO)
-			return true;
-		else
-			return false;
-	}
-	
-	public boolean estaFinalizado() {
-		if (this.estado == Estado.FINALIZADO)
-			return true;
-		else
-			return false;
-	}
-	
-	public String getEstadoInicial() {
-		return Estado.PROPUESTO.toString();
-	}
-
+	/**
+	 * @return Lista de porciones incluidas en el Paquete
+	 */
 	public ArrayList<Porcion> obtenerPorciones() {
 		ArrayList<Porcion> porciones = null;
 		try {
@@ -275,4 +226,106 @@ public class Paquete implements Producto {
 		}
 		return porciones;
 	}
+	
+	/**
+	 * @return Productor del terreno al que pertenece el Paquete
+	 */
+	public Productor getProductor() {
+		return this.terreno.getProductor();
+	}
+	
+	/**
+	 * @return nombre completo del Productor del terreno al que pertenece el Paquete
+	 */
+	public String getNombreCompletoProductor() {
+		return this.terreno.getProductor().getNombreCompleto();
+	}
+	
+	/**
+	 * @return nombre del Alimento al que pertenece el Paquete
+	 */
+	public String getNombreAlimento() {
+		return this.alimento.getNombre();
+	}
+	
+	/**
+	 * @return nombre del Terreno al que pertenece el Paquete
+	 */
+	public String getNombreTerreno() {
+		return this.terreno.getNombre();
+	}
+	
+	/**
+	 * @return medida del Alimento al que pertenece el Paquete
+	 */
+	public String getMedidaAlimento() {
+		return this.alimento.getMedida();
+	}
+
+	/**
+	 * Aprueba la cantidad el Paquete indicado
+	 * @param id: id del Paquete
+	 * @param cantidad: cantidad a aprobar
+	 * @throws SQLException
+	 */
+	public void aprobar(int id, Double cantidad) throws SQLException {
+		PaqueteDAO.getInstance().approve(id, cantidad);
+	}
+	
+	/**
+	 * Rechaza el Paquete indicado
+	 * @param id: id del Paquete
+	 * @throws SQLException
+	 */
+	public void rechazar(int id) throws SQLException {
+		PaqueteDAO.getInstance().disApprove(id);
+	}
+	
+	/**
+	 * Finaliza el Paquete indicado y deja su cantidad disponible a 0
+	 * @param id: id del Paquete
+	 * @throws SQLException
+	 */
+	public void finalizar(int id) throws SQLException {
+		PaqueteDAO.getInstance().archive(id);
+	}
+	
+	/**
+	 * @return true si todavía no se ha getionado el Paquete, false en caso contrario
+	 */
+	public boolean estaSinGestionar() {
+		if (this.estado == Estado.PROPUESTO)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @return true si se ha aceptado el Paquete, false en caso contrario
+	 */
+	public boolean estaAceptado() {
+		if (this.estado == Estado.ACEPTADO)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @return true si se ha finalizado el Paquete, false en caso contrario
+	 */
+	public boolean estaFinalizado() {
+		if (this.estado == Estado.FINALIZADO)
+			return true;
+		else
+			return false;
+	}
+	
+	/**
+	 * @return valor del estado definido como Inicial (PROPUESTO)
+	 */
+	public String getEstadoInicial() {
+		return Estado.PROPUESTO.toString();
+	}
+
+
 }

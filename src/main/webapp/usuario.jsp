@@ -1,5 +1,5 @@
 <%@page import="modelo.Usuario"%>
-<%@page import="dao.CommonDAO"%>
+<%@page import="dao.UsuarioDAO"%>
 <%@page import="modelo.Productor"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
@@ -15,6 +15,7 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
+//al cargar la pagina mira si en funcion del rol tiene que ocultar algun campo
 window.onload = function() {
 	showHideAttributes()
 };
@@ -43,16 +44,17 @@ function showHideAttributes(){
 		String dni = "";
 		String direccion = "";
 		
-		CommonDAO commonDAO = new CommonDAO();
-		ArrayList<String> roles = commonDAO.getRols();
+		UsuarioDAO uDAO = new UsuarioDAO();
+		ArrayList<String> roles = uDAO.getRols();
 
-		//actualizar el usuario
+		//si se ha pasado un usuario, carga los valores para poder actualizarlo
 		if (request.getAttribute("id") != null){
 			id = (int)request.getAttribute("id");
 			option = 3;
 			Usuario usuario = new Usuario();
 			String userRol = usuario.obtenerRol(id);
 			
+			//se diferrencia entra PRODUCTOR y el resto de usuarios
 			if (userRol.equals("PRODUCTOR")){
 				Productor productor = new Productor();
 				productor.buscarID(id);
@@ -64,6 +66,7 @@ function showHideAttributes(){
 				mail = productor.getMail();
 				ciudad = productor.getCiudad();
 				telefono = productor.getTelefono();
+				//atributos solo del Productor
 				dni = productor.getDni();
 				direccion = productor.getDireccion();
 			}
@@ -80,7 +83,6 @@ function showHideAttributes(){
 			}
 		}
 	%>
-
 	<section>
 		<h1>Usuario</h1>
 		<form name="usuario" action="UsuariosController" method="post">

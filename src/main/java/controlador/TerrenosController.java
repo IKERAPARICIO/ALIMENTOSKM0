@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,19 +19,21 @@ import modelo.Terreno;
 import modelo.Usuario;
 
 /**
- * Servlet implementation class GestionLibros
+ * Servlet para procesar las peticiones de Terrenos
+ * @author Iker Aparicio
  */
 @WebServlet("/TerrenosController")
 public class TerrenosController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    //Constructor vacio
+	 /**
+     * Constructor vacío
+     */
     public TerrenosController() {
     }
 
     /**
-     * Dependiendo la opcion indicada, da de alta un terreno, lo elimina o actualiza
-     * @throws SQLException 
+     * Recoge la opcion indicada y la procesa
      */
 	private void procesarTerrenos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
@@ -65,7 +65,7 @@ public class TerrenosController extends HttpServlet {
 				cargarSelectAlimentos(request, response);
 				break;
 			default:
-				System.out.println("Opcion no valida.");
+				System.out.println("Opción no valida.");
 		}
 	}
 
@@ -84,7 +84,6 @@ public class TerrenosController extends HttpServlet {
 			Terreno  terreno = new Terreno(nombre, metros, ciudad, direccion, idUsuario);
 			int id = terreno.insertar();
 			terreno.buscarID(id);
-			
 			request.setAttribute("terreno",terreno);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el Terreno.";
@@ -98,7 +97,7 @@ public class TerrenosController extends HttpServlet {
 	}
 	
 	/**
-	 * Elimina el terreno que tiene el id pasado y vuelve a la pagina del listado de terreno con un mensaje de resultado.
+	 * Elimina el terreno que tiene el id pasado y vuelve a la pagina del listado de terrenos con un mensaje de resultado.
 	 */
 	private void eliminarTerreno(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Terreno eliminado.";
@@ -122,7 +121,7 @@ public class TerrenosController extends HttpServlet {
 	}
 	
 	/**
-	 * Modifica el precio del terreno que tiene el id pasado y vuelve a la pagina del listado de terrenos con un mensaje de resultado.
+	 * Modifica el terreno con los parametros pasados y vuelve a la pagina del listado de terrenos con un mensaje de resultado.
 	 */
 	private void actualizarTerreno(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Terreno actualizado.";
@@ -149,6 +148,9 @@ public class TerrenosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Carga el terreno de id pasado y llama a la pagina de terreno 
+	 */
 	private void verDetalleTerreno(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = null;
 		try {
@@ -168,7 +170,7 @@ public class TerrenosController extends HttpServlet {
 	}
 
 	/**
-	 * Elimina el alimento del terreno indicado y vuelve a la pagina del listado de terrenos con un mensaje de resultado.
+	 * Elimina el alimento indicado del terreno indicado y vuelve a la pagina del terreno con un mensaje de resultado.
 	 */
 	private void quitarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento quitado del terreno.";
@@ -191,6 +193,9 @@ public class TerrenosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Agrega el alimento indicado al terreno indicado y vuelve a la pagina del terreno con un mensaje de resultado.
+	 */
 	private void agregarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento agregado al terreno.";
 		Terreno terreno = new Terreno();
@@ -211,6 +216,9 @@ public class TerrenosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el terreno de id indicado y llama a la pagina de alimentos con los que esten disponibles para ese terreno
+	 */
 	private void mostrarAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = null;
 		ArrayList<Alimento> alimentos = new ArrayList<Alimento>();
@@ -221,7 +229,6 @@ public class TerrenosController extends HttpServlet {
 			Terreno terreno = new Terreno();
 			terreno.buscarID(idTerreno);
 			alimentos = terreno.obtenerAlimentosDisponibles();
-			
 		} catch (NumberFormatException e) {
 			msg = "ERROR al cargar los alimentos disponibles.";
 		}
@@ -233,10 +240,13 @@ public class TerrenosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el listado de terrenos y llama a la pagina de listado de terrenos
+	 * - si es productor lista solo sus terrenos, si no todos
+	 */
 	private void cargarTerrenos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
-		//si es productor lista solo sus terrenos, si no todos
 		int idUsuario = 0;
 		if (usuario.obtenerPermisosRol() == 5) {
 			idUsuario = usuario.getId();
@@ -250,7 +260,9 @@ public class TerrenosController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
-	//llamada AJAX
+	/**
+	 * Tratamiento de llamada AJAX. Carga un select con los alimentos que tiene el terreno con id pasada
+	 */
 	private void cargarSelectAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		response.setContentType("text/html;charset=UTF-8");
         try (PrintWriter out = response.getWriter()) {
@@ -275,20 +287,24 @@ public class TerrenosController extends HttpServlet {
         }
 	}
 	
+	/**
+	 * todas las peticiones GET se gestionan a traves de procesarTerrenos()
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarTerrenos(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * todas las peticiones POST se gestionan a traves de procesarTerrenos()
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarTerrenos(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

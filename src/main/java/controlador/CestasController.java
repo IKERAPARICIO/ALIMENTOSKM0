@@ -20,28 +20,27 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import dao.CestaDAO;
 import dao.PaqueteDAO;
-import dao.TerrenoDAO;
 import modelo.Cesta;
 import modelo.GeneradorPdf;
-import modelo.Paquete;
 import modelo.Porcion;
-import modelo.Terreno;
 import modelo.Usuario;
 
 /**
- * Servlet implementation class CestasController
+ * Servlet para procesar las peticiones de Cestas
+ * @author Iker Aparicio
  */
 @WebServlet("/CestasController")
 public class CestasController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
-	//Constructor vacio
+	/**
+     * Constructor vacío
+     */
     public CestasController() {
     }
 
     /**
-     * Dependiendo la opcion indicada, da de alta un cesta, lo elimina o actualiza
-     * @throws SQLException 
+     * Recoge la opcion indicada y la procesa
      */
 	private void procesarCestas(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
@@ -82,12 +81,12 @@ public class CestasController extends HttpServlet {
 				descargarJustificante(request, response);
 				break;
 			default:
-				System.out.println("Opcion no valida.");
+				System.out.println("Opción no valida.");
 		}
 	}
 
 	/**
-	 * Elimina la cesta que tiene el id pasado y vuelve a la pagina del listado de cestas con un mensaje de resultado.
+	 * Elimina la cesta que tiene el id pasado y vuelve a la pagina de cestas con un mensaje de resultado.
 	 */
 	private void eliminarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta eliminada.";
@@ -109,7 +108,7 @@ public class CestasController extends HttpServlet {
 	}
 	
 	/**
-	 * Elimina la porcion de la cesta indicada y vuelve a la pagina del listado de cestas con un mensaje de resultado.
+	 * Elimina la porcion de la cesta indicada y vuelve a la pagina de cestas con un mensaje de resultado.
 	 */
 	private void quitarPorcion(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Porción quitada de la cesta.";
@@ -130,15 +129,17 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Da de alta la cesta segun los parametros pasados y vuelve a la pagina de la cesta con un mensaje de resultado.
+	 */
 	private void altaCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta creada.";
 		try {
 			String nombre = request.getParameter("nombre");	
 			Cesta cesta = new Cesta(nombre);
 			int id = cesta.insertar();
-			//carga el resto de datos
+			//carga el resto de datos para devolverlos a la pagina de la cesta
 			cesta.buscarID(id);
-			
 			request.setAttribute("cesta",cesta);
 		} catch (NumberFormatException e) {
 			msg = "ERROR al crear la cesta.";
@@ -151,6 +152,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Modifica la cesta co los parametros pasados y vuelve a la pagina de la cesta con un mensaje de resultado.
+	 */
 	private void actualizarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Cesta actualizada.";
 		Cesta cesta = new Cesta();
@@ -168,7 +172,7 @@ public class CestasController extends HttpServlet {
 		} catch (SQLException e) {
 			msg = "ERROR en la BBDD al modificar la cesta.";
 		} finally {
-			//carga el resto de datos
+			//carga el resto de datos para devolverlos a la pagina de la cesta
 			cesta.buscarID(id);
 			request.setAttribute("cesta",cesta);
 		}
@@ -178,6 +182,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga la cesta y llama a la pagina de la cesta 
+	 */
 	private void verDetalleCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = null;
 		try {
@@ -196,6 +203,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Incluye la porcion indicada en la cesta indicada y vuelve a la pagina de la cesta
+	 */
 	private void agregarPorcion(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Porción agregada a la cesta.";
 		Cesta cesta = new Cesta();
@@ -215,6 +225,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Incluye la cesta indicada al usuario de la sesion actual y carga el listado de sus cestas
+	 */
 	private void comprarCesta(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = null;
 		int id = 0;
@@ -241,6 +254,10 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga las cestas del usuario de la sesion actual
+	 * - si es productor lista las cestas en las que hay porciones de sus terrenos, si es consumidor sus cestas compradas
+	 */
 	private void verMisCestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
@@ -248,7 +265,6 @@ public class CestasController extends HttpServlet {
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
 		try {
 			CestaDAO cDAO = new CestaDAO();
-			//si es productor lista las cestas en las que hay porciones de sus terrenos, si es consumidor sus cestas compradas
 			if (usuario.obtenerPermisosRol() < 4) {
 				listaCestas = cDAO.listMyCestas(usuario.getId());
 			}
@@ -266,6 +282,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el listado de cestas disponibles para la compra
+	 */
 	private void verCestasDisponibles(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		String msg = null;
 		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
@@ -283,6 +302,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Carga el listado de cestas
+	 */
 	private void cargarCestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		CestaDAO cest = new CestaDAO();
 		ArrayList<Cesta> cestas = cest.listCestas();
@@ -292,7 +314,9 @@ public class CestasController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
-	
+	/**
+	 * Carga el listado de porciones disponibles para poder incluir en la cesta pasada
+	 */
 	private void verPorcionesDisponibles(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException  {
 		String msg = null;
 		ArrayList<Porcion> porciones = new ArrayList<Porcion>();
@@ -312,6 +336,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * Genera un PDF para el Consumidor como recibo de la cesta comprada indicada y vuelve a mostrar sus cestas
+	 */
 	private void descargarJustificante(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		String msg = null;
 		Document document = new Document(); 
@@ -321,7 +348,6 @@ public class CestasController extends HttpServlet {
 	    { 
 	    	int idCesta = Integer.parseInt(request.getParameter("id"));	
 	    	String fileName = filePath+idCesta+"_"+fileNameEnd;
-	    	//PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream("Test.pdf"));
 	    	PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fileName));
 	    	document.open(); 
 	    	GeneradorPdf pdf = new GeneradorPdf();
@@ -331,8 +357,7 @@ public class CestasController extends HttpServlet {
 	    	msg = "Se ha generado el recibo en " + fileName + ". Preséntelo como justificante.";
 	    } catch (NumberFormatException e) {
 			msg = "ERROR al cargar la cesta.";
-		} catch (DocumentException e) 
-	    { 
+		} catch (DocumentException e) { 
 	    	e.printStackTrace(); 
 	    	msg = "Error al generar el documento pdf.";
 	    } catch (FileNotFoundException e) 
@@ -341,7 +366,7 @@ public class CestasController extends HttpServlet {
 	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
 	    }
 	    
-		
+		//carga su listado de cestas para mostrarlo el la pagina
 		ArrayList<Cesta> listaCestas = new ArrayList<Cesta>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -359,6 +384,9 @@ public class CestasController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * todas las peticiones GET se gestionan a traves de procesarCestas()
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarCestas(request, response);
@@ -368,6 +396,9 @@ public class CestasController extends HttpServlet {
 		}
 	}
 
+	/**
+	 * todas las peticiones POST se gestionan a traves de procesarCestas()
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarCestas(request, response);

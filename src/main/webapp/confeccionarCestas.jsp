@@ -19,7 +19,6 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Confeccionar Cestas</h1>
-
 		<table>
 			<tr>
 				<th>ID</th>
@@ -31,7 +30,7 @@
 				<th>PRECIO</th>
 				<th></th>
 			</tr>
-			<%
+			<% //muestra las cestas pasadas
 			if (request.getAttribute("cestas") != null){
 				ArrayList<Cesta> cestas = (ArrayList<Cesta>)request.getAttribute("cestas");
 				for (Cesta c : cestas) {
@@ -56,7 +55,6 @@
 			}
 			%>
 		</table>
-		
 		<div class="centeredContainer">
 			<button class="button" onclick="document.location='CestasController?opcion=5&id=0'">Nueva Cesta</button>
 		</div>

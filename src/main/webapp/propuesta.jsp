@@ -89,7 +89,7 @@
 		terrenos = (ArrayList<Terreno>)request.getAttribute("terrenos");
 	}
 			
-	//actualizar la propuesta
+	//si se ha pasado un paquete, carga los valores para poder actualizarlo
 	if(request.getAttribute("propuesta") != null){
 		Paquete paquete = (Paquete)request.getAttribute("propuesta");
 		option = 13;
@@ -102,7 +102,6 @@
 		nombreAlimento = paquete.getNombreAlimento();
 	}
 	%>
-
 	<section>
 		<h1>Propuesta</h1>
 		<form name="propuesta" action="PaquetesController" method="post">

@@ -35,7 +35,7 @@ function validarDatos(){
 		String medida = "";
 		double precio = 0;
 
-		//actualizar el alimento
+		//si se ha pasado un alimento, carga los valores para poder actualizarlo
 		if(request.getAttribute("alimento") != null){
 			Alimento alimento = (Alimento)request.getAttribute("alimento");
 			option = 3;
@@ -64,8 +64,8 @@ function validarDatos(){
 				<input type="submit" class="button" name="guardar" value="Guardar" onclick="return validarDatos();">
 			</div>
 		</form>
-		
 		<%
+		//muestra el historico del precio del alimento
 		if(id != 0){
 			Alimento alimento = new Alimento();
 			Map<String,String> historico = alimento.getHistoricoPrecios(id);
@@ -76,7 +76,6 @@ function validarDatos(){
 					<th>FECHA</th>
 					<th>PRECIO</th>
 				</tr>
-			
 				<%
 				for (Map.Entry<String, String> entry : historico.entrySet()) {
 				    %>
@@ -90,7 +89,6 @@ function validarDatos(){
 			}
 		}
 		%>
-		
 		<%@include file="/includes/msg.inc.jsp"%>
 		</section>
 	<%@include file="/includes/footer.inc.jsp"%>

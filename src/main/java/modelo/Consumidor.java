@@ -4,10 +4,15 @@ import java.sql.SQLException;
 
 import dao.UsuarioDAO;
 
+/**
+ * Clase para trabajar con Consumidor
+ * @author Iker Aparicio
+ */
 public class Consumidor extends Usuario {
 	
 	private Rol rol = Rol.CONSUMIDOR;
 	
+	//****************** Constructores ******************
 	public Consumidor() {
 		super();
 	}
@@ -22,6 +27,7 @@ public class Consumidor extends Usuario {
 		super(id,nick,password,nombre,apellidos,mail,ciudad,telefono,sRol);
 	}
 	
+	//****************** Métodos DAO ******************
 	public void insertar() {
 		String dni = "";
 		String direccion = "";

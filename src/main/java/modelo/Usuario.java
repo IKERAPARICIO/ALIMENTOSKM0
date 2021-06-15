@@ -3,11 +3,12 @@ package modelo;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-import dao.AlimentoDAO;
-import dao.TerrenoDAO;
 import dao.UsuarioDAO;
-import modelo.Rol;
 
+/**
+ * Clase para trabajar con usuarios
+ * @author Iker Aparicio
+ */
 public class Usuario {
 		
 	private int id;
@@ -20,8 +21,8 @@ public class Usuario {
 	private String telefono;
 	private Rol rol;
 	
+	//****************** Constructores ******************
 	public Usuario() {
-		
 	}
 
 	public Usuario(String nick, String password, String nombre, String apellidos, String mail, 
@@ -49,6 +50,7 @@ public class Usuario {
 		this.rol = this.getRolFromString(sRol);
 	}
 
+	//****************** Getters y Setters ******************
 	public int getId() {
 		return id;
 	}
@@ -125,6 +127,7 @@ public class Usuario {
 		return rol.toString();
 	}
 
+	//****************** Métodos DAO ******************
 	public void insertar() throws SQLException {
 		UsuarioDAO.getInstance().insert(this,"","");
 	}
@@ -137,30 +140,10 @@ public class Usuario {
 		UsuarioDAO.getInstance().update(this,"","");
 	}
 	
-	public String getNombreCompleto () {
-		return this.getNombre() + " " + this.getApellidos();
-	}
-	
-	public int idUsuarioValido(String nick, String pass) {
-		int id = 0;
-		try {
-			id = UsuarioDAO.getInstance().idValidUser(nick, pass);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return id;
-	}
-
-	public ArrayList<Usuario> obtenerUsuarios(String sRol) {
-		ArrayList<Usuario> lista = null;
-		try {
-			lista = UsuarioDAO.getInstance().listUsuarios(sRol);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		return lista;
-	}
-	
+	/**
+	 * Carga el objeto que tiene el id pasado
+	 * @param id
+	 */
 	public void buscarID(int id) {
 		Usuario u = null;
 		try {
@@ -181,6 +164,47 @@ public class Usuario {
 		}
 	}
 	
+	/**
+	 * @return nombre completo (nombre y apellidos) del Usuario
+	 */
+	public String getNombreCompleto () {
+		return this.getNombre() + " " + this.getApellidos();
+	}
+	
+	/**
+	 * Comprueba si el password y usuario son correctos
+	 * @param nick: nick a comprobar
+	 * @param pass: password a comprobar
+	 * @return id del usuario si es correcto, 0 si no existe en la BBDD
+	 */
+	public int idUsuarioValido(String nick, String pass) {
+		int id = 0;
+		try {
+			id = UsuarioDAO.getInstance().idValidUser(nick, pass);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+
+	/**
+	 * @param sRol: rol de usuario
+	 * @return lista de usuarios con el rol indicado, todos los usuarios si el rol esta vacio y null si no encuentra usuarios
+	 */
+	public ArrayList<Usuario> obtenerUsuarios(String sRol) {
+		ArrayList<Usuario> lista = null;
+		try {
+			lista = UsuarioDAO.getInstance().listUsuarios(sRol);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	/**
+	 * @param sRol: valor pasado
+	 * @return Rol que tiene el valor pasado
+	 */
 	public Rol getRolFromString(String sRol) {
 		if (sRol.equals(Rol.CONSUMIDOR.toString())) {
 			return Rol.CONSUMIDOR;
@@ -196,6 +220,10 @@ public class Usuario {
 		}
 	}
 	
+	/**
+	 * @param id: id de Usuario
+	 * @return valor del rol del Usuario pasado
+	 */
 	public String obtenerRol(int id) {
 		String sRol = "";
 		try {

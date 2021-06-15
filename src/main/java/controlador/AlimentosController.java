@@ -3,8 +3,6 @@ package controlador;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -14,24 +12,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import dao.AlimentoDAO;
-import dao.TerrenoDAO;
 import modelo.Alimento;
-import modelo.Terreno;
 
 /**
- * Servlet implementation class GestionLibros
+ * Servlet para procesar las peticiones de Alimentos
+ * @author Iker Aparicio
  */
 @WebServlet("/AlimentosController")
 public class AlimentosController extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-    //Constructor vacio
+    /**
+     * Constructor vacío
+     */
     public AlimentosController() {
     }
 
     /**
-     * Dependiendo la opcion indicada, da de alta un alimento, lo elimina o actualiza
-     * @throws SQLException 
+     * Recoge la opcion indicada y la procesa
      */
 	private void procesarAlimentos(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException, SQLException {
 		switch (request.getParameter("opcion")) {
@@ -51,12 +49,12 @@ public class AlimentosController extends HttpServlet {
 				verDetalleAlimento(request, response);
 				break;	
 			default:
-				System.out.println("Opcion no valida.");
+				System.out.println("Opción no valida.");
 		}
 	}
 
 	/**
-	 * Da de alta el alimento segun los parametros pasados y vuelve a la pagina de alta con un mensaje de resultado.
+	 * Da de alta el alimento segun los parametros pasados y vuelve a la pagina de alimentos con un mensaje de resultado. 
 	 */
 	private void altaAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento incluido.";
@@ -71,7 +69,6 @@ public class AlimentosController extends HttpServlet {
 			int idAlimento = alimento.insertar();
 			alimento.setId(idAlimento);
 			alimento.setPrecio(precio);
-			
 		} catch (NumberFormatException e) {
 			msg = "ERROR al introducir el Alimento.";
 		} catch (SQLException e) {
@@ -88,7 +85,7 @@ public class AlimentosController extends HttpServlet {
 	}
 	
 	/**
-	 * Elimina el alimento que tiene el id pasado y vuelve a la pagina del listado de alimento con un mensaje de resultado.
+	 * Elimina el alimento que tiene el id pasado y vuelve a la pagina de alimento con un mensaje de resultado. 
 	 */
 	private void eliminarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento eliminado.";
@@ -97,6 +94,7 @@ public class AlimentosController extends HttpServlet {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Alimento alimento = new Alimento();
+			//comprueba que el alimento no este incluido en algun Terreno
 			alimento.buscarID(id);
 			if (alimento.estaEnTerrenos()) {
 				msg = "ERROR al eliminar el alimento, puede que tenga referencias de Terrenos.";
@@ -116,7 +114,7 @@ public class AlimentosController extends HttpServlet {
 	}
 	
 	/**
-	 * Modifica el precio del alimento que tiene el id pasado y vuelve a la pagina del listado de alimentos con un mensaje de resultado.
+	 * Modifica el precio del alimento que tiene el id pasado y vuelve a la pagina de alimentos con un mensaje de resultado. 
 	 */
 	private void actualizarAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Alimento actualizado.";
@@ -146,6 +144,9 @@ public class AlimentosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 
+	/**
+	 * Carga el listado de alimentos y llama a la pagina de alimentos
+	 */
 	private void cargarAlimentos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		AlimentoDAO aDAO = new AlimentoDAO();
 		ArrayList<Alimento> alimentos = aDAO.listAlimentos();	
@@ -155,6 +156,9 @@ public class AlimentosController extends HttpServlet {
 		req.forward(request, response);
 	}
 	
+	/**
+	 * Carga el alimento y llama a la pagina de alimento 
+	 */
 	private void verDetalleAlimento(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = null;
 		try {
@@ -173,20 +177,24 @@ public class AlimentosController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
+	/**
+	 * todas las peticiones GET se gestionan a traves de procesarAlimentos()
+	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarAlimentos(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
+	/**
+	 * todas las peticiones POST se gestionan a traves de procesarAlimentos()
+	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		try {
 			procesarAlimentos(request, response);
 		} catch (IOException | ServletException | SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
