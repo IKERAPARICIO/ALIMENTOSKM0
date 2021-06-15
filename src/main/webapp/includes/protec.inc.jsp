@@ -6,6 +6,8 @@ int nivelPagina = 0;
 switch(nombrePagina){
 	case "cestas":
 	case "usuarios":
+	case "terreno":
+	case "terrenos":
 		nivelPagina = 1;
 		break;
 	case "usuario":
@@ -13,12 +15,11 @@ switch(nombrePagina){
 		break;
 	case "propuestas":
 	case "propuesta":
-	case "terreno":
-	case "terrenos":
 		nivelPagina = 5;
 		break;
 	case "alimento":
 	case "alimentos":
+	case "almacen":
 	case "almacenadoPorciones":
 	case "cesta":
 	case "cestaPorciones":

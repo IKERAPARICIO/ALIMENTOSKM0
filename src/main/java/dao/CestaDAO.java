@@ -69,7 +69,7 @@ public class CestaDAO {
 	}
 	
 	public ArrayList<Cesta> listCestas() throws SQLException {
-		PreparedStatement ps = con.prepareStatement("SELECT * from cesta ORDER BY fechaCreacion");
+		PreparedStatement ps = con.prepareStatement("SELECT * from cesta ORDER BY fechaCreacion DESC");
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Cesta> result = null;
 		

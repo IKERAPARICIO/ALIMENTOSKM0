@@ -91,14 +91,14 @@ public class PaqueteDAO {
 		return listPaquetes(selectSt, whereSt, orderBy);
 	}
 	
-	public ArrayList<Paquete> listAlmacen(String estado) throws SQLException {
+	public ArrayList<Paquete> listAlmacen(Boolean disponible) throws SQLException {
 		String selectSt = "SELECT * from paquete";
-		String orderBy = " ORDER BY idAlimento,cantidadDisponible";
+		String orderBy = " ORDER BY fechaPropuesta DESC,cantidadDisponible DESC";
 		
-		//define el WHERE con los estados
+		//define el WHERE con los estados y disponibilidad
 		String whereSt = "";
-		if(estado != "")
-			whereSt = " WHERE estado = \"" + estado + "\"";
+		if(disponible)
+			whereSt = " WHERE cantidadDisponible > 0";
 		else {
 			ArrayList<String> estados = this.getAlmacenStates();
 			for(String est : estados){
@@ -151,7 +151,7 @@ public class PaqueteDAO {
 		return result;
 	}
 	
-	public void approve(int id, int cantidad) throws SQLException {
+	public void approve(int id, Double cantidad) throws SQLException {
 		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET cantidadAceptada = ?, cantidadDisponible = ?,"
 				+ "fechaAceptacion = ?, estado = ? WHERE idPaquete = ?");
 		ps.setDouble(1, cantidad);
@@ -177,10 +177,11 @@ public class PaqueteDAO {
 		ps.close();
 	}
 	
-	public void cancel(int id) throws SQLException {
-		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET estado = ? WHERE idPaquete = ?");
-		ps.setString(1, Estado.ANULADO.toString());
-		ps.setInt(2, id);
+	public void archive(int id) throws SQLException {
+		PreparedStatement ps = con.prepareStatement("UPDATE paquete SET estado = ?, cantidadDisponible = ? WHERE idPaquete = ?");
+		ps.setString(1, Estado.FINALIZADO.toString());
+		ps.setInt(2, 0);
+		ps.setInt(3, id);
 		
 		ps.executeUpdate();
 		ps.close();
@@ -230,14 +231,14 @@ public class PaqueteDAO {
 		lista.add(Estado.PROPUESTO.toString());
 		lista.add(Estado.ACEPTADO.toString());
 		lista.add(Estado.RECHAZADO.toString());
-		lista.add(Estado.ANULADO.toString());
+		lista.add(Estado.FINALIZADO.toString());
 		return lista;
 	}
 	
 	public ArrayList<String> getAlmacenStates() {
 		ArrayList<String> lista = new ArrayList<String>();
 		lista.add(Estado.ACEPTADO.toString());
-		lista.add(Estado.ANULADO.toString());
+		lista.add(Estado.FINALIZADO.toString());
 		return lista;
 	}
 	

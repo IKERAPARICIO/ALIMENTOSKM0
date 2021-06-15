@@ -133,7 +133,7 @@ public class TerrenoDAO {
 	
 	public ArrayList<Alimento> getAlimentos(int idTerreno) throws SQLException{	
 		PreparedStatement ps = con.prepareStatement("SELECT * FROM terreno_alimento, alimento "
-				+ "WHERE terreno_alimento.idAlimento = alimento.idAlimento AND idTerreno = ?");		
+				+ "WHERE terreno_alimento.idAlimento = alimento.idAlimento AND idTerreno = ? ORDER BY alimento.nombre");		
 		ps.setInt(1, idTerreno);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Alimento> result = null;
@@ -148,7 +148,8 @@ public class TerrenoDAO {
 	}
 	
 	public ArrayList<Alimento> getAlimentosDisponibles(int idTerreno) throws SQLException{	
-		PreparedStatement ps = con.prepareStatement("SELECT * FROM alimento WHERE idAlimento NOT IN (SELECT idAlimento FROM terreno_alimento WHERE idTerreno = ? )");		;
+		PreparedStatement ps = con.prepareStatement("SELECT * FROM alimento WHERE idAlimento NOT IN (SELECT idAlimento "
+				+ "FROM terreno_alimento WHERE idTerreno = ?) ORDER BY nombre");
 		ps.setInt(1, idTerreno);
 		ResultSet rs = ps.executeQuery();
 		ArrayList<Alimento> result = null;

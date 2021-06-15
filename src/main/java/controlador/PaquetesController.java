@@ -21,6 +21,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import dao.PaqueteDAO;
 import dao.TerrenoDAO;
+import modelo.Estado;
 import modelo.GeneradorPdf;
 import modelo.Paquete;
 import modelo.Porcion;
@@ -51,7 +52,7 @@ public class PaquetesController extends HttpServlet {
 				rechazarPaquete(request, response);
 				break;
 			case "3":
-				anularPaquete(request, response);
+				finalizarPaquete(request, response);
 				break;
 			case "4":
 				porcionesPaquete(request, response);
@@ -97,16 +98,15 @@ public class PaquetesController extends HttpServlet {
 	private void aprobarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Paquete aprobado.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
+		Paquete paquete = new Paquete();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
-			int cantidad = Integer.parseInt(request.getParameter("cant"));
-			
-			Paquete paquete = new Paquete();
+			Double cantidad = Double.parseDouble(request.getParameter("cant"));
 			paquete.aprobar(id,cantidad);
-			propuestas = paquete.obtenerPropuestas("");
-		
 		} catch (Exception e) {
 			msg = "ERROR al aprobar el paquete.";
+		} finally {
+			propuestas = paquete.obtenerPropuestas("");
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -121,15 +121,14 @@ public class PaquetesController extends HttpServlet {
 	private void rechazarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		String msg = "Paquete rechazado.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
+		Paquete paquete = new Paquete();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
-			
-			Paquete paquete = new Paquete();
 			paquete.rechazar(id);
-			propuestas = paquete.obtenerPropuestas("");
-		
 		} catch (Exception e) {
 			msg = "ERROR al rechazar el paquete.";
+		} finally {
+			propuestas = paquete.obtenerPropuestas("");
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -138,22 +137,25 @@ public class PaquetesController extends HttpServlet {
 		vista.forward(request, response);
 	}
 	
-	private void anularPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String msg = "Paquete anulado.";
+	private void finalizarPaquete(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String msg = "Paquete finalizado, se ha actualizado su cantidad a 0.";
 		ArrayList<Paquete> almacen = new ArrayList<Paquete>();
+		boolean disponible = true;
+		String sDisponible = "si";
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			
 			Paquete paquete = new Paquete();
-			paquete.anular(id);
+			paquete.finalizar(id);
 			
 			PaqueteDAO pDAO = new PaqueteDAO();
-			almacen = pDAO.listAlmacen("");	
+			almacen = pDAO.listAlmacen(disponible);	
 		
 		} catch (Exception e) {
-			msg = "ERROR al anular el paquete.";
+			msg = "ERROR al finalizar el paquete.";
 		}
 		
+		request.setAttribute("sDisponible",sDisponible);
 		request.setAttribute("almacen",almacen);
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("almacen.jsp");
@@ -246,7 +248,8 @@ public class PaquetesController extends HttpServlet {
 	
 	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
-		String fEstado = "";
+		//por defecto carga las PROPUESTAS
+		String fEstado = Estado.PROPUESTO.toString();
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -255,6 +258,7 @@ public class PaquetesController extends HttpServlet {
 			if (request.getParameter("fEstado") != null) {
 				fEstado = request.getParameter("fEstado");
 			}
+			
 			
 			PaqueteDAO pDAO = new PaqueteDAO();
 			//si es productor lista sus propuestas, si es gestor todas
@@ -276,16 +280,18 @@ public class PaquetesController extends HttpServlet {
 	}
 	
 	private void cargarAlmacen(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
-		String fEstado = "";
-		if (request.getParameter("fEstado") != null) {
-			fEstado = request.getParameter("fEstado");
+		//por defecto carga los paquetes con alguna cantidad disponible
+		String sDisponible = "si";
+		if (request.getParameter("sDisponible") != null) {
+			sDisponible = request.getParameter("sDisponible");
 		}
 		
+		Boolean disponible = ("si".equals(sDisponible)) ? true : false;
 		PaqueteDAO pDAO = new PaqueteDAO();
-		ArrayList<Paquete> almacen = pDAO.listAlmacen(fEstado);	
+		ArrayList<Paquete> almacen = pDAO.listAlmacen(disponible);	
 		
 		request.setAttribute("almacen",almacen);
-		request.setAttribute("fEstado",fEstado);
+		request.setAttribute("sDisponible",sDisponible);
 		RequestDispatcher req = request.getRequestDispatcher("almacen.jsp");
 		req.forward(request, response);
 	}

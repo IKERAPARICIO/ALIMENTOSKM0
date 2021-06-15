@@ -137,8 +137,8 @@ function validateForm() {
 			</table>
 			<div class="centeredContainer">
 				<form name="paquete" action="PaquetesController" method="post">
-					Cantidad:<input type="text" name="cantNew" value="0" id="cantNew" required>
-					Número Porciones:<input type="text" name="numNew" value="0" id="numNew" required>
+					Cantidad:<input type="text" type="number" step="1.00" name="cantNew" value="0" id="cantNew" required>
+					Número Porciones:<input type="text" type="number" name="numNew" value="0" id="numNew" required>
 					
 					<input type="hidden" name="opcion" value="5">
 					<input type="hidden" name="id" value="<%=paquete.getId()%>">

@@ -107,7 +107,7 @@ public class Porcion implements Producto {
 		double precio = 0;
 		
 		precio = this.paquete.getAlimento().getPrecio() * cantidad;
-		return precio;
+		return Math.round(precio * 100.0) / 100.0;
 	}
 	
 	@Override
@@ -115,7 +115,7 @@ public class Porcion implements Producto {
 		double precio = 0;
 		
 		precio = this.paquete.getAlimento().getPrecio(fecha) * cantidad;
-		return precio;
+		return Math.round(precio * 100.0) / 100.0;
 	}
 	
 	public boolean incluidaEnCesta() {

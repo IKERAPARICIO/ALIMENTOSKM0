@@ -2,14 +2,14 @@
     <div class="floatLeft">
         <img src="img/mobile.png">
         <div class="floatRight footertext">
-    		658.587.478
+    		<a href="tel:658587478">658.587.478</a>
     	</div>
     </div>  
     
    
     <div class="floatRight">
     	 <div class="floatLeft footertext">
-    		alimentosKM0@udala.com
+    	 	<a href="mailto:alimentosKM0@udala.com">alimentosKM0@udala.com</a>
     	</div>
         <img src="img/email.png">
     </div>  

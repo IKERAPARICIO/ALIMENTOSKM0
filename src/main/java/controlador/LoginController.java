@@ -115,7 +115,7 @@ public class LoginController extends HttpServlet {
 			consumidor.setPassword(pass);
 			consumidor.insertar();
 			
-			request.setAttribute("mensaje","Bienvenido! Acceda con su datos de usuario.");
+			request.setAttribute("mensaje","Bienvenid@ " + nombre + "! Acceda con su datos de usuario.");
 			RequestDispatcher req = request.getRequestDispatcher("index.jsp");
 			req.forward(request, response);
 		}

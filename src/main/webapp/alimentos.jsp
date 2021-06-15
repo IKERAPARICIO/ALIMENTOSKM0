@@ -29,13 +29,13 @@
 			<%
 			ArrayList<Alimento> alimentos = new ArrayList<Alimento>();
 			int idTerreno = 0;
+			if (request.getAttribute("idTerreno") != null){
+				idTerreno = (int)request.getAttribute("idTerreno");
+			}
 			//si no se pasa un terreno se cargan todos los alimentos
 			//si se llama desde terrenos.jsp se puedan incluir alimentos al Terreno pasado
 			if (request.getAttribute("alimentos") != null){
 				alimentos = (ArrayList<Alimento>)request.getAttribute("alimentos");
-				if (request.getAttribute("idTerreno") != null){
-					idTerreno = (int)request.getAttribute("idTerreno");
-				}
 
 				if (alimentos != null){
 					for (Alimento a : alimentos) {
@@ -56,14 +56,14 @@
 					<%
 					}
 				}
-				%>
+			}
+			%>
 			</table>
 			<% if (idTerreno == 0) { %>
 				<div class="centeredContainer">
 					<button class="button" onclick="document.location='AlimentosController?opcion=5&id=0'">Nuevo Alimento</button>
 				</div>
-			<% } 
-			}%>
+			<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

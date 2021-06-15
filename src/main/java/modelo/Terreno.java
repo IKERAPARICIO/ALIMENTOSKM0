@@ -104,8 +104,8 @@ public class Terreno {
 	}
 	
 	//
-	public String getNombreProductor() {
-		return this.productor.getNombre();
+	public String getNombreCompletoProductor() {
+		return this.productor.getNombreCompleto();
 	}
 	
 	//Acceso a DAO

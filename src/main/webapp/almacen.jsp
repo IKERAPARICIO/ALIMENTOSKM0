@@ -1,6 +1,4 @@
 <%@page import="modelo.Paquete"%>
-<%@page import="modelo.Estado"%>
-<%@page import="dao.PaqueteDAO"%>
 <%@page import="java.util.ArrayList"%>
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
@@ -15,8 +13,8 @@
 <body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
 <script>
-	function doReload(fEstado){
-		document.location = 'PaquetesController?opcion=9&fEstado=' + fEstado;
+	function doReload(sDisponible){
+		document.location = 'PaquetesController?opcion=9&sDisponible=' + sDisponible;
 	}
 </script>
 <div id="contenedor">
@@ -26,34 +24,30 @@
 	<section>
 		<h1>Almacén</h1>
 		<%
-		String estado = "";
-		if (request.getAttribute("fEstado") != null) {
-			estado = (String)request.getAttribute("fEstado");
+		String sDisponible = "si";
+		if (request.getAttribute("sDisponible") != null) {
+			sDisponible = (String)request.getAttribute("sDisponible");
 		}
-		
-		PaqueteDAO pDAO = new PaqueteDAO();
-		ArrayList<String> estados = pDAO.getAlmacenStates();
+
 		%>
-		<label for="stateFilter">Estado:</label>
-		<select name="stateFilter" onchange="doReload(this.value);">
-			<option value="">TODOS</option>
-			<% for(String est : estados){ %>
-				<option value="<%=est%>" <%if(est.equals(estado)){%> selected <%} %>><%=est%></option>
-		  	<% } %>
+		<label for="dispFilter">Mostrar:</label>
+		<select name="dispFilter" onchange="doReload(this.value);">
+			<option value="si" <%if("si".equals(sDisponible)){%> selected <%} %>>SÓLO CANTIDADES DISPONIBLES</option>
+			<option value="no" <%if("no".equals(sDisponible)){%> selected <%} %>>TODO</option>
 		</select>
 		<p>
-		<table>
-			<tr>
-				<th>PRODUCTO</th>
-				<th>PRODUCTOR</th>
-				<th>DISPONIBLE</th>
-				<th>TERRENO</th>
-				<th>PRECIO</th>
-				<th>ESTADO</th>
-				<th></th>
-			</tr>
-			<%	
-			if (request.getAttribute("almacen") != null) {
+		<%if (request.getAttribute("almacen") != null) {  %>
+			<table>
+				<tr>
+					<th>PRODUCTO</th>
+					<th>PRODUCTOR</th>
+					<th>DISPONIBLE</th>
+					<th>TERRENO</th>
+					<th>FECHA</th>
+					<th>ESTADO</th>
+					<th></th>
+				</tr>
+				<%
 				ArrayList<Paquete> almacen = (ArrayList<Paquete>)request.getAttribute("almacen");
 				for (Paquete p : almacen) {
 				%>
@@ -62,21 +56,23 @@
 					<td><%=p.getNombreCompletoProductor()%></td>
 					<td><%=p.getCantidadDisponible().toString()%></td>
 					<td><%=p.getNombreTerreno()%></td>
-					<td><%=p.getPrecio()%></td>
+					<td><%=p.getFechaPropuesta()%></td>
 					<td><%=p.getEstado().toString()%></td>
 					<td>
-						<% if (!p.estaAnulado()){ %>
-							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/delete.png" width="16px" alt="Anular"></a>
-						<%} if (p.estaGestionado()){ %>
+						<%
+						if (!p.estaFinalizado()){
+						%>
+							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/finish.png" width="16px" alt="Finalizar"></a>
+						<%} if (true || p.estaGestionado()){ %>
 							<a href="PaquetesController?opcion=4&id=<%=p.getId()%>"><img src="img/multiply.png" width="16px" alt="Porciones"></a>
 						<% } %>
 					</td>
 				</tr>
-				<%
-				}
-			}
-			%>
-		</table>
+				<%}%>
+			</table>
+		<% }else {%>
+			<p>No hay paquetes a mostrar. </p>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

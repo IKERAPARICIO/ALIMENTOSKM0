@@ -236,9 +236,9 @@ public class TerrenosController extends HttpServlet {
 	private void cargarTerrenos(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException {
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
-		//si es administrador lista todos los terrenos, si no solo los suyos
+		//si es productor lista solo sus terrenos, si no todos
 		int idUsuario = 0;
-		if (usuario.obtenerPermisosRol() < 8) {
+		if (usuario.obtenerPermisosRol() == 5) {
 			idUsuario = usuario.getId();
 		}
 		

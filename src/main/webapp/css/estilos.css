@@ -209,6 +209,11 @@ footer .floatLeft .footertext {
 	margin-top: 12px;
 }
 
+footer a {
+	text-decoration:none;
+	color: #fff;
+}
+
 
 /*************************** BUTTON ***************************/
 .centeredContainer{
@@ -227,7 +232,7 @@ footer .floatLeft .footertext {
   	text-decoration: none;
   	display: inline-block;
   	cursor: pointer;
-  	width: 180px;
+  	width: 200px;
   	border-radius: 8px;
 }
 

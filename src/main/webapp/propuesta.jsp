@@ -130,7 +130,7 @@
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
 			<div class="centeredContainer">
-				<input type="submit" name="guardar" value="Guardar" onclick="return validarDatos();">
+				<input type="submit" class="button" name="guardar" value="Guardar" onclick="return validarDatos();">
 			</div>
 		</form>
 

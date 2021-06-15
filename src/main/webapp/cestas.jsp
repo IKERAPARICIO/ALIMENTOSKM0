@@ -110,8 +110,9 @@ function confirmMsg(){
 				</div>
 			<%
 			}
-		}
-		%>	
+		} else { %>
+			<p>No hay cestas a mostrar. </p>
+		<% } %>	
 		
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>

@@ -8,16 +8,16 @@
 <title>Registro</title>
 </head>
 <body class="loginBack">
-<%@include file="/includes/header.inc.jsp"%>
+<%@include file="/includes/headerLogin.inc.jsp"%>
 <%@include file="/includes/msg.inc.jsp"%>
 <div class="wrapper-login">
 	<form class="form-signin" action="LoginController" method="post">
 		<h2 class="form-signin-heading">Nuevo Consumidor</h2>
 		
 		<label for="nombre">Nombre:</label>
-		<input class="form-control-register" type="text" name="nombre">
+		<input class="form-control-register" type="text" name="nombre" required>
 		<label for="nombre">Apellidos:</label>
-		<input class="form-control-register" type="text" name="apellidos">
+		<input class="form-control-register" type="text" name="apellidos" required>
 		<label for="nombre">Mail:</label>
 		<input class="form-control-register" type="text" name="mail">
 		<label for="nombre">Ciudad:</label>
@@ -25,9 +25,9 @@
 		<label for="nombre">Teléfono:</label>
 		<input class="form-control-register" type="text" name="telefono">
 		<label for="nombre">Nick:</label>
-		<input class="form-control-register" type="text" name="nick">
+		<input class="form-control-register" type="text" name="nick" required>
 		<label for="nombre">Password:</label>
-		<input class="form-control-register" type="password" name="pass">
+		<input class="form-control-register" type="password" name="pass" required>
 		<input type="hidden" name="opcion" value="2">
 		<input type="submit" class="button" value="Registrar" />
 		<br>

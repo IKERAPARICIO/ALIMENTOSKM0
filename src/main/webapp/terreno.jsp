@@ -28,46 +28,61 @@ function validarDatos(){
 
 	return result;
 }
+
+window.onload=function() {
+	permisoEdicion = document.getElementById("permisoEdicion").value;
+	if (permisoEdicion == "false"){
+	  	document.getElementById("nombre").disabled = true;
+	  	document.getElementById("idUsuario").disabled=true;
+	  	document.getElementById("metros").disabled=true;
+	  	document.getElementById("ciudad").disabled=true;
+	  	document.getElementById("direccion").disabled=true;
+	  	document.getElementById("nuevo").style.display = "none";
+	  	document.getElementById("guardar").style.display = "none";
+	}
+}
 </script>
 <div id="contenedor">
 	<%@include file="/includes/header.inc.jsp"%>
 	<%@include file="/includes/protec.inc.jsp"%>
 	<%@include file="/includes/nav.inc.jsp"%>
 	<%
-		int option = 1;
-		String nombre = "";
-		String productor = "";
-		int idProductor = 0;
-		Double metros = 0.0;
-		String ciudad = "";
-		String direccion = "";
-		
-		int id = 0;
-		Terreno terreno = new Terreno();
-		//actualizar el terreno
-		if(request.getAttribute("terreno") != null){
-			terreno = (Terreno)request.getAttribute("terreno");
-			option = 3;
-			id = terreno.getId();
-			nombre = terreno.getNombre();
-			productor = terreno.getNombreProductor();
-			idProductor = terreno.getProductorId();
-			metros = terreno.getMetros();
-			ciudad = terreno.getCiudad();
-			direccion = terreno.getDireccion();
-		}
-		
-		//carga los productores
-		UsuarioDAO uDAO = new UsuarioDAO();
-		ArrayList<Usuario> productores = uDAO.listUsuarios(Rol.PRODUCTOR.toString());
-		int tam = productores.size();
+	boolean permisoEdicion = (nivelAcceso > 8) ? true : false;
+	
+	int option = 1;
+	String nombre = "";
+	String productor = "";
+	int idProductor = 0;
+	Double metros = 0.0;
+	String ciudad = "";
+	String direccion = "";
+	
+	int id = 0;
+	Terreno terreno = new Terreno();
+	//actualizar el terreno
+	if(request.getAttribute("terreno") != null){
+		terreno = (Terreno)request.getAttribute("terreno");
+		option = 3;
+		id = terreno.getId();
+		nombre = terreno.getNombre();
+		productor = terreno.getNombreCompletoProductor();
+		idProductor = terreno.getProductorId();
+		metros = terreno.getMetros();
+		ciudad = terreno.getCiudad();
+		direccion = terreno.getDireccion();
+	}
+			
+	//carga los productores
+	UsuarioDAO uDAO = new UsuarioDAO();
+	ArrayList<Usuario> productores = uDAO.listUsuarios(Rol.PRODUCTOR.toString());
+	int tam = productores.size();
 	%>
 	<section>
 		<h1>Detalle Terreno</h1>
 		<form name="terreno" action="TerrenosController" method="post">
 			<label for="nombre">Nombre:</label><input type="text" name="nombre" value="<%=nombre%>" id="nombre" required><br>
 			<label for="idUsuario">Productor:</label>
-			<select name="idUsuario" required>
+			<select name="idUsuario" id="idUsuario" required>
 				<option value="">--sin productor asignado--</option>
 				<% for(Usuario u : productores){ %><option value="<%=u.getId()%>" <%if(idProductor == u.getId()){%> selected <%} %>><%=u.getNombreCompleto()%></option>
 			  	<% } %>
@@ -79,8 +94,9 @@ function validarDatos(){
 			<input type="hidden" name="opcion" value="<%=option%>">
 			<input type="hidden" name="id" value="<%=id%>">
 			<input type="hidden" name="idUsuario" value="<%=idProductor%>">
+			<input type="hidden" id="permisoEdicion" value="<%=permisoEdicion%>">
 			<div class="centeredContainer">
-				<input type="submit" name="guardar" value="Guardar" onclick="return validarDatos();">
+				<input class="button" type="submit" name="guardar" id="guardar" value="Guardar" onclick="return validarDatos();">
 			</div>
 		</form>
 		
@@ -101,17 +117,20 @@ function validarDatos(){
 						<td><%=a.getNombre()%></td>
 						<td><%=a.getMedida()%></td>
 						<td>
-							<a href="TerrenosController?opcion=5&idTerreno=<%=id%>&idAlimento=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+							<% if(permisoEdicion){ %>
+								<a href="TerrenosController?opcion=5&idTerreno=<%=id%>&idAlimento=<%=a.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
+							<% } %>
 						</td>
 					</tr>
 				<% } %>
 				</table><%
-			} %>
+			} else { %>
+				<p>No hay alimentos incluidos. </p>
+			<%}%>
 			<div class="centeredContainer">
-				<button class="button" onclick="document.location='TerrenosController?opcion=7&id=<%=id%>'">Nuevo Alimento</button>
+				<button class="button" id="nuevo" onclick="document.location='TerrenosController?opcion=7&id=<%=id%>'">Nuevo Alimento</button>
 			</div>
-		<%}
-		%>
+		<%}%>
 		
 		<%@include file="/includes/msg.inc.jsp"%>
 		</section>

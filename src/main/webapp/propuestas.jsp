@@ -45,6 +45,7 @@
 	<section>
 		<h1>Propuestas</h1>
 		<%
+		//por defecto muestra las PROPUESTAS
 		String estado = "";
 		if (request.getAttribute("fEstado") != null) {
 			estado = (String)request.getAttribute("fEstado");
@@ -61,20 +62,20 @@
 		  	<% } %>
 		</select>
 		<p>
-		<table>
-			<tr>
-				<th>PRODUCTOR</th>
-				<th>PRODUCTO</th>
-				<th>PROPUESTO</th>
-				<th>ACEPTADO</th>
-				<th>MEDIDA</th>
-				<th>TERRENO</th>
-				<th>FECHA</th>
-				<th>ESTADO</th>
-				<th></th>
-			</tr>
-			<%
-			if (request.getAttribute("propuestas") != null) {
+		<% if (request.getAttribute("propuestas") != null) {%>
+			<table>
+				<tr>
+					<th>PRODUCTOR</th>
+					<th>PRODUCTO</th>
+					<th>PROPUESTO</th>
+					<th>ACEPTADO</th>
+					<th>MEDIDA</th>
+					<th>TERRENO</th>
+					<th>FECHA</th>
+					<th>ESTADO</th>
+					<th></th>
+				</tr>
+				<%
 				ArrayList<Paquete> propuestas = (ArrayList<Paquete>)request.getAttribute("propuestas");
 				for (Paquete p : propuestas) {
 				%>
@@ -103,12 +104,11 @@
 						}%>
 					</td>
 				</tr>
-				<%
-				}
-			}
-			%>
-		</table>
-		<% if (nivelAcceso == 5){ %>
+				<% } %>
+			</table>
+		<% }else {%>
+			<p>No hay propuetas a mostrar. </p>
+		<% } if (nivelAcceso == 5){ %>
 			<div class="centeredContainer">
 				<button class="button" onclick="document.location='PaquetesController?opcion=14&id=0'">Nueva Propuesta</button>
 			</div>

@@ -19,21 +19,20 @@
 	<%@include file="/includes/nav.inc.jsp"%>
 	<section>
 		<h1>Porciones Disponibles</h1>
-		<table>
-			<tr>
+		<% if (request.getAttribute("porciones") != null){ %>
+			<table>
 				<tr>
-					<th>ALIMENTO</th>
-					<th>CANTIDAD</th>
-					<th>PRECIO/ALIMENTO</th>
-					<th>TERRENO</th>
-					<th>PRODUCTOR</th>
-					<th>PRECIO TOTAL</th>
-					<th></th>
+					<tr>
+						<th>ALIMENTO</th>
+						<th>CANTIDAD</th>
+						<th>PRECIO/ALIMENTO</th>
+						<th>TERRENO</th>
+						<th>PRODUCTOR</th>
+						<th>PRECIO TOTAL</th>
+						<th></th>
+					</tr>
 				</tr>
-			</tr>
-			<%
-			if (request.getAttribute("porciones") != null){
-				ArrayList<Porcion> porciones = (ArrayList<Porcion>)request.getAttribute("porciones");
+			<%  ArrayList<Porcion> porciones = (ArrayList<Porcion>)request.getAttribute("porciones");
 				int id = (int)request.getAttribute("id");
 				for (Porcion p : porciones) {
 				%>
@@ -48,11 +47,11 @@
 						<a href="CestasController?opcion=6&idCesta=<%=id%>&idPorcion=<%=p.getId()%>"><img src="img/add.png" width="16px" alt="Incluir"></a>
 					</td>
 				</tr>
-				<%
-				}
-			}
-			%>
-		</table>
+				<% } %>
+			</table>
+		<% }else {%>
+			<p>No hay porciones a mostrar. </p>
+		<% } %>
 		<%@include file="/includes/msg.inc.jsp"%>
 	</section>
 	<%@include file="/includes/footer.inc.jsp"%>

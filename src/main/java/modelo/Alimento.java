@@ -62,7 +62,7 @@ public class Alimento implements Producto {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return precio;
+		return Math.round(precio * 100.0) / 100.0;
 	}
 	
 	//devuelve el precio en la fecha pasada
@@ -73,7 +73,7 @@ public class Alimento implements Producto {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return precio;
+		return Math.round(precio * 100.0) / 100.0;
 	}
 	
 	public void setPrecio(double precio) {

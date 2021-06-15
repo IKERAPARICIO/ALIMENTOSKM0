@@ -56,8 +56,8 @@ public class Paquete implements Producto {
 		this.fechaAceptacion = fechaAceptacion;
 		if (Estado.ACEPTADO.toString().equals(estado))
 			this.estado = Estado.ACEPTADO;
-		else if (Estado.ANULADO.toString().equals(estado))
-			this.estado = Estado.ANULADO;
+		else if (Estado.FINALIZADO.toString().equals(estado))
+			this.estado = Estado.FINALIZADO;
 		else if (Estado.PROPUESTO.toString().equals(estado))
 			this.estado = Estado.PROPUESTO;
 		else
@@ -222,28 +222,16 @@ public class Paquete implements Producto {
 		}
 	}
 	
-	public void aprobar(int id, int cantidad) {
-		try {
-			PaqueteDAO.getInstance().approve(id, cantidad);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void aprobar(int id, Double cantidad) throws SQLException {
+		PaqueteDAO.getInstance().approve(id, cantidad);
 	}
 	
-	public void rechazar(int id) {
-		try {
-			PaqueteDAO.getInstance().disApprove(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void rechazar(int id) throws SQLException {
+		PaqueteDAO.getInstance().disApprove(id);
 	}
 	
-	public void anular(int id) {
-		try {
-			PaqueteDAO.getInstance().cancel(id);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+	public void finalizar(int id) throws SQLException {
+		PaqueteDAO.getInstance().archive(id);
 	}
 	
 	public boolean estaSinGestionar() {
@@ -267,8 +255,8 @@ public class Paquete implements Producto {
 			return false;
 	}
 	
-	public boolean estaAnulado() {
-		if (this.estado == Estado.ANULADO)
+	public boolean estaFinalizado() {
+		if (this.estado == Estado.FINALIZADO)
 			return true;
 		else
 			return false;
