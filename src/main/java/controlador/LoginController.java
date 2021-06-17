@@ -2,6 +2,7 @@ package controlador;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -130,6 +131,8 @@ public class LoginController extends HttpServlet {
 				consumidor.setPassword(pass);
 				consumidor.insertar();
 				msg = "Bienvenid@ " + nombre + "! Acceda con su datos de usuario.";
+			} catch (SQLIntegrityConstraintViolationException sqlError) {
+				msg = "No se ha podido crear el usuario, el nick usado ya existe.";
 			} catch (Exception e) {
 				msg = "ERROR al crear el usuario.";
 			}
@@ -155,6 +158,9 @@ public class LoginController extends HttpServlet {
 			else if (error == 2) {
 				msg = "No tiene permisos para ver la página indicada.";
 			}
+		}
+		else {
+			msg = "Ha finalizado la sesión.";
 		}
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher req = request.getRequestDispatcher("index.jsp");

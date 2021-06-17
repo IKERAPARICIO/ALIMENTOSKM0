@@ -5,5 +5,5 @@ package modelo;
  * @author Iker Aparicio
  */
 public enum Medida {
-	KG,UNIDDAD
+	KG,UNIDAD
 }

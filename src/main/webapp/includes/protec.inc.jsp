@@ -30,8 +30,12 @@ switch(nombrePagina){
 		nivelPagina = 1;
 	break;
 }
+//si no existe la sesion redirecciona al login con un mensaje de error
+if (nivelAcceso == -1){
+	response.sendRedirect("LoginController?opcion=4&error=1");
+}
 //si no tiene acceso a la pagina redirecciona al login con un mensaje de error
-if (nivelPagina > nivelAcceso){
+else if (nivelPagina > nivelAcceso){
 	response.sendRedirect("LoginController?opcion=4&error=2");
 }
 %>

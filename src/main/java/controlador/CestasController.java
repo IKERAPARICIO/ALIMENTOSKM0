@@ -363,7 +363,7 @@ public class CestasController extends HttpServlet {
 	    } catch (FileNotFoundException e) 
 	    { 
 	    	e.printStackTrace(); 
-	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
+	    	msg = "Error al generar el fichero pdf, asegúrese que la carpeta "+filePath+" exista.";
 	    }
 	    
 		//carga su listado de cestas para mostrarlo el la pagina

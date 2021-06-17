@@ -28,14 +28,10 @@ public class Consumidor extends Usuario {
 	}
 	
 	//****************** Métodos DAO ******************
-	public void insertar() {
+	public void insertar() throws SQLException {
 		String dni = "";
 		String direccion = "";
-		try {
-			UsuarioDAO.getInstance().insert(this,dni,direccion);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		UsuarioDAO.getInstance().insert(this,dni,direccion);
 	}
 
 }

@@ -1,9 +1,9 @@
 <%
 HttpSession sesion = request.getSession();
 int nivelAcceso = 0;
-//si el usuario no existe, redirecciona a login con un mensaje de error
+//si el usuario no existe, lo redirecciona en el protec.inc a login con un mensaje de error
 if (sesion.getAttribute("nivelAcceso")==null){ 
-	response.sendRedirect("LoginController?opcion=4&error=1");
+	nivelAcceso = -1;
 }
 else{
 	//devulve: 1 para invitado, 3 consumidor, 5 productor y 9 gestor
@@ -13,7 +13,7 @@ else{
 <header>
 	<div class="cabizq">
 		<div class="logo">
-			<a href="index.jsp"><img src="img/cesta.png" alt="biblioteca" title="logo" ></a>
+			<a href="LoginController?opcion=4"><img src="img/cesta.png" alt="biblioteca" title="logo" ></a>
 		</div>
 	</div>
 	

@@ -6,7 +6,7 @@
 
 <link href="css/estilos.css" rel="stylesheet" type="text/css" />
 <meta charset="ISO-8859-1">
-<title>Insert title here</title>
+<title>Login</title>
 </head>
 <body class="loginBack">
 <script>
