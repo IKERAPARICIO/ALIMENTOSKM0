@@ -64,7 +64,7 @@ function doReload(sDisponible){
 						<%
 						if (!p.estaFinalizado()){
 						%>
-							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/finish.png" width="16px" alt="Finalizar"></a>
+							<a href="PaquetesController?opcion=3&id=<%=p.getId()%>"><img src="img/cancel.png" width="16px" alt="Finalizar"></a>
 						<%} %>
 						<a href="PaquetesController?opcion=4&id=<%=p.getId()%>"><img src="img/multiply.png" width="16px" alt="Porciones"></a>
 					</td>
