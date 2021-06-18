@@ -89,7 +89,8 @@ public class CestaDAO {
 	}
 	
 	/**
-	 * @return Listado de cestas completo ordenadas por fecha de creacion
+	 * Devuelve el listado de cestas completo ordenadas por fecha de creacion
+	 * @return Listado de cestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Cesta> listCestas() throws SQLException {
@@ -110,7 +111,8 @@ public class CestaDAO {
 	}
 	
 	/**
-	 * @return Listado de cestas disponibles (preparada a TRUE) ordenadas por fecha de creacion
+	 * Devuelve el Listado de cestas disponibles (preparada a TRUE) ordenadas por fecha de creacion
+	 * @return Listado de cestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Cesta> listCestasDisponibles() throws SQLException {
@@ -132,8 +134,9 @@ public class CestaDAO {
 	}
 
 	/**
+	 * Devuelve el listado de cestas compradas por el usuario pasado ordenadas por fecha de creacion
 	 * @param idUsuario: id del usuario consumidor
-	 * @return Listado de cestas compradas por el usuario pasado ordenadas por fecha de creacion
+	 * @return Listado de cestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Cesta> listMyCestas(int idUsuario) throws SQLException {
@@ -154,8 +157,9 @@ public class CestaDAO {
 	}
 	
 	/**
+	 * Devuelve el listado de cestas en las que se ha incluido algun producto del usuario pasado ordenadas por fecha de creacion
 	 * @param idUsuario: id del usuario productor
-	 * @return Listado de cestas en las que se ha incluido algun producto del usuario pasado ordenadas por fecha de creacion
+	 * @return Listado de cestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Cesta> listCestasMyTerrenos(int idUsuario) throws SQLException {
@@ -183,6 +187,7 @@ public class CestaDAO {
 	}
 	
 	/**
+	 * Devuelve la Cesta con id pasado
 	 * @param id: id de la cesta
 	 * @return Cesta con id pasado
 	 * @throws SQLException
@@ -202,9 +207,9 @@ public class CestaDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de porciones incluidas en la cesta pasada
 	 * @param id: id de la cesta
-	 * @return Listado de porciones incluidas en la cesta pasada
+	 * @return Listado de porciones
 	 * @throws SQLException
 	 */
 	public ArrayList<Porcion> getPorciones(int id) throws SQLException{	

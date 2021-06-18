@@ -83,10 +83,10 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de propuestas del productor pasado en el estado indicado
 	 * @param estado: filtro para estado de la propuesta
 	 * @param idProductor: id del productor
-	 * @return Listado de propuestas del productor pasado en el estado indicado
+	 * @return Listado de propuestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Paquete> listMyPropuestas(String estado, int idProductor) throws SQLException {
@@ -108,9 +108,9 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de todas las propuestas en el estado indicado
 	 * @param estado: filtro para estado de la propuesta
-	 * @return Listado de todas las propuestas en el estado indicado
+	 * @return Listado de propuestas
 	 * @throws SQLException
 	 */
 	public ArrayList<Paquete> listPropuestas(String estado) throws SQLException {
@@ -125,9 +125,9 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de paquetes segun la disponibilidad indicada
 	 * @param disponible: true si cantidad disponible tiene que ser > 0, false para ver todos
-	 * @return Listado de paquetes segun la disponibilidad indicada
+	 * @return Listado de paquetes
 	 * @throws SQLException
 	 */
 	public ArrayList<Paquete> listAlmacen(Boolean disponible) throws SQLException {
@@ -152,11 +152,11 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de paquetes segun las sentencias select, where y order indicadas
 	 * @param selectSt: sentencia select
 	 * @param whereSt: sentencia where
 	 * @param orderBy: sentencia order
-	 * @return Listado de paquetes segun las sentencias select, where y order indicadas
+	 * @return Listado de paquetes
 	 * @throws SQLException
 	 */
 	private ArrayList<Paquete> listPaquetes(String selectSt, String whereSt, String orderBy) throws SQLException {
@@ -180,8 +180,9 @@ public class PaqueteDAO {
 	}
 	
 	/**
+	 * Devuelve el Paquete con id pasado
 	 * @param id: id del paquete
-	 * @return Paquete con id pasado
+	 * @return Paquete
 	 * @throws SQLException
 	 */
 	public Paquete finID(int id) throws SQLException {
@@ -252,8 +253,9 @@ public class PaqueteDAO {
 	}
 	
 	/**
+	 * Devuelve el listado de porciones del paquete indicado
 	 * @param id: id del paquete
-	 * @return Listado de porciones del paquete indicado
+	 * @return listado de porciones del paquete indicado
 	 * @throws SQLException
 	 */
 	public ArrayList<Porcion> getPorciones(int id) throws SQLException{	
@@ -288,7 +290,8 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * @return Listado de porciones disponibles, todavía no se han incluido en ninguna cesta
+	 * Devuelve el listado de porciones disponibles, todavía no se han incluido en ninguna cesta
+	 * @return Listado de porciones
 	 * @throws SQLException
 	 */
 	public ArrayList<Porcion> listPorcionesDisponibles() throws SQLException{	
@@ -306,7 +309,8 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * @return Listado de strings de posibles estados para las propuestas
+	 * Devuelve el listado de strings de posibles estados para las propuestas
+	 * @return Listado de strings
 	 */
 	public ArrayList<String> getPropuestasStates() {
 		ArrayList<String> lista = new ArrayList<String>();
@@ -318,7 +322,8 @@ public class PaqueteDAO {
 	}
 	
 	/**
-	 * @return Listado de strings de posibles estados para los paquetes almacenados
+	 * Devuelve el listado de strings de posibles estados para los paquetes almacenados
+	 * @return Listado de strings
 	 */
 	public ArrayList<String> getAlmacenStates() {
 		ArrayList<String> lista = new ArrayList<String>();

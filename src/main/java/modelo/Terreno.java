@@ -155,7 +155,8 @@ public class Terreno {
 	}
 	
 	/**
-	 * @return nombre completo del Productor del Terreno
+	 * Devuelve el nombre completo del Productor del Terreno
+	 * @return nombre del Productor
 	 */
 	public String getNombreCompletoProductor() {
 		return this.productor.getNombreCompleto();
@@ -174,7 +175,7 @@ public class Terreno {
 	}
 	
 	/**
-	  * Incluye el alimento pasado al Terreno
+	 * Incluye el alimento pasado al Terreno
 	 * @param idAlimento: id del alimento
 	 */
 	public void agregarAlimento(int idAlimento) {
@@ -186,7 +187,8 @@ public class Terreno {
 	}
 	
 	/**
-	 * @return lista de todos los Alimentos del Terreno
+	 * Devuelve la lista de todos los Alimentos del Terreno
+	 * @return lista de Alimentos
 	 */
 	public ArrayList<Alimento> obtenerAlimentos() {
 		ArrayList<Alimento> alimentos = null;
@@ -199,7 +201,8 @@ public class Terreno {
 	}
 	
 	/**
-	 * @return lista de todos los Alimentos que no se han incluido en el Terreno
+	 * Devuelve la lista de todos los Alimentos que no se han incluido en el Terreno
+	 * @return lista de Alimentos
 	 */
 	public ArrayList<Alimento> obtenerAlimentosDisponibles() {
 		ArrayList<Alimento> alimentos = null;

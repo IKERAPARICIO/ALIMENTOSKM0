@@ -122,9 +122,9 @@ public class UsuarioDAO {
 	}
 		
 	/**
-	 * 
+	 * Devuelve el listado de usuarios segun el rol pasado ordenados por nombre. Si no pasa el rol se devuelven todos
 	 * @param rol: rol de usuario
-	 * @return Listado de usuarios segun el rol pasado ordenados por nombre. Si no pasa el rol se devuelven todos
+	 * @return Listado de usuarios
 	 * @throws SQLException
 	 */
 	public ArrayList<Usuario> listUsuarios(String rol) throws SQLException {
@@ -153,8 +153,9 @@ public class UsuarioDAO {
 	}
 	
 	/**
+	 * Devuelve el usuario con id pasado
 	 * @param id: id de usuario
-	 * @return Usuario con id pasado
+	 * @return Usuario
 	 * @throws SQLException
 	 */
 	public Usuario finID(int id) throws SQLException {
@@ -173,8 +174,9 @@ public class UsuarioDAO {
 	}
 	
 	/**
+	 * Devuelve el Productor de id pasado. Si no lo encuentra devuelve null
 	 * @param id: id del productor
-	 * @return Devuelve el Productor de id pasado. Si no lo encuentra devuelve null
+	 * @return Productor
 	 * @throws SQLException
 	 */
 	public Productor finIDProductor(int id) throws SQLException {
@@ -193,8 +195,9 @@ public class UsuarioDAO {
 	}
 	
 	/**
+	 * Devuelve el rol del usuario con id pasado. Si no lo encuentra devuelve null
 	 * @param id: id del usuario
-	 * @return Devuelve el rol del usuario con id pasado. Si no lo encuentra devuelve null
+	 * @return rol del usuario 
 	 * @throws SQLException
 	 */
 	public String getRol(int id) throws SQLException {
@@ -211,7 +214,8 @@ public class UsuarioDAO {
 	}	
 	
 	/**
-	 * @return Listado de strings con los posibles valores del Rol
+	 * Devuelve el listado de strings con los posibles valores del Rol
+	 * @return Listado de strings
 	 */
 	public ArrayList<String> getRols() {
 		ArrayList<String> lista = new ArrayList<String>();

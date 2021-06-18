@@ -201,8 +201,9 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve la lista de propuestas filtradas por su estado
 	 * @param estado: nombre del estado
-	 * @return Lista de propuestas filtradas por su estado
+	 * @return Lista de propuestas
 	 */
 	public ArrayList<Paquete> obtenerPropuestas(String estado) {
 		ArrayList<Paquete> lista = null;
@@ -215,7 +216,8 @@ public class Paquete implements Producto {
 	}
 	
 	/**
-	 * @return Lista de porciones incluidas en el Paquete
+	 * Devuelve la lista de porciones incluidas en el Paquete
+	 * @return Lista de porciones
 	 */
 	public ArrayList<Porcion> obtenerPorciones() {
 		ArrayList<Porcion> porciones = null;
@@ -228,35 +230,40 @@ public class Paquete implements Producto {
 	}
 	
 	/**
-	 * @return Productor del terreno al que pertenece el Paquete
+	 * Devuelve el Productor del terreno al que pertenece el Paquete
+	 * @return Productor
 	 */
 	public Productor getProductor() {
 		return this.terreno.getProductor();
 	}
 	
 	/**
-	 * @return nombre completo del Productor del terreno al que pertenece el Paquete
+	 * Devuelve el nombre completo del Productor del terreno al que pertenece el Paquete
+	 * @return nombre del Productor
 	 */
 	public String getNombreCompletoProductor() {
 		return this.terreno.getProductor().getNombreCompleto();
 	}
 	
 	/**
-	 * @return nombre del Alimento al que pertenece el Paquete
+	 * Devuelve el nombre del Alimento al que pertenece el Paquete
+	 * @return nombre del Alimento
 	 */
 	public String getNombreAlimento() {
 		return this.alimento.getNombre();
 	}
 	
 	/**
-	 * @return nombre del Terreno al que pertenece el Paquete
+	 * Devuelve el nombre del Terreno al que pertenece el Paquete
+	 * @return nombre del Terreno
 	 */
 	public String getNombreTerreno() {
 		return this.terreno.getNombre();
 	}
 	
 	/**
-	 * @return medida del Alimento al que pertenece el Paquete
+	 * Devuelve la medida del Alimento al que pertenece el Paquete
+	 * @return medida del Alimento
 	 */
 	public String getMedidaAlimento() {
 		return this.alimento.getMedida();
@@ -291,6 +298,7 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve true si todavía no se ha getionado el Paquete, false en caso contrario
 	 * @return true si todavía no se ha getionado el Paquete, false en caso contrario
 	 */
 	public boolean estaSinGestionar() {
@@ -301,6 +309,7 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve true si se ha aceptado el Paquete, false en caso contrario
 	 * @return true si se ha aceptado el Paquete, false en caso contrario
 	 */
 	public boolean estaAceptado() {
@@ -311,6 +320,7 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve true si se ha finalizado el Paquete, false en caso contrario
 	 * @return true si se ha finalizado el Paquete, false en caso contrario
 	 */
 	public boolean estaFinalizado() {
@@ -321,6 +331,7 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve el valor del estado definido como Inicial (PROPUESTO)
 	 * @return valor del estado definido como Inicial (PROPUESTO)
 	 */
 	public String getEstadoInicial() {
@@ -328,6 +339,7 @@ public class Paquete implements Producto {
 	}
 	
 	/**
+	 * Devuelve el valor del estado por defecto en el filtro (PROPUESTO)
 	 * @return valor del estado por defecto en el filtro (PROPUESTO)
 	 */
 	public String getValorDefectoFIltro() {

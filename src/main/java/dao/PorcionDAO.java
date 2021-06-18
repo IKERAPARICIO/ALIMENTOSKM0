@@ -86,8 +86,8 @@ public class PorcionDAO {
 	}
 	
 	/**
-	 * 
-	 * @return Listado de porciones completo ordenados por nombre
+	 * Devuelve el listado de porciones completo ordenados por nombre
+	 * @return Listado de porciones
 	 * @throws SQLException
 	 */
 	public ArrayList<Porcion> listPorcions() throws SQLException {
@@ -108,8 +108,9 @@ public class PorcionDAO {
 	}
 	
 	/**
+	 * Devuelve la Porcion con id pasado
 	 * @param id: id de la porcin
-	 * @return Porcion con id pasado
+	 * @return Porcion
 	 * @throws SQLException
 	 */
 	public Porcion finID(int id) throws SQLException {

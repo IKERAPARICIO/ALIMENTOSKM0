@@ -156,28 +156,32 @@ public class Porcion implements Producto {
 	}
 	
 	/** 
-	 * @return nombre del Alimento al que pertenece el Paquete de la Porcion
+	 * Devuelve el nombre del Alimento al que pertenece el Paquete de la Porcion
+	 * @return nombre del Alimento
 	 */
 	public String getNombreAlimento() {
 		return this.paquete.getAlimento().getNombre();
 	}
 	
 	/** 
-	 * @return nombre completo del Productor al que pertenece el Terreno del Paquete de la Porcio
+	 * Devuelve el nombre completo del Productor al que pertenece el Terreno del Paquete de la Porcio
+	 * @return nombre del Productor
 	 */
 	public String getNombreProductor() {
 		return this.paquete.getTerreno().getProductor().getNombre();
 	}
 	
 	/** 
-	 * @return fecha de aceptación del Paquete de la Porcion
+	 * Devuelve la fecha de aceptación del Paquete de la Porcion
+	 * @return fecha de aceptación
 	 */
 	public Date getFechaAceptacionPaquete() {
 		return this.paquete.getFechaAceptacion();
 	}
 	
 	/**
-	 * @return nombre del Terreno al que pertenece el Paquete de la Porcion
+	 * Devuelve el nombre del Terreno al que pertenece el Paquete de la Porcion
+	 * @return nombre del Terreno
 	 */
 	public String getNombreTerreno() {
 		return this.paquete.getTerreno().getNombre();

@@ -190,7 +190,8 @@ public class Cesta implements Producto {
 	}
 	
 	/**
-	 * @return Devuelve el id del Consumidor de la clase, 0 si es null
+	 * Devuelve el id del Consumidor de la clase, 0 si es null
+	 * @return id del Consumidor
 	 */
 	public int getUsuarioId() {
 		if(consumidor == null)
@@ -201,7 +202,8 @@ public class Cesta implements Producto {
 	
 	
 	/**
-	 * @return Devuelve el nombre completo del Consumidor de la clase, vacio si es null
+	 * Devuelve el nombre completo del Consumidor de la clase, vacio si es null
+	 * @return nombre completo del Consumidor
 	 */
 	public String getUsuarioNombreCompleto() {
 		if(consumidor == null)
@@ -211,7 +213,8 @@ public class Cesta implements Producto {
 	}
 
 	/**
-	 * @return Devuelve el valor del atributo fechaCompra, vacio si es null
+	 * Devuelve el valor del atributo fechaCompra, vacio si es null
+	 * @return valor del atributo fechaCompra
 	 */
 	public String getStringFechaCompra() {
 		if (fechaCompra == null)
@@ -221,7 +224,8 @@ public class Cesta implements Producto {
 	}
 	
 	/**
-	 * @return Devuelve el listado de porciones incluidas en la Cesta
+	 * Devuelve el listado de porciones incluidas en la Cesta
+	 * @return listado de porciones
 	 */
 	public ArrayList<Porcion> obtenerPorciones() {
 		ArrayList<Porcion> porciones = null;

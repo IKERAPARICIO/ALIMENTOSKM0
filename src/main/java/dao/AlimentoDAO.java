@@ -86,7 +86,8 @@ public class AlimentoDAO {
 	}
 	
 	/**
-	 * @return Listado de alimentos completo ordenados por nombre
+	 * Devuelve el listado de alimentos completo ordenados por nombre
+	 * @return Listado de alimentos
 	 * @throws SQLException
 	 */
 	public ArrayList<Alimento> listAlimentos() throws SQLException {
@@ -106,8 +107,9 @@ public class AlimentoDAO {
 	}
 	
 	/**
+	 * Devuelve el Alimento con id pasado
 	 * @param id: id de alimento
-	 * @return Alimento con id pasado
+	 * @return Alimento
 	 * @throws SQLException
 	 */
 	public Alimento finID(int id) throws SQLException {
@@ -255,8 +257,9 @@ public class AlimentoDAO {
 	}
 	
 	/**
+	 * Devuelve el Historico de precios en un Map con fecha y precio
 	 * @param id: id del alimento
-	 * @return Historico de precios en un Map con fecha y precio
+	 * @return Historico de precios
 	 * @throws SQLException
 	 */
 	public Map getPriceHistory(int id) throws SQLException {

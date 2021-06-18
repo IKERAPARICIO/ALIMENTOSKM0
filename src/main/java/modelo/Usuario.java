@@ -165,7 +165,8 @@ public class Usuario {
 	}
 	
 	/**
-	 * @return nombre completo (nombre y apellidos) del Usuario
+	 * Devuelve el nombre completo (nombre y apellidos) del Usuario
+	 * @return nombre del Usuario
 	 */
 	public String getNombreCompleto () {
 		return this.getNombre() + " " + this.getApellidos();
@@ -188,8 +189,9 @@ public class Usuario {
 	}
 
 	/**
+	 * Devuelve la lista de usuarios con el rol indicado, todos los usuarios si el rol esta vacio y null si no encuentra usuarios
 	 * @param sRol: rol de usuario
-	 * @return lista de usuarios con el rol indicado, todos los usuarios si el rol esta vacio y null si no encuentra usuarios
+	 * @return lista de usuarios
 	 */
 	public ArrayList<Usuario> obtenerUsuarios(String sRol) {
 		ArrayList<Usuario> lista = null;
@@ -202,8 +204,9 @@ public class Usuario {
 	}
 	
 	/**
+	 * Devuele el Rol que tiene el valor pasado
 	 * @param sRol: valor pasado
-	 * @return Rol que tiene el valor pasado
+	 * @return Rol
 	 */
 	public Rol getRolFromString(String sRol) {
 		if (sRol.equals(Rol.CONSUMIDOR.toString())) {
@@ -221,8 +224,9 @@ public class Usuario {
 	}
 	
 	/**
+	 * Devuelve el valor del rol del Usuario pasado
 	 * @param id: id de Usuario
-	 * @return valor del rol del Usuario pasado
+	 * @return valor del rol
 	 */
 	public String obtenerRol(int id) {
 		String sRol = "";

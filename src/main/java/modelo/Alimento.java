@@ -138,8 +138,9 @@ public class Alimento implements Producto {
 	}
 	
 	/**
+	 * Devuelve el histórico de precios del Alimento
 	 * @param id: id del Alimento
-	 * @return Histórico de precios del Alimento
+	 * @return Histórico de precios
 	 */
 	public Map getHistoricoPrecios(int id) {
 		Map<String,String> historico = new HashMap<>();

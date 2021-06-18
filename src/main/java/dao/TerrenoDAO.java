@@ -93,9 +93,9 @@ public class TerrenoDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de terrenos del usuario pasado ordenados por nombre. Si idUsuario vale 0 muestar todos los terrenos
 	 * @param idUsuario: id del Usuario
-	 * @return  Listado de terrenos del usuario pasado ordenados por nombre. Si idUsuario vale 0 muestar todos los terrenos
+	 * @return  Listado de terrenos
 	 * @throws SQLException
 	 */
 	public ArrayList<Terreno> listTerrenos(int idUsuario) throws SQLException {
@@ -122,8 +122,9 @@ public class TerrenoDAO {
 	}
 	
 	/**
+	 * Devuelve el Terreno con id pasado
 	 * @param id: id del terreno
-	 * @return Terreno con id pasado
+	 * @return Terreno
 	 * @throws SQLException
 	 */
 	public Terreno finID(int id) throws SQLException {
@@ -174,9 +175,9 @@ public class TerrenoDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuelve el listado de alimentos incluidos en el terreno indicado ordenados por nombre
 	 * @param idTerreno: id del terreno
-	 * @return Listado de alimentos incluidos en el terreno indicado ordenados por nombre
+	 * @return Listado de alimentos
 	 * @throws SQLException
 	 */
 	public ArrayList<Alimento> getAlimentos(int idTerreno) throws SQLException{	
@@ -196,9 +197,9 @@ public class TerrenoDAO {
 	}
 	
 	/**
-	 * 
+	 * Devuleve el listado de alimentos que pueden ser incluidos en el terreno indicado ordenados por nombre
 	 * @param idTerreno: id del terreno
-	 * @return Listado de alimentos que pueden ser incluidos en el terreno indicado ordenados por nombre
+	 * @return Listado de alimentos
 	 * @throws SQLException
 	 */
 	public ArrayList<Alimento> getAlimentosDisponibles(int idTerreno) throws SQLException{	
