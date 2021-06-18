@@ -326,6 +326,11 @@ public class Paquete implements Producto {
 	public String getEstadoInicial() {
 		return Estado.PROPUESTO.toString();
 	}
-
-
+	
+	/**
+	 * @return valor del estado por defecto en el filtro (PROPUESTO)
+	 */
+	public String getValorDefectoFIltro() {
+		return Estado.PROPUESTO.toString();
+	}
 }

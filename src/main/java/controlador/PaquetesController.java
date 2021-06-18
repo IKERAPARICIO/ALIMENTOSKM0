@@ -97,6 +97,7 @@ public class PaquetesController extends HttpServlet {
 		String msg = "Paquete aprobado.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		Paquete paquete = new Paquete();
+		String fEstado = this.getEstadoDefectoFiltros();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			Double cantidad = Double.parseDouble(request.getParameter("cant"));
@@ -109,6 +110,7 @@ public class PaquetesController extends HttpServlet {
 		
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
 	}
@@ -120,6 +122,7 @@ public class PaquetesController extends HttpServlet {
 		String msg = "Paquete rechazado.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		Paquete paquete = new Paquete();
+		String fEstado = this.getEstadoDefectoFiltros();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			paquete.rechazar(id);
@@ -131,6 +134,7 @@ public class PaquetesController extends HttpServlet {
 		
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
 	}
@@ -248,7 +252,7 @@ public class PaquetesController extends HttpServlet {
 	private void cargarPropuestas(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String msg = null;
 		//por defecto carga las PROPUESTAS
-		String fEstado = Estado.PROPUESTO.toString();
+		String fEstado = this.getEstadoDefectoFiltros();
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -269,6 +273,7 @@ public class PaquetesController extends HttpServlet {
 		}
 		
 		request.setAttribute("propuestas",propuestas);
+		request.setAttribute("mensaje",msg);
 		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher req = request.getRequestDispatcher("propuestas.jsp");
 		req.forward(request, response);
@@ -326,7 +331,7 @@ public class PaquetesController extends HttpServlet {
 	    }
 	    
 	    //carga su listado de propuestas para mostrarlo el la pagina
-		String fEstado = "";
+		String fEstado = this.getEstadoDefectoFiltros();
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -339,6 +344,7 @@ public class PaquetesController extends HttpServlet {
 
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
 	}
@@ -351,6 +357,7 @@ public class PaquetesController extends HttpServlet {
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>(); 
+		String fEstado = this.getEstadoDefectoFiltros();
 		try {
 			int idTerreno = Integer.parseInt(request.getParameter("terreno"));
 			int idAlimento = Integer.parseInt(request.getParameter("producto"));
@@ -369,6 +376,7 @@ public class PaquetesController extends HttpServlet {
 		
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
 	}
@@ -380,6 +388,7 @@ public class PaquetesController extends HttpServlet {
 		String msg = "Propuesta eliminada.";
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
+		String fEstado = this.getEstadoDefectoFiltros();
 		
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		try {
@@ -396,6 +405,7 @@ public class PaquetesController extends HttpServlet {
 		
 		request.setAttribute("propuestas",propuestas);
 		request.setAttribute("mensaje",msg);
+		request.setAttribute("fEstado",fEstado);
 		RequestDispatcher vista = request.getRequestDispatcher("propuestas.jsp");
 		vista.forward(request, response);
 	}
@@ -453,6 +463,15 @@ public class PaquetesController extends HttpServlet {
 		request.setAttribute("mensaje",msg);
 		RequestDispatcher vista = request.getRequestDispatcher("propuesta.jsp");
 		vista.forward(request, response);
+	}
+	
+	/**
+	 * Busca y devuelve el valor que estado de los paquetes por defecto
+	 * @return
+	 */
+	private String getEstadoDefectoFiltros() {
+		Paquete paquete = new Paquete();
+		return paquete.getValorDefectoFIltro();
 	}
 	
 	/**
