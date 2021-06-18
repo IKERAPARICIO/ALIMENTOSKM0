@@ -94,18 +94,18 @@ public class PaquetesController extends HttpServlet {
 	 * Aprueba el paquete que tiene el id pasado total o parcialmente y vuelve a la pagina del listado de paquetes con un mensaje de resultado.
 	 */
 	private void aprobarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String msg = "Paquete aprobado.";
+		String msg = "Propuesta aprobada.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		Paquete paquete = new Paquete();
-		String fEstado = this.getEstadoDefectoFiltros();
+		String fEstado = Estado.ACEPTADO.toString();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			Double cantidad = Double.parseDouble(request.getParameter("cant"));
 			paquete.aprobar(id,cantidad);
 		} catch (Exception e) {
-			msg = "ERROR al aprobar el paquete.";
+			msg = "ERROR al aprobar la propuesta.";
 		} finally {
-			propuestas = paquete.obtenerPropuestas("");
+			propuestas = paquete.obtenerPropuestas(fEstado);
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -119,17 +119,17 @@ public class PaquetesController extends HttpServlet {
 	 * Rechaza el paquete que tiene el id pasado y vuelve a la pagina del listado de paquetes con un mensaje de resultado.
 	 */
 	private void rechazarPaquete(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-		String msg = "Paquete rechazado.";
+		String msg = "Propuesta rechazada.";
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		Paquete paquete = new Paquete();
-		String fEstado = this.getEstadoDefectoFiltros();
+		String fEstado = Estado.RECHAZADO.toString();
 		try {
 			int id = Integer.parseInt(request.getParameter("id"));
 			paquete.rechazar(id);
 		} catch (Exception e) {
-			msg = "ERROR al rechazar el paquete.";
+			msg = "ERROR al rechazar la propuesta.";
 		} finally {
-			propuestas = paquete.obtenerPropuestas("");
+			propuestas = paquete.obtenerPropuestas(fEstado);
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -330,8 +330,8 @@ public class PaquetesController extends HttpServlet {
 	    	msg = "Error al generar el fichero pdf, asegurese que la carpeta "+filePath+" exista.";
 	    }
 	    
-	    //carga su listado de propuestas para mostrarlo el la pagina
-		String fEstado = this.getEstadoDefectoFiltros();
+	    //carga su listado de aceptados para mostrarlo el la pagina
+		String fEstado = Estado.ACEPTADO.toString();
 		ArrayList<Paquete> propuestas = new ArrayList<Paquete>();
 		HttpSession sesion = request.getSession();
 		Usuario usuario = (Usuario)sesion.getAttribute("usuario");
@@ -371,7 +371,7 @@ public class PaquetesController extends HttpServlet {
 			msg = "ERROR en la BBDD al introducir la Propuesta.";
 		} finally {
 			PaqueteDAO pDAO = new PaqueteDAO();
-			propuestas = pDAO.listMyPropuestas("",usuario.getId());
+			propuestas = pDAO.listMyPropuestas(fEstado,usuario.getId());
 		}
 		
 		request.setAttribute("propuestas",propuestas);
@@ -398,7 +398,7 @@ public class PaquetesController extends HttpServlet {
 			paquete.eliminar(id);
 			
 			PaqueteDAO pDAO = new PaqueteDAO();
-			propuestas = pDAO.listMyPropuestas("",usuario.getId());
+			propuestas = pDAO.listMyPropuestas(fEstado,usuario.getId());
 		} catch (Exception e) {
 			msg = "ERROR al eliminar la propuesta.";
 		}
