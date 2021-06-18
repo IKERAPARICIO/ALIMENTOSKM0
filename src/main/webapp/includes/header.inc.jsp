@@ -13,7 +13,7 @@ else{
 <header>
 	<div class="cabizq">
 		<div class="logo">
-			<a href="LoginController?opcion=4"><img src="img/cesta.png" alt="biblioteca" title="logo" ></a>
+			<a href="LoginController?opcion=4"><img src="img/cesta.png" alt="cesta" title="logo" ></a>
 		</div>
 	</div>
 	
