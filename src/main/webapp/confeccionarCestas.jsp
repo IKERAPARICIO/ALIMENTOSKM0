@@ -47,6 +47,8 @@
 						<% if (c.getUsuarioNombreCompleto().trim() == "") {%>
 							<a href="CestasController?opcion=1&id=<%=c.getId()%>"><img src="img/delete.png" width="16px" alt="Eliminar"></a>
 							<a href="CestasController?opcion=5&id=<%=c.getId()%>"><img src="img/edit.png" alt="Editar" width="16px"></a>
+						<% } else {%>
+							<a href="CestasController?opcion=5&id=<%=c.getId()%>"><img src="img/basket.png" width="16px" alt="Ver Cesta"></a>
 						<% } %>
 					</td>
 				</tr>
